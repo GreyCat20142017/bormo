@@ -8,7 +8,6 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import Content from './components/Content';
 import BormoFooter from './components/BormoFooter';
 import BormoHeader from './components/BormoHeader';
 import BormoAside from './components/BormoAside';
@@ -29,24 +28,40 @@ const styles = theme => ({
     height: '100vh',
     overflow: 'hidden'
   },
-  
+
+  contentMain: {
+    width: '90%',
+    [theme.breakpoints.down('xs')]: {
+      width: '84%',
+    }
+  },
+
+  contentAside: {
+    width: '9%',
+    [theme.breakpoints.down('xs')]: {
+      width: '15%'
+    }
+  },
+
   paperMain: {
-    height: '78vh',      
+    height: '78vh',
     overflowY: 'auto',
     display: 'flex',
-    padding: '10px'
+    padding: '10px',
+    width: '100%',
+    justifyContent: 'space-between'
   },
 
   paperHeader: {
-    height: '12vh',    
-    minHeight: '50px',  
-    overflowY: 'auto' 
+    height: '12vh',
+    minHeight: '50px',
+    overflowY: 'auto'
   },
 
   paperFooter: {
-    height: '10vh',    
+    height: '10vh',
     minHeight: '40px',
-    overflowY: 'auto' 
+    overflowY: 'auto'
   },
 
 });
@@ -69,18 +84,21 @@ class App extends Component {
   render() {
     const {classes} = this.props;
     return (
-      <React.Fragment>    
+      <React.Fragment>
           <CssBaseline />
           <MuiThemeProvider theme={MainTheme}>
-          <div className={classes.app}>         
-              
+          <div className={classes.app}>
+
             <Paper className={classes.paperHeader}>
-             <BormoHeader openModal={this.openModal} closeModal={this.closeModal} theme={MainTheme}/>             
+             <BormoHeader openModal={this.openModal} closeModal={this.closeModal} theme={MainTheme}/>
             </Paper>
-                          
-            <Paper className={classes.paperMain}>              
-              <BormoAside/>     
-              <Content  className={classes.contentMain}>     
+
+            <Paper className={classes.paperMain}>
+              <Paper className={classes.contentAside}>
+                <BormoAside className/>
+              </Paper>
+              <Paper className={classes.contentMain}>
+
                 <Switch>
                  <Route exact path='/' component={Main}/>
                  <Route path='/bormo' component={Bormo}/>
@@ -88,15 +106,16 @@ class App extends Component {
                  <Route path='/reversecontrol' component={ReverseControl}/>
                  <Route component={NotFound} />
                </Switch>
-             </Content>   
-            </Paper>  
-          
+
+             </Paper>
+            </Paper>
+
             <Paper className={classes.paperFooter}>
               <BormoFooter/>
-            </Paper>                 
-                   
+            </Paper>
+
           </div>
-            
+
         </MuiThemeProvider>
        </React.Fragment>
     );

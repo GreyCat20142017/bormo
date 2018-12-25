@@ -13,7 +13,7 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({ 
+const styles = theme => ({
   appBar: {
     top: 'auto',
     bottom: 0,
@@ -25,7 +25,7 @@ const styles = theme => ({
   fabButtons: {
     position: 'relative',
     zIndex: 1,
-    top: -30,
+    top: -20,
     left: 0,
     right: 0,
     margin: '0 auto',
@@ -34,7 +34,7 @@ const styles = theme => ({
   fabButton: {
     position: 'relative',
     margin: '0 2px'
-  }  
+  }
 });
 
 const BormoFooter = ({classes}) => (
@@ -58,7 +58,7 @@ const BormoFooter = ({classes}) => (
 	    <div>
 	      <IconButton color="inherit">
 	        <Search />
-	      </IconButton>	     
+	      </IconButton>
 	    </div>
 	  </Toolbar>
 	 </AppBar>);

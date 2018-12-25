@@ -10,12 +10,18 @@ import More from '@material-ui/icons/MoreVert';
 
 import BormoToolbar from './BormoToolbar';
 
-const styles = {
+const styles = (theme) => ({
   toolbar: {
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
-};
+  appName: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
+  }
+
+});
 
 class BormoHeader extends React.Component {
  constructor(props) {
@@ -35,7 +41,6 @@ class BormoHeader extends React.Component {
 
   onAboutClick = () => {
   	this.setState({ anchorEl: null });
-  	this.props.openModal();
   }
 
 	render() {
@@ -45,8 +50,8 @@ class BormoHeader extends React.Component {
 
 		      <AppBar position="static" color="primary" className={classes.appbar}>
 		        <Toolbar className={classes.toolbar}>
-		          <Typography variant="h5" color='secondary'>
-		            Бормотунчик
+		          <Typography variant="h5" color='secondary' className={classes.appName}>
+		            Бормо<span className={classes.appNamePart}>тунчик</span>
 		          </Typography>
 
 			     	   <BormoToolbar/>

@@ -11,8 +11,8 @@ const styles = theme => ({
 });
 
 const ToolbarLink = ({classes, children, ...rest}) => (
-	<NavLink 	
-		activeClassName={classes.tabActive} 
+	<NavLink
+		activeClassName={classes.tabActive}
 		{...rest}
 	>
 	 {children}
