@@ -59,9 +59,9 @@ const BormoToolbar = ({classes})  => (
     <span className={classes.text}>Главная</span>
    </ToolbarLink>
 
-   <ToolbarLink to='/bormo' className={classes.menuLink} title='Бормотунчик'>
+   <ToolbarLink to='/bormo' className={classes.menuLink} title='Бормотание'>
      <HeadsetIcon  className={classes.icon} fontSize='small' color='inherit' />
-     <span className={classes.text}>Бормотунчик</span>
+     <span className={classes.text}>Бормотание</span>
     </ToolbarLink>
 
    <ToolbarLink to='/control' className={classes.menuLink} title='Контроль'>
@@ -69,9 +69,9 @@ const BormoToolbar = ({classes})  => (
     <span className={classes.text}>Контроль</span>
    </ToolbarLink>
 
-   <ToolbarLink to='/reversecontrol' className={classes.menuLink} title='Обратный контроль'>
+   <ToolbarLink to='/reversecontrol' className={classes.menuLink} title='Контроль наоборот'>
     <DoneAllIcon  className={classes.icon} fontSize='small' color='inherit' />
-    <span className={classes.text}>Обратный контроль</span>
+    <span className={classes.text}>Контроль наоборот</span>
    </ToolbarLink>
 
 

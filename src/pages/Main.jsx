@@ -26,7 +26,13 @@ const styles = theme => ({
   },
   card: {
     padding: '1%',
-    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)'
+    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '200px'
+    },
+    [theme.breakpoints.up('sm')]: {
+      minWidth: '400px'
+    }
   },
   avatar: {
     backgroundColor: theme.palette.primary.main
@@ -38,18 +44,19 @@ const Main = ({classes}) => (
  <div className={classes.mainWrapper}>
 
   <Card className={classes.card}>
-    <CardHeader title=" Программа для зазубривания английской лексики."  avatar={
+    <CardHeader title="Браузерная версия программы - зубрилки" avatar={
         <Avatar aria-label="Recipe" className={classes.avatar} color='primary'>
-         <HeadsetIcon  fontSize='medium' color='default' />
+         <HeadsetIcon  fontSize='default' color='inherit' />
         </Avatar>}
      />
 
     <CardContent>
       <Typography variant="h5">
-        Бормотунчик - 2018
+       Бормотунчик - 2018
       </Typography>
-      <Typography variant="subheading">
-      React, React Router, Material-UI
+      <Typography variant="caption">
+        <p>React, React Router, Material-UI</p>
+        <p>Рекомендуемый браузер - Google Chrome</p>
       </Typography>
     </CardContent>
    </Card>

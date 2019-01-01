@@ -37,11 +37,14 @@ class BormoHeader extends React.Component {
 
   onConfigClick = () => {
   	this.setState({ anchorEl: null });
+    this.props.openConfig();
   };
 
   onAboutClick = () => {
   	this.setState({ anchorEl: null });
+    this.props.openAbout();
   }
+
 
 	render() {
 	  const classes = this.props.classes;
