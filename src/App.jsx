@@ -6,7 +6,6 @@ import MainTheme from './MainTheme';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -14,7 +13,7 @@ import BormoFooter from './components/BormoFooter';
 import BormoHeader from './components/BormoHeader';
 import BormoAside from './components/BormoAside';
 import BormoConfig from './components/BormoConfig';
-import BormoSimpleModal from './components/BormoSimpleModal';
+import BormoModal from './components/BormoModal';
 
 import Main from './pages/Main';
 import Bormo from './pages/Bormo';
@@ -24,9 +23,9 @@ import ReverseControl from './pages/ReverseControl';
 import NotFound from './pages/NotFound';
 
 import './App.css';
-import {getDataByCondition} from './functions';
+import {getDataByCondition, getInitialState} from './functions';
 import {courses, lessons} from './data';
-
+import {about} from './about';
 
 const styles = theme => ({
   app: {
@@ -75,16 +74,7 @@ const styles = theme => ({
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isAboutOpen: false,
-      isConfigOpen: false,
-      currentMode: null,
-      currentCourse: null,
-      currentLesson: null,
-      lessons: [],
-      content: [],
-      isLoading: false
-    };
+    this.state = getInitialState();
     this.onCourseChange = this.onCourseChange.bind(this);
     this.onLessonChange = this.onLessonChange.bind(this);
   }
@@ -100,6 +90,7 @@ class App extends React.Component {
    //    this.setState({ isLoading: false, news: data })
    //  })
  }
+
 
   openAbout = () => {
     this.setState({isAboutOpen: true});
@@ -117,6 +108,9 @@ class App extends React.Component {
     this.setState({isConfigOpen: false});
   }
 
+  onConfigChange = () => {
+
+ }
 
   onCourseChange (course)  {
     if (course !== this.state.currentCourse) {
@@ -137,13 +131,15 @@ class App extends React.Component {
       currentLesson: lesson,
       content: newData.content
     });
-     console.log(newData.content);
    }
   }
 
   render() {
     const {classes} = this.props;
-    const {currentMode, currentCourse, currentLesson, lessons, content, isLoading, isConfigOpen, isAboutOpen} = this.state;
+    const {
+      currentMode, currentCourse, currentLesson, lessons, content,
+      isLoading, isConfigOpen, isAboutOpen,
+      config, voiceConfig, noSound} = this.state;
     return (
       <React.Fragment>
         <CssBaseline />
@@ -193,11 +189,22 @@ class App extends React.Component {
           <Paper className={classes.paperFooter}>
             <BormoFooter/>
           </Paper>
-
         </div>
       }
-      <BormoConfig isConfigOpen={isConfigOpen} closeConfig={this.closeConfig}/>
-      <BormoSimpleModal title={'О программе'} text={'Бормотунчик - 2018.'} isModalOpen={isAboutOpen} closeModal={this.closeAbout}/>
+
+      <BormoModal
+        title={'Бормотунчик - 2018. '}
+        text={about}
+        isModalOpen={isAboutOpen}
+        closeModal={this.closeAbout}/>
+
+      <BormoConfig
+        config={config}
+        voiceConfig={voiceConfig}
+        noSound={noSound}
+        isConfigOpen={isConfigOpen}
+        closeConfig={this.closeConfig}
+        onConfigChange={this.onConfigChange}/>
       </MuiThemeProvider>
      </React.Fragment>
     );

@@ -48,7 +48,7 @@ const BormoFooter = ({classes}) => (
   	    <Fab color="primary" aria-label="Предыдущий урок" title="Предыдущий урок" className={classes.fabButton}>
   	      <ArrowBack />
   	    </Fab>
-        <Fab color="secondary" aria-label="Перезапустить" title="Перезапустить" className={classes.fabButton}>
+        <Fab color="secondary" aria-label="Старт/перезапуск" title="Старт/перезапуск" className={classes.fabButton}>
           <RefreshRounded />
         </Fab>
         <Fab color="primary" aria-label="Следующий урок" title="Cледующий урок" className={classes.fabButton}>

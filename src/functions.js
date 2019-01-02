@@ -44,3 +44,33 @@ export const getDataByCondition =  (data, course, lesson) => {
   }
   return {lessons: courseLessons, content: courseContent.filter(item => item.lesson === lesson), lesson: lesson}
 };
+
+export const getInitialState = () => (
+  {
+    isAboutOpen: false,
+    isConfigOpen: false,
+    currentMode: null,
+    currentCourse: null,
+    currentLesson: null,
+    lessons: [],
+    content: [],
+    isLoading: false,
+    config: {
+      instantStart: false,
+      instantNextMode: true,
+      countErrorAtPrompt: true,
+      checkedModes: {
+
+      }
+    },
+    noSound: true,
+    voiceConfig: {
+      onlyEnglish: true,
+      russian: '',
+      english: '',
+      volume: 1, //0 - 1 step 0.2
+      rate: 1,  //0.1 - 10 step 0.1
+      pitch : 1 //0 - 2 step 0.1
+    }
+  }
+);
