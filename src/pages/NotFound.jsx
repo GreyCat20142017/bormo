@@ -51,8 +51,8 @@ class NotFound extends React.Component {
       <section className={classes.page404}>
         <h5 className={classes.page404__title}>Укaзанная ссылка не найдена</h5>
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           className={classes.button}
           onClick={this.setRedirect}>
           {'Перейти на главную'}

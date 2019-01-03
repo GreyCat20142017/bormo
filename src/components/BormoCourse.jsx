@@ -13,7 +13,7 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 
 const styles = theme => ({
   asideText: {
-   color: theme.palette.secondary.main,
+   color: 'rgba(0, 0, 0, 0.26)',
    fontWeight: '700',
    textTransform: 'uppercase',
    [theme.breakpoints.down('md')]: {
@@ -60,7 +60,7 @@ class BormoCourse extends React.Component {
     return (
       <ListItem button key={item.name} title={item.name.toUpperCase()} onClick={this.onCourseClick} className={classes.asideItem}>
         <ListItemIcon className={classes.asideIcon}>
-          <CourseIcon name={item.name} color={(item.name === currentCourse ) ? 'primary' : 'secondary'} fontSize='small'/>
+          <CourseIcon name={item.name} color={(item.name === currentCourse ) ? 'primary' : 'disabled'} fontSize='small'/>
         </ListItemIcon>
         <ListItemText primary={item.name} className={item.name === currentCourse ? classes.asideTextActive : classes.asideText} disableTypography={true}/>
       </ListItem>

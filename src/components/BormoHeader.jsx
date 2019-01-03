@@ -51,18 +51,18 @@ class BormoHeader extends React.Component {
 	  const anchorEl = this.state.anchorEl;
 		 return (
 
-		      <AppBar position="static" color="primary" className={classes.appbar}>
+		      <AppBar position='static' color='primary' className={classes.appbar}>
 		        <Toolbar className={classes.toolbar}>
-		          <Typography variant="h5" color='secondary' className={classes.appName}>
+		          <Typography variant='h5' color='inherit' className={classes.appName}>
 		            Бормо<span className={classes.appNamePart}>тунчик</span>
 		          </Typography>
 
 			     	   <BormoToolbar/>
-			     	   <IconButton color="inherit" onClick={this.onAnchorClick}>
+			     	   <IconButton color='inherit' onClick={this.onAnchorClick}>
 			        	<More />
 			     	   </IconButton>
 				     	 <Menu
-			          id="simple-menu"
+			          id='simple-menu'
 			          anchorEl={anchorEl}
 			          open={Boolean(anchorEl)}>
 				          <MenuItem onClick={this.onConfigClick}>Настройка</MenuItem>

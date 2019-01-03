@@ -1,13 +1,13 @@
 import React from 'react';
 import {Route, Switch, withRouter} from 'react-router-dom';
 
+import CssBaseline from '@material-ui/core/CssBaseline';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import MainTheme from './MainTheme';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 import BormoFooter from './components/BormoFooter';
 import BormoHeader from './components/BormoHeader';
@@ -19,11 +19,10 @@ import Main from './pages/Main';
 import Bormo from './pages/Bormo';
 import Control from './pages/Control';
 import ReverseControl from './pages/ReverseControl';
-
 import NotFound from './pages/NotFound';
 
 import './App.css';
-import {getDataByCondition, getInitialState} from './functions';
+import {getDataByCondition,  getArrayFromObject, getInitialState} from './functions';
 import {courses, lessons} from './data';
 import {about} from './about';
 
@@ -72,11 +71,16 @@ const styles = theme => ({
 
 
 class App extends React.Component {
+  static defaultProps = {
+   themes: getArrayFromObject(MainTheme)
+  }
+
   constructor(props) {
     super(props);
-    this.state = getInitialState();
+    this.state = getInitialState(MainTheme.neutral);
     this.onCourseChange = this.onCourseChange.bind(this);
     this.onLessonChange = this.onLessonChange.bind(this);
+    this.onThemeSelect = this.onThemeSelect.bind(this);
   }
 
   componentDidMount() {
@@ -134,16 +138,20 @@ class App extends React.Component {
    }
   }
 
+  onThemeSelect (themeKey) {
+    this.setState({currentTheme: MainTheme[themeKey]});
+  }
+
   render() {
-    const {classes} = this.props;
+    const {classes, themes} = this.props;
     const {
       currentMode, currentCourse, currentLesson, lessons, content,
-      isLoading, isConfigOpen, isAboutOpen,
+      currentTheme, isLoading, isConfigOpen, isAboutOpen,
       config, voiceConfig, noSound} = this.state;
     return (
       <React.Fragment>
         <CssBaseline />
-        <MuiThemeProvider theme={MainTheme}>
+        <MuiThemeProvider theme={currentTheme.themeObject}>
         {isLoading ?
           <Paper className={classes.paperMain}>
            <Typography variant='caption' color='primary'>Загрузка...</Typography>
@@ -153,7 +161,7 @@ class App extends React.Component {
 
           <Paper className={classes.paperHeader}>
            <BormoHeader
-            theme={MainTheme}
+            theme={currentTheme}
             openAbout={this.openAbout}
             closeAbout={this.closeAbout}
             openConfig={this.openConfig}
@@ -187,7 +195,7 @@ class App extends React.Component {
           </Paper>
 
           <Paper className={classes.paperFooter}>
-            <BormoFooter/>
+            <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}/>
           </Paper>
         </div>
       }

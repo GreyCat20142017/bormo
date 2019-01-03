@@ -31,14 +31,14 @@ class SimpleSlider extends React.Component {
 
     return (
       <div className={classes.sliderWrapper}>
-        <Typography id="Slider">{params.title + ': ' +  Math.round(10 * value) / 10}</Typography>
+        <Typography id='Slider'>{params.title + ': ' +  Math.round(10 * value) / 10}</Typography>
         <Slider
           classes={{ container: classes.slider }}
           value={value}
           min={params.min}
           max={params.max}
           step={params.step}
-          aria-labelledby="Slider"
+          aria-labelledby='Slider'
           onChange={this.handleChange}
         />
       </div>

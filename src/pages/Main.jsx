@@ -44,17 +44,17 @@ const Main = ({classes}) => (
  <div className={classes.mainWrapper}>
 
   <Card className={classes.card}>
-    <CardHeader title="Браузерная версия программы - зубрилки" avatar={
-        <Avatar aria-label="Recipe" className={classes.avatar} color='primary'>
+    <CardHeader title='Браузерная версия программы - зубрилки' avatar={
+        <Avatar aria-label='Recipe' className={classes.avatar} color='primary'>
          <HeadsetIcon  fontSize='default' color='inherit' />
         </Avatar>}
      />
 
     <CardContent>
-      <Typography variant="h5">
+      <Typography variant='h5'>
        Бормотунчик - 2018
       </Typography>
-      <Typography variant="caption">
+      <Typography variant='caption'>
         <p>React, React Router, Material-UI</p>
         <p>Рекомендуемый браузер - Google Chrome</p>
       </Typography>

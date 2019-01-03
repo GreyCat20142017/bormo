@@ -19,14 +19,14 @@
 //     }
 //   };
 
+ export const getArrayFromObject = (obj) =>  Object.keys(obj).map(key => obj[key]);
+
  const getUniqueFromArray =  (entities) => {
     let temporaryObject = {};
-    entities.forEach(function (item) {
+    entities.forEach(item => {
       temporaryObject[item.toString()] = true;
     });
-    return Object.keys(temporaryObject).map(function (key) {
-      return key;
-    });
+    return Object.keys(temporaryObject).map(key => key);
   };
 
 export const getDataByCondition =  (data, course, lesson) => {
@@ -45,10 +45,11 @@ export const getDataByCondition =  (data, course, lesson) => {
   return {lessons: courseLessons, content: courseContent.filter(item => item.lesson === lesson), lesson: lesson}
 };
 
-export const getInitialState = () => (
+export const getInitialState = (currentTheme) => (
   {
     isAboutOpen: false,
     isConfigOpen: false,
+    currentTheme: currentTheme,
     currentMode: null,
     currentCourse: null,
     currentLesson: null,
