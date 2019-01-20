@@ -11,6 +11,9 @@ const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    }
   },
   formControl: {
     margin: theme.spacing.unit,

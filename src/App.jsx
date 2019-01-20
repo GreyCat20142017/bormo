@@ -1,5 +1,6 @@
 import React from 'react';
 import {Route, Switch, withRouter} from 'react-router-dom';
+import axios from 'axios';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
@@ -7,13 +8,14 @@ import MainTheme from './MainTheme';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import BormoFooter from './components/BormoFooter';
 import BormoHeader from './components/BormoHeader';
 import BormoAside from './components/BormoAside';
 import BormoConfig from './components/BormoConfig';
 import BormoModal from './components/BormoModal';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import Main from './pages/Main';
 import Bormo from './pages/Bormo';
@@ -23,7 +25,8 @@ import NotFound from './pages/NotFound';
 
 import './App.css';
 import {getDataByCondition,  getArrayFromObject, getInitialState} from './functions';
-import {courses, lessons} from './data';
+import {GET_DATA_PATH, GET_COURSES_PATH} from './constants';
+
 import {about} from './about';
 
 const styles = theme => ({
@@ -44,6 +47,18 @@ const styles = theme => ({
     [theme.breakpoints.down('xs')]: {
       width: '15%'
     }
+  },
+
+  paperLoader: {
+    top: 0,
+    left: 0,
+    height: '100vh',
+    width: '100%',
+    position: 'fixed',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    padding: '10%',
+    textAlign: 'center',
+    zIndex: '10'
   },
 
   paperMain: {
@@ -69,8 +84,15 @@ const styles = theme => ({
 
 });
 
+const Loader = ({classes}) => (
+  <Paper className={classes.paperLoader}>
+     <Typography variant='caption' color='primary'>Загрузка...</Typography>
+  </Paper>
+);
 
 class App extends React.Component {
+  static Loader = Loader;
+
   static defaultProps = {
    themes: getArrayFromObject(MainTheme)
   }
@@ -84,17 +106,19 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-   // this.setState({ isLoading: true })
-   // fetch('http://localhost:3000/data/data.js')
-   //  .then(response => {
-   //    return response.json()
-   //  })
-   //  .then(data => {
+    this.getCoursesData();
+    this.getBasicData();
+  }
 
-   //    this.setState({ isLoading: false, news: data })
-   //  })
- }
+  getCoursesData = async () => {
+    const res = await axios.get(GET_COURSES_PATH);
+    this.setState({ isLoading: false, courses: res.data });
+  }
 
+  getBasicData = async () => {
+    const res = await axios.get(GET_DATA_PATH);
+    this.setState({ isDataLoading: false, data: res.data });
+  }
 
   openAbout = () => {
     this.setState({isAboutOpen: true});
@@ -116,21 +140,28 @@ class App extends React.Component {
 
  }
 
-  onCourseChange (course)  {
-    if (course !== this.state.currentCourse) {
-      const newData = getDataByCondition(lessons, course, this.state.currentLesson);
+ onCourseChange (course, ind)  {
+   const {currentCourse, courses} = this.state;
+   if (course !== currentCourse) {
+     if (ind <=  courses.length) {
+      let lastlesson = courses[ind].lastlesson;
+      let courseLessons = [];
+      for (let i = 1; i <= lastlesson; i++) {
+        courseLessons.push(i);
+      };
+      let courselesson = courseLessons.length > 0 ? courseLessons[0] : null;
       this.setState({
-        currentCourse: course,
-        currentLesson: newData.lesson,
-        lessons: newData.lessons,
-        content: newData.content
-      });
+       currentCourse: course,
+       currentLesson: courselesson,
+       lessons: courseLessons
+     });
     }
   }
+}
 
   onLessonChange (lesson) {
    if (lesson !== this.state.currentLesson) {
-    const newData = getDataByCondition(lessons, this.state.currentCourse, lesson);
+    const newData = getDataByCondition(this.state.lessons, this.state.currentCourse, lesson);
     this.setState({
       currentLesson: lesson,
       content: newData.content
@@ -145,17 +176,16 @@ class App extends React.Component {
   render() {
     const {classes, themes} = this.props;
     const {
-      currentMode, currentCourse, currentLesson, lessons, content,
+      currentMode, currentCourse, currentLesson, lessons, courses, content,
       currentTheme, isLoading, isConfigOpen, isAboutOpen,
-      config, voiceConfig, noSound} = this.state;
+      config, voiceConfig, noSound } = this.state;
+
     return (
       <React.Fragment>
         <CssBaseline />
         <MuiThemeProvider theme={currentTheme.themeObject}>
         {isLoading ?
-          <Paper className={classes.paperMain}>
-           <Typography variant='caption' color='primary'>Загрузка...</Typography>
-          </Paper>
+          <Loader classes={classes}/>
         :
         <div className={classes.app}>
 
@@ -171,15 +201,17 @@ class App extends React.Component {
 
           <Paper className={classes.paperMain}>
             <Paper className={classes.contentAside}>
-              <BormoAside
-               currentMode={currentMode}
-               currentCourse={currentCourse}
-               currentLesson={currentLesson}
-               lessons={lessons}
-               courses={courses}
-               onLessonChange={this.onLessonChange}
-               onCourseChange={this.onCourseChange}
-               />
+              <ErrorBoundary>
+                <BormoAside
+                 currentMode={currentMode}
+                 currentCourse={currentCourse}
+                 currentLesson={currentLesson}
+                 lessons={lessons}
+                 courses={courses}
+                 onLessonChange={this.onLessonChange}
+                 onCourseChange={this.onCourseChange}
+                 />
+               </ErrorBoundary>
             </Paper>
             <Paper className={classes.contentMain} content={content}>
 

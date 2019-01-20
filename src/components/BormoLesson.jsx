@@ -2,18 +2,14 @@ import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 
 
 const styles = theme => ({
   btn: {
-    margin: '4px',
-    maxWidth: '40%',
-    padding: theme.spacing.unit/4,
-    textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '30px'
-    },
+    margin: theme.spacing.unit,
+    padding: theme.spacing.unit,
+    textAlign: 'center'
   }
 });
 
@@ -24,14 +20,14 @@ class BormoLesson extends React.Component {
   render() {
     const {currentLesson, item, classes} = this.props;
     return (
-    <Button
-      variant='contained'
+    <Fab
       color={item === currentLesson ? 'primary': 'secondary'}
       title={'Урок ' + item}
       onClick={this.onLessonClick}
-      className={classes.btn}>
+      className={classes.btn}
+      size='small'>
       {item}
-    </Button>
+    </Fab>
      )
   }
 }

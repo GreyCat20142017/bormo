@@ -52,7 +52,7 @@ const CourseIcon = ({name, color, fontSize}) => {
 class BormoCourse extends React.Component {
   static CourseIcon = CourseIcon;
 
-  onCourseClick = () => this.props.onCourseChange(this.props.item.name);
+  onCourseClick = () => this.props.onCourseChange(this.props.item.name, this.props.ind);
 
   render() {
     const {currentCourse, item, classes} = this.props;

@@ -53,9 +53,12 @@ export const getInitialState = (currentTheme) => (
     currentMode: null,
     currentCourse: null,
     currentLesson: null,
+    courses: [],
     lessons: [],
     content: [],
-    isLoading: false,
+    data: [],
+    isLoading: true,
+    isDataLoading: true,
     config: {
       instantStart: false,
       instantNextMode: true,
@@ -75,3 +78,9 @@ export const getInitialState = (currentTheme) => (
     }
   }
 );
+
+export const getMobileWidthMarker = (theme) => {
+  const result = (document.body.clientWidth <= theme.breakpoints.values['sm']);
+  console.log(result);
+  return result;
+};

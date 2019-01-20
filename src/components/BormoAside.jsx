@@ -14,9 +14,16 @@ const styles = theme => ({
     position: 'relative'
   },
 
-  asideWrapper: {
+  asideWrapperCourse: {
     position: 'relative',
-    maxHeight: '50%'
+    maxHeight: '120px',
+    overflowY: 'auto'
+  },
+
+  asideWrapperLesson: {
+    position: 'relative',
+    maxHeight: '310px',
+    overflowY: 'hidden'
   },
 
   lessonList: {
@@ -24,11 +31,10 @@ const styles = theme => ({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    width: '100%',
+    width: '90%',
     padding: '10px',
     listStyle: 'none',
     [theme.breakpoints.down('sm')]: {
-      padding: '2px',
       justifyContent: 'center'
     },
  }
@@ -38,7 +44,7 @@ const styles = theme => ({
 const Courses = ({ courses,  currentCourse, onCourseChange, classes }) => (
   <List dense={true}>
     {courses.map((item, index) => (
-    <BormoCourse key={item.name} title={item.name} item={item} currentCourse={currentCourse} onCourseChange={onCourseChange}/>
+    <BormoCourse key={item.name + ' ' + item.index} title={item.name} item={item} ind={index} currentCourse={currentCourse} onCourseChange={onCourseChange}/>
   )) }
   </List>
 );
@@ -64,11 +70,11 @@ class BormoAside extends React.Component {
       lessons, currentLesson,  onLessonChange } = this.props;
     return (
      <nav className={classes.aside}>
-      <div className={classes.asideWrapper}>
+      <div className={classes.asideWrapperCourse}>
        <Courses key={'courses'} courses={courses} currentCourse={currentCourse} classes={classes} onCourseChange={onCourseChange}/>
       </div>
       <Divider/>
-      <div className={classes.asideWrapper}>
+      <div className={classes.asideWrapperLesson}>
        <Lessons key={'lessons'} lessons={lessons} currentLesson={currentLesson} classes={classes} onLessonChange={onLessonChange}/>
       </div>
      </nav>

@@ -14,12 +14,17 @@ const styles = (theme) => ({
   toolbar: {
     alignItems: 'center',
     justifyContent: 'space-between'
+    //  ,[theme.breakpoints.down('sm')]: {
+    //    paddingRight: '8px',
+    //    paddingLeft: '8px'
+    // }
   },
+
   appName: {
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
-  }
+  },
 
 });
 
