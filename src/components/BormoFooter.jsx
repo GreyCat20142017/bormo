@@ -13,9 +13,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 
 import BormoThemeSelect from './BormoThemeSelect';
 
-import {getMobileWidthMarker} from '../functions';
-
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import { withStyles} from '@material-ui/core/styles';
 
 
 const styles = theme => ({
@@ -26,6 +24,7 @@ const styles = theme => ({
   toolbar: {
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderTop: `3px solid ${theme.palette.primary.contrastText}`
   },
   fabButtons: {
     position: 'relative',
@@ -39,28 +38,37 @@ const styles = theme => ({
   fabButton: {
     position: 'relative',
     margin: '0 2px'
+  },
+  mobileOn: {
+    display: 'none',
+    [theme.breakpoints.down('sm')]: {
+     display: 'block'
+    }
+  },
+  mobileOff: {
+    [theme.breakpoints.down('sm')]: {
+     display: 'none'
+    }
   }
 });
 
-const BormoFooter = ({classes, theme, ...rest}) => {
- const fabSize = theme.breakpoints.down('sm') ? 'small' : 'medium';
- const mobileDepends = getMobileWidthMarker(theme) ?
-    <IconButton color='inherit' className={classes.searchButton}>
-      <MoreIcon />
-    </IconButton> :
-    <BormoThemeSelect {...rest}/>;
- return (
+const BormoFooter = ({classes, theme, ...rest}) => (
 	<AppBar position='fixed' color='primary' className={classes.appBar}>
 	  <Toolbar className={classes.toolbar}>
-      {mobileDepends}
+
+      <IconButton color='inherit' className={classes.mobileOn}>
+        <MoreIcon />
+      </IconButton>
+      <BormoThemeSelect {...rest} className={classes.mobileOff}/>
+
       <div className={classes.fabButtons}>
-  	    <Fab color='primary' aria-label='Предыдущий урок' title='Предыдущий урок' className={classes.fabButton} size={fabSize}>
+  	    <Fab color='primary' aria-label='Предыдущий урок' title='Предыдущий урок' className={classes.fabButton} size='small'>
   	      <ArrowBackIcon />
   	    </Fab>
-        <Fab color='secondary' aria-label='Старт/перезапуск' title='Старт/перезапуск' className={classes.fabButton} size={fabSize}>
+        <Fab color='secondary' aria-label='Старт/перезапуск' title='Старт/перезапуск' className={classes.fabButton} size='small'>
           <RefreshRoundedIcon />
         </Fab>
-        <Fab color='primary' aria-label='Следующий урок' title='Cледующий урок' className={classes.fabButton} size={fabSize}>
+        <Fab color='primary' aria-label='Следующий урок' title='Cледующий урок' className={classes.fabButton} size='small'>
           <ArrowForwardIcon />
         </Fab>
       </div>
@@ -70,7 +78,7 @@ const BormoFooter = ({classes, theme, ...rest}) => {
 	      </IconButton>
 	    </div>
 	  </Toolbar>
-	 </AppBar>)};
+	 </AppBar>);
 
 
-export default withTheme()(withStyles(styles)(BormoFooter));
+export default withStyles(styles)(BormoFooter);

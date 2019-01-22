@@ -12,6 +12,7 @@ import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import { withStyles } from '@material-ui/core/styles';
 
 import SimpleSlider from './SimpleSlider'
+import BormoThemeSelect from './BormoThemeSelect';
 import { voiceParams } from '../constants';
 
 
@@ -51,7 +52,7 @@ class BormoConfig extends React.Component {
   }
 
   render() {
-   const {isConfigOpen, classes} = this.props;
+   const {isConfigOpen, classes, onThemeSelect, currentTheme, themes} = this.props;
    const {
     instantStart, instantNextMode, countErrorAtPrompt,
     onlyEnglish, pitch, volume, noSound} = this.state;
@@ -106,7 +107,7 @@ class BormoConfig extends React.Component {
       <Paper>
         <FormGroup  className={classes.configGroup}>
            <FormControlLabel
-            control={<Switch checked={onlyEnglish} onChange={this.onOptionChange('onlyEnglish')} value='onlyEnglish' color='primary'/>            }
+            control={<Switch checked={onlyEnglish} onChange={this.onOptionChange('onlyEnglish')} value='onlyEnglish' color='primary'/>}
             label='при доступности синтеза речи озвучивать только английский'
           />
 
@@ -124,8 +125,15 @@ class BormoConfig extends React.Component {
         </Button>
       </Paper>
 
+      <Typography variant='caption' className={classes.configGroup}>Цветовая тема (параметр применяется при выборе)</Typography>
+      <Paper>
+        <BormoThemeSelect onThemeSelect={onThemeSelect} currentTheme={currentTheme} themes={themes} fromConfig={true}/>
+      </Paper>
+
+
       <Button variant='contained' color='primary' onClick={this.props.closeConfig} className={classes.configButton}> Сохранить и закрыть </Button>
       <Button variant='contained' color='secondary' onClick={this.props.closeConfig} className={classes.configButton}> Отмена </Button>
+
    </div>
     </Dialog>)
    } else {

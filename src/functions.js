@@ -47,7 +47,7 @@ export const getDataByCondition =  (data, course, lesson) => {
 
 export const getInitialState = (currentTheme) => (
   {
-    isAboutOpen: false,
+    isModalOpen: false,
     isConfigOpen: false,
     currentTheme: currentTheme,
     currentMode: null,
@@ -78,9 +78,3 @@ export const getInitialState = (currentTheme) => (
     }
   }
 );
-
-export const getMobileWidthMarker = (theme) => {
-  const result = (document.body.clientWidth <= theme.breakpoints.values['sm']);
-  console.log(result);
-  return result;
-};

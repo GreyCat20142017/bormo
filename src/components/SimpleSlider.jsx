@@ -6,16 +6,23 @@ import Slider from '@material-ui/lab/Slider';
 
 const styles = theme => ({
   sliderWrapper: {
-    marginTop: theme.spacing.unit * 2
+    width: '100%',
+    padding: 0,
+    margin: 0
   },
   slider: {
-    padding: theme.spacing.unit,
-    margin: theme.spacing.unit,
+    padding: theme.spacing.unit/2,
+    margin: theme.spacing.unit/2
   }
 });
 
 
 class SimpleSlider extends React.Component {
+  static defaultProps = {
+    noTitle: false,
+    verticalOnMobile: false
+  }
+
   state = {
     value: this.props.value || this.props.params.default || 1
   };
@@ -26,18 +33,20 @@ class SimpleSlider extends React.Component {
   };
 
   render() {
-    const { classes, params } = this.props;
+    const { classes, params, noTitle, verticalOnMobile } = this.props;
     const { value } = this.state;
 
     return (
-      <div className={classes.sliderWrapper}>
-        <Typography id='Slider'>{params.title + ': ' +  Math.round(10 * value) / 10}</Typography>
+      <div className={verticalOnMobile ? classes.sliderWrapperVertical : classes.sliderWrapper}>
+        {noTitle ?  null : <Typography id='Slider'>{params.title + ': ' +  Math.round(10 * value) / 10}</Typography>}
         <Slider
           classes={{ container: classes.slider }}
           value={value}
+          disabled={params.min >= params.max}
           min={params.min}
           max={params.max}
           step={params.step}
+          vertical={verticalOnMobile}
           aria-labelledby='Slider'
           onChange={this.handleChange}
         />

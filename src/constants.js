@@ -8,3 +8,5 @@ export const voiceParams = {
 
 export const GET_DATA_PATH = 'data/bormo.json'
 export const GET_COURSES_PATH = 'data/courses.json'
+
+export const MAX_LESSONS_BY_PAGE = 10;

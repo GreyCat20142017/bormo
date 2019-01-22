@@ -7,7 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const renderTextFromArray = (text) => text.map(
-  (paragraph, ind) => (paragraph === '' ? <br key={ind}/>  :<DialogContentText variant='body2' key={ind}> {paragraph} </DialogContentText>)
+   (paragraph, ind) => (paragraph === '' ? <br key={ind}/>  : <DialogContentText variant='body2' key={ind}> {paragraph} </DialogContentText>)
 );
 
 const BormoModal = ({isModalOpen, title, subtitle, text, closeModal}) => {

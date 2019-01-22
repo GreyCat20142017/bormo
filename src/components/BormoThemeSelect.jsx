@@ -15,6 +15,10 @@ const styles = theme => ({
       display: 'none',
     }
   },
+  rootfromConfig: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 100,
@@ -38,10 +42,10 @@ class Bred extends React.Component {
   };
 
   render() {
-    const { classes, themes } = this.props;
+    const { classes, themes, fromConfig = false } = this.props;
 
     return (
-      <form className={classes.root} autoComplete='off'>
+      <form className={fromConfig ? classes.rootFromConfig : classes.root} autoComplete='off'>
         <FormControl className={classes.formControl}>
           <Select
             value={this.state.choice}

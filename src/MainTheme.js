@@ -3,7 +3,7 @@ import { indigo, blueGrey, deepPurple, white, black, amber, orange, grey} from '
 
 const NeutralTheme = createMuiTheme({
   palette: {
-    primary: {main: indigo[500], light: indigo[100], dark: indigo[800], contrastText: white},
+    primary: {main: indigo[500], light: indigo[300], dark: indigo[900], contrastText: white},
     secondary: {main: blueGrey[200],  dark: blueGrey[400], contrastText: black },
     error: { main: orange[900]},
   },
@@ -14,7 +14,7 @@ const NeutralTheme = createMuiTheme({
 
 const BrightTheme = createMuiTheme({
   palette: {
-    primary: {main: deepPurple[400], light: deepPurple[100], dark: deepPurple[700], contrastText: white},
+    primary: {main: deepPurple[400], light: deepPurple[300], dark: deepPurple[900], contrastText: white},
     secondary: {main: orange[400], dark: orange[600], contrastText: black},
     error: { main: orange[900]},
   },
@@ -28,7 +28,7 @@ const BrightTheme = createMuiTheme({
 
 const GreyTheme = createMuiTheme({
   palette: {
-    primary: {main: blueGrey[500], light: blueGrey[100], dark: blueGrey[700], contrastText: black},
+    primary: {main: blueGrey[500], light: blueGrey[300], dark: blueGrey[900], contrastText: black},
     secondary: {main: orange[400], dark: orange[600], contrastText: black},
     error: { main: orange[900]},
   },
@@ -39,7 +39,7 @@ const GreyTheme = createMuiTheme({
 
 const AmberTheme = createMuiTheme({
   palette: {
-    primary: {main: amber[200], light: amber[50], dark: amber[600], contrastText: black},
+    primary: {main: amber[200], light: amber[50], dark: amber[800], contrastText: black},
     secondary: {main: grey[300], dark: grey[500], contrastText: black},
     error: { main: orange[900]},
   },

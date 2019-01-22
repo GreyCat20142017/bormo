@@ -9,7 +9,11 @@ const styles = theme => ({
   btn: {
     margin: theme.spacing.unit,
     padding: theme.spacing.unit,
-    textAlign: 'center'
+    textAlign: 'center',
+    [theme.breakpoints.down('sm')]: {
+      margin: '4px',
+      padding: '4px'
+    }
   }
 });
 

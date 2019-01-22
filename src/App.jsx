@@ -42,10 +42,12 @@ const styles = theme => ({
     }
   },
 
-  contentAside: {
+  paperAside: {
     width: '9%',
+
     [theme.breakpoints.down('xs')]: {
-      width: '15%'
+      width: '15%',
+      minWidth: '65px'
     }
   },
 
@@ -62,23 +64,22 @@ const styles = theme => ({
   },
 
   paperMain: {
-    height: '78vh',
+    height: '100%',
     overflowY: 'auto',
     display: 'flex',
-    padding: '10px',
+    padding: '10px 10px 60px',
     width: '100%',
     justifyContent: 'space-between'
+
   },
 
   paperHeader: {
-    height: '12vh',
     minHeight: '50px',
     overflowY: 'auto'
   },
 
   paperFooter: {
-    height: '10vh',
-    minHeight: '40px',
+    height: '54px',
     overflowY: 'auto'
   },
 
@@ -103,6 +104,11 @@ class App extends React.Component {
     this.onCourseChange = this.onCourseChange.bind(this);
     this.onLessonChange = this.onLessonChange.bind(this);
     this.onThemeSelect = this.onThemeSelect.bind(this);
+    this._lastLesson = 0;
+  }
+
+  get lastLesson() {
+    return this._lastLesson;
   }
 
   componentDidMount() {
@@ -120,12 +126,12 @@ class App extends React.Component {
     this.setState({ isDataLoading: false, data: res.data });
   }
 
-  openAbout = () => {
-    this.setState({isAboutOpen: true});
+  openModal = () => {
+    this.setState({isModalOpen: true});
   }
 
-  closeAbout = () => {
-    this.setState({isAboutOpen: false});
+  closeModal = () => {
+    this.setState({isModalOpen: false});
   }
 
   openConfig = () => {
@@ -144,9 +150,9 @@ class App extends React.Component {
    const {currentCourse, courses} = this.state;
    if (course !== currentCourse) {
      if (ind <=  courses.length) {
-      let lastlesson = courses[ind].lastlesson;
+      this._lastLesson = courses[ind].lastlesson;
       let courseLessons = [];
-      for (let i = 1; i <= lastlesson; i++) {
+      for (let i = 1; i <= this._lastLesson; i++) {
         courseLessons.push(i);
       };
       let courselesson = courseLessons.length > 0 ? courseLessons[0] : null;
@@ -155,6 +161,9 @@ class App extends React.Component {
        currentLesson: courselesson,
        lessons: courseLessons
      });
+    }
+    else {
+      this._lastLesson = 0;
     }
   }
 }
@@ -177,7 +186,7 @@ class App extends React.Component {
     const {classes, themes} = this.props;
     const {
       currentMode, currentCourse, currentLesson, lessons, courses, content,
-      currentTheme, isLoading, isConfigOpen, isAboutOpen,
+      currentTheme, isLoading, isConfigOpen, isModalOpen,
       config, voiceConfig, noSound } = this.state;
 
     return (
@@ -192,15 +201,16 @@ class App extends React.Component {
           <Paper className={classes.paperHeader}>
            <BormoHeader
             theme={currentTheme}
-            openAbout={this.openAbout}
-            closeAbout={this.closeAbout}
+            openModal={this.openModal}
+            closeModal={this.closeModal}
             openConfig={this.openConfig}
             closeConfig={this.closeConfig}
+            onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
             />
           </Paper>
 
           <Paper className={classes.paperMain}>
-            <Paper className={classes.contentAside}>
+            <Paper className={classes.paperAside}>
               <ErrorBoundary>
                 <BormoAside
                  currentMode={currentMode}
@@ -210,6 +220,7 @@ class App extends React.Component {
                  courses={courses}
                  onLessonChange={this.onLessonChange}
                  onCourseChange={this.onCourseChange}
+                 lastLesson={this.lastLesson}
                  />
                </ErrorBoundary>
             </Paper>
@@ -220,6 +231,7 @@ class App extends React.Component {
                <Route path='/bormo' component={Bormo}/>
                <Route path='/control' component={Control}/>
                <Route path='/reversecontrol' component={ReverseControl}/>
+               {/* <Route path='/config' render={()=><BormoConfig/>}/> */}
                <Route component={NotFound} />
              </Switch>
 
@@ -232,19 +244,23 @@ class App extends React.Component {
         </div>
       }
 
+      <BormoConfig
+                  currentTheme={currentTheme}
+                  themes={themes}
+                  config={config}
+                  voiceConfig={voiceConfig}
+                  noSound={noSound}
+                  isConfigOpen={isConfigOpen}
+                  closeConfig={this.closeConfig}
+                  onConfigChange={this.onConfigChange}
+                  onThemeSelect={this.onThemeSelect}/>
       <BormoModal
         title={'Бормотунчик - 2018. '}
         text={about}
-        isModalOpen={isAboutOpen}
-        closeModal={this.closeAbout}/>
+        isModalOpen={isModalOpen}
+        closeModal={this.closeModal}/>
 
-      <BormoConfig
-        config={config}
-        voiceConfig={voiceConfig}
-        noSound={noSound}
-        isConfigOpen={isConfigOpen}
-        closeConfig={this.closeConfig}
-        onConfigChange={this.onConfigChange}/>
+
       </MuiThemeProvider>
      </React.Fragment>
     );

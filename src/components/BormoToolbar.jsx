@@ -1,6 +1,8 @@
 import React, {Fragment} from 'react';
 
-import {withStyles, withTheme} from '@material-ui/core/styles';
+import Menu from '@material-ui/core/Menu';
+
+import {withStyles} from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import HomeIcon from '@material-ui/icons/Home';
 import HeadsetIcon from '@material-ui/icons/Headset';
@@ -11,7 +13,7 @@ import PACIcon from '@material-ui/icons/PlaylistAddCheck';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import ToolbarLink from './ToolbarLink';
-import {getMobileWidthMarker} from '../functions';
+
 
 const styles = theme => ({
   menuList: {
@@ -34,53 +36,74 @@ const styles = theme => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.primary.main,
     textDecoration: 'none',
     margin: theme.spacing.unit,
     padding: theme.spacing.unit,
     transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.08)'
+      backgroundColor: theme.palette.primary.light,
+      color: theme.palette.primary.dark
     },
     '&:focus': {
-      backgroundColor: 'rgba(255, 255, 255, 0.06)'
+       boxShadow: `0 0 0 1px ${theme.palette.primary.light} inset`,
+       backgroundColor: theme.palette.primary.light
     },
      '&:active': {
       backgroundImage: 'linear-gradient(to bottom, ' +
         theme.palette.primary.light + ' 0%, ' +
         theme.palette.primary.main +' 50%, ' +
         theme.palette.primary.light + ' 100%)',
-      boxShadow: '0 3px 5px 2px ' + theme.palette.primary.dark
+      boxShadow: '0 3px 5px 2px ' + theme.palette.primary.dark,
+      color: theme.palette.primary.contrastText,
     }
    },
-   notMobilePart: {
-    display: 'flex',
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
+
+   mobileOn: {
+    display: 'none',
+    [theme.breakpoints.down('sm')]: {
+     display: 'flex'
     }
-   }
+  },
+
+   mobileOff: {
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+     display: 'none'
+    }
+  },
+
+  burgerOpened: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  }
 });
 
-const BormoToolbar = ({classes, theme})  => {
-   const mobileDepends = getMobileWidthMarker(theme) ?
-    <IconButton color='inherit' className={classes.searchButton}>
-      <MenuIcon />
-    </IconButton> :
-    <Fragment>
-      <div className={classes.notMobilePart}>
-       <ToolbarLink to='/spelling' className={classes.menuLink} title='Правописание'>
-        <PACIcon  className={classes.icon} fontSize='small' color='inherit' />
-        <span className={classes.text}>Правописание</span>
-       </ToolbarLink>
+const BurgerContent = ({classes, burgerEl, onBurgerClick, onBurgerClose}) => (
+     <Fragment>
+     <IconButton color='inherit' className={classes.mobileOn} title="Правописание, проверка..." onClick={onBurgerClick}>
+       <MenuIcon />
+     </IconButton>
 
+       <Menu
+          id='burger-menu'
+          anchorEl={burgerEl}
+          onClose={onBurgerClose}
+          open={Boolean(burgerEl)}>
+          <ToolbarLink to='/spelling' className={classes.menuLink} title='Правописание' onClick={onBurgerClose}>
+            <PACIcon  className={classes.icon} fontSize='small' color='inherit' />
+            <span >Правописание</span>
+          </ToolbarLink>
 
-       <ToolbarLink to='/check' className={classes.menuLink} title='Проверка'>
-        <ListAltIcon  className={classes.icon} fontSize='small' color='inherit' />
-        <span className={classes.text}>Проверка</span>
-       </ToolbarLink>
-     </div>
-   </Fragment>;
+          <ToolbarLink to='/check' className={classes.menuLink} title='Проверка' onClick={onBurgerClose}>
+            <ListAltIcon  className={classes.icon} fontSize='small' color='inherit' />
+            <span>Проверка</span>
+          </ToolbarLink>
+        </Menu>
+    </Fragment>
+);
 
-  return (
+const BormoToolbar = ({classes, theme, burgerEl, onBurgerClick, onBurgerClose})  => (
   <nav className={classes.menuList}>
    <ToolbarLink exact to='/' className={classes.menuLink} title='Главная'>
     <HomeIcon  className={classes.icon} fontSize='small' color='inherit' />
@@ -102,10 +125,22 @@ const BormoToolbar = ({classes, theme})  => {
     <span className={classes.text}>Контроль наоборот</span>
    </ToolbarLink>
 
-   {mobileDepends}
+   <div className={classes.mobileOff}>
+     <ToolbarLink to='/spelling' className={classes.menuLink} title='Правописание'>
+      <PACIcon  className={classes.icon} fontSize='small' color='inherit' />
+      <span className={classes.text}>Правописание</span>
+     </ToolbarLink>
+
+     <ToolbarLink to='/check' className={classes.menuLink} title='Проверка'>
+      <ListAltIcon  className={classes.icon} fontSize='small' color='inherit' />
+      <span className={classes.text}>Проверка</span>
+     </ToolbarLink>
+   </div>
+
+   <BurgerContent classes={classes} burgerEl={burgerEl} onBurgerClick={onBurgerClick} onBurgerClose={onBurgerClose}/>
 
   </nav>
-)};
+);
 
 
-export default withTheme()(withStyles(styles)(BormoToolbar));
+export default withStyles(styles)(BormoToolbar);
