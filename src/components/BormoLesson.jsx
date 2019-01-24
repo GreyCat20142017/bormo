@@ -7,12 +7,17 @@ import Fab from '@material-ui/core/Fab';
 
 const styles = theme => ({
   btn: {
+    textAlign: 'center',
+    flexShrink: 1,
     margin: theme.spacing.unit,
     padding: theme.spacing.unit,
-    textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('lg')]: {
       margin: '4px',
-      padding: '4px'
+      padding: '2px'
+    } ,
+    [theme.breakpoints.down('sm')]: {
+      width: '30px',
+      height: '20px'
     }
   }
 });

@@ -14,20 +14,27 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SwapCallsIcon from '@material-ui/icons/SwapCalls';
 
 import BormoLesson from './BormoLesson';
 import SimpleSlider from './SimpleSlider';
 
-import {MAX_LESSONS_BY_PAGE} from '../constants';
+import {PAGE_LIMIT} from '../constants';
 
 const styles = theme => ({
   root: {
     width: '100%',
   },
-  icon: {
-    verticalAlign: 'bottom',
-    height: 20,
-    width: 20,
+ fab: {
+    margin: theme.spacing.unit,
+    marginRight: 'auto',
+    marginLeft: 'auto',
+    fontSize: '80%',
+    textTransform: 'none',
+    flexShrink: 1
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit,
   },
   details: {
     alignItems: 'center',
@@ -42,9 +49,10 @@ const styles = theme => ({
     }
   },
   columnMobile: {
-    flexBasis: '100%',
-    [theme.breakpoints.up('lg')]: {
-      display: 'none'
+    display: 'none',
+    [theme.breakpoints.down('md')]: {
+      flexBasis: '100%',
+      display: 'flex'
     }
   },
   btn: {
@@ -62,7 +70,9 @@ const styles = theme => ({
     padding: '10px',
     listStyle: 'none',
     [theme.breakpoints.down('md')]: {
-      justifyContent: 'center'
+      justifyContent: 'center',
+      margin: 0,
+      padding: '4px'
      }
  },
    expanded: {
@@ -75,7 +85,7 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     padding: theme.spacing.unit,
     textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none'
     }
   },
@@ -97,15 +107,40 @@ const styles = theme => ({
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column'
     }
-  }
-});
+  },
+  swapBtn: {
+    display: 'none',
+    [theme.breakpoints.down('md')]: {
+      flexBasis: '100%',
+      marginTop: '4px',
+      marginBottom: '4px',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      display: 'block'
+    }
+  },
+  hidden: {
+    display: 'none'
+  },
+  extend: {
+    [theme.breakpoints.down('md')]: {
+      display: 'none'
+    }
+}});
 
-const Lessons = ({ lessons,  currentLesson, onLessonChange, classes, expanded, firstPart }) => {
+const getPositionTo = (position, max, limit) => (position +  Math.min(limit, max - position + 1) - 1);
+const getNextTo = (position, max, limit) => ((position + limit) >= max ? position : position + limit);
+const getPrevTo = (position, min, limit) => ((position - limit) <= 1 ? 1 : position - limit);
+const getSpecifiedStart = (state) => (state.expanded && state.paginationStart !== state.paginationStartTmp ?
+      state.paginationStartTmp : state.paginationStart);
+
+const Lessons = ({ lessons,  currentLesson, onLessonChange, classes, expanded, firstPart, start, finish }) => {
   let list = [];
-  for (let i = 0; i < Math.min(MAX_LESSONS_BY_PAGE, lessons.length); i++) {
+
+  for (let i = start; i <= finish; i++) {
     list.push(
     <li key={i} className={firstPart ? classes.lessonLiFirst : classes.lessonLiSecond}>
-      <BormoLesson item={lessons[i]} currentLesson={currentLesson} onLessonChange={onLessonChange}/>
+      <BormoLesson item={lessons[i - 1]} currentLesson={currentLesson} onLessonChange={onLessonChange}/>
     </li>);
   }
   return (
@@ -115,27 +150,48 @@ const Lessons = ({ lessons,  currentLesson, onLessonChange, classes, expanded, f
   )
 };
 
-const BackwardForward = ({currentClass}) => (
+const BackwardForward = ({currentClass, onPrevClick, onNextClick}) => (
   <Fragment>
     <div className={currentClass}>
-      <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу назад'>
+      <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу назад' onClick={onPrevClick}>
       <ArrowBackIcon />
       </IconButton>
     </div>
     <div className={currentClass}>
-      <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу вперед'>
+      <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу вперед' onClick={onNextClick}>
       <ArrowForwardIcon />
       </IconButton>
     </div>
   </Fragment>
 );
 
+
 class BormoLessons extends React.Component {
   static Lessons = Lessons;
+  static defaultProps = {
+    defaultStart:  1
+  };
 
   constructor(props) {
     super(props);
-    this.state = {expanded: false, startPage: 1, firstPart: false};
+    this.state = {
+      expanded: false,
+      firstPart: false,
+      paginationFrom: this.props.defaultStart,
+      paginationTo: this.props.lastLesson,
+      paginationStart: this.props.defaultStart,
+      paginationFinish: getPositionTo(this.props.defaultStart, this.props.lastLesson, PAGE_LIMIT),
+      paginationStartTmp: this.props.defaultStart
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+        paginationTo: nextProps.lastLesson,
+        paginationStart: this.props.defaultStart,
+        paginationFinish: getPositionTo(this.props.defaultStart, nextProps.lastLesson, PAGE_LIMIT),
+        paginationStartTmp: this.props.defaultStart
+    });
   }
 
   onPanelSwitch = () => {
@@ -146,33 +202,80 @@ class BormoLessons extends React.Component {
     this.setState({ [name]: value});
   };
 
+  onSwapParts = () => {
+    this.setState({firstPart: !this.state.firstPart});
+  }
+
+  onPageJump = () => {
+    this.setState({
+      firstPart: true,
+      paginationStart: this.state.paginationStartTmp,
+      paginationFinish:  getPositionTo(this.state.paginationStartTmp, this.state.paginationTo, PAGE_LIMIT)
+    });
+  }
+
+  onPrevClick = () => {
+    const prev = getPrevTo(getSpecifiedStart(this.state), 1, PAGE_LIMIT);
+    this.setState({
+      firstPart: true,
+      paginationStart: prev,
+      paginationStartTmp: prev,
+      paginationFinish:  getPositionTo(prev, this.state.paginationTo, PAGE_LIMIT)
+    });
+  }
+
+  onNextClick = () => {
+    const next = getNextTo(getSpecifiedStart(this.state), this.state.paginationTo, PAGE_LIMIT);
+    this.setState({
+      firstPart: true,
+      paginationStart: next,
+      paginationStartTmp: next,
+      paginationFinish:  getPositionTo(next, this.state.paginationTo, PAGE_LIMIT)
+    });
+  }
 
   render () {
   const {classes, lessons, currentLesson, onLessonChange, lastLesson} = this.props;
-  const {expanded, startPage, firstPart} = this.state;
-  const sliderParams = {default: 1, min: 1, max: lastLesson, step: 1, title: ''};
+  const {expanded, paginationStart, paginationFinish, paginationStartTmp, firstPart} = this.state;
+  const sliderParams = {default: paginationStart, min: 1, max: lastLesson, step: 1, title: ''};
 
   return (lastLesson ?
     <div className={classes.root}>
       <ExpansionPanel expanded={expanded} onChange={this.onPanelSwitch}>
         <ExpansionPanelSummary expanded={expanded} expandIcon={<ExpandMoreIcon />}>
 
-        <BackwardForward currentClass={classes.column}/>
+        <BackwardForward currentClass={classes.column} onPrevClick={this.onPrevClick} onNextClick={this.onNextClick}/>
 
         </ExpansionPanelSummary>
         <Divider/>
         <ExpansionPanelDetails className={classes.details}>
-          <SimpleSlider noTitle={true} name='startPage' params={sliderParams} value={startPage} onSliderChange={this.onSliderChange}/>
+          <SimpleSlider noTitle={true} name='paginationStartTmp' params={sliderParams} value={paginationStartTmp} onSliderChange={this.onSliderChange}/>
         </ExpansionPanelDetails>
         <Divider/>
         <ExpansionPanelActions className={classes.actions}>
-          <Fab size='small' color='inherit' className={classes.btn} title={'Перейти к странице "Урок ' + startPage + ' - ..."'}>
-            <span className={classes.fab}>{startPage}</span>
+          <Fab variant="extended" color='inherit' className={classes.fab}
+            title={'Перейти к странице "Урок ' + paginationStartTmp + ' - ..."'}
+            onClick={this.onPageJump}>
+            {'c ' + paginationStartTmp}
           </Fab>
-            <BackwardForward currentClass={classes.columnMobile}/>
+          <BackwardForward currentClass={classes.columnMobile} onPrevClick={this.onPrevClick} onNextClick={this.onNextClick}/>
          </ExpansionPanelActions>
       </ExpansionPanel>
-      <Lessons lessons={lessons} currentLesson={currentLesson} classes={classes} onLessonChange={onLessonChange} expanded={!expanded} firstPart={firstPart}/>
+      <IconButton size='small' color='secondary'
+        className={expanded ? classes.hidden : classes.swapBtn} title={'Переключить части текущей страницы'} onClick={this.onSwapParts}>
+         <SwapCallsIcon />
+      </IconButton>
+
+      <Lessons
+        lessons={lessons}
+        currentLesson={currentLesson}
+        classes={classes}
+        onLessonChange={onLessonChange}
+        expanded={!expanded}
+        start={paginationStart}
+        finish={paginationFinish}
+        firstPart={firstPart}
+      />
     </div>
     :
     <Typography variant='caption' className={classes.message}>Не выбран курс или нет уроков</Typography>

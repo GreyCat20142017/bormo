@@ -39,12 +39,12 @@ const Courses = ({ courses,  currentCourse, onCourseChange, classes }) => (
 
 class BormoAside extends React.Component {
   static Courses = Courses;
-  // static Lessons = Lessons;
 
    render() {
     const { classes,
       courses, currentCourse, lastLesson,  onCourseChange,
       lessons, currentLesson,  onLessonChange } = this.props;
+
     return (
      <nav className={classes.aside}>
         <div className={classes.asideWrapperCourse}>

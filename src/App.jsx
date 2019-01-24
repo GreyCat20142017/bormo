@@ -37,13 +37,15 @@ const styles = theme => ({
 
   contentMain: {
     width: '90%',
+    fexShrink: 1,
     [theme.breakpoints.down('xs')]: {
       width: '84%',
     }
   },
 
   paperAside: {
-    width: '9%',
+    width: '11%',
+    minWidth: '115px',
 
     [theme.breakpoints.down('xs')]: {
       width: '15%',
@@ -104,11 +106,6 @@ class App extends React.Component {
     this.onCourseChange = this.onCourseChange.bind(this);
     this.onLessonChange = this.onLessonChange.bind(this);
     this.onThemeSelect = this.onThemeSelect.bind(this);
-    this._lastLesson = 0;
-  }
-
-  get lastLesson() {
-    return this._lastLesson;
   }
 
   componentDidMount() {
@@ -150,20 +147,19 @@ class App extends React.Component {
    const {currentCourse, courses} = this.state;
    if (course !== currentCourse) {
      if (ind <=  courses.length) {
-      this._lastLesson = courses[ind].lastlesson;
+      let newLast = courses[ind].lastlesson;
+
       let courseLessons = [];
-      for (let i = 1; i <= this._lastLesson; i++) {
+      for (let i = 1; i <= newLast; i++) {
         courseLessons.push(i);
       };
       let courselesson = courseLessons.length > 0 ? courseLessons[0] : null;
       this.setState({
        currentCourse: course,
        currentLesson: courselesson,
+       lastLesson: newLast,
        lessons: courseLessons
      });
-    }
-    else {
-      this._lastLesson = 0;
     }
   }
 }
@@ -187,7 +183,7 @@ class App extends React.Component {
     const {
       currentMode, currentCourse, currentLesson, lessons, courses, content,
       currentTheme, isLoading, isConfigOpen, isModalOpen,
-      config, voiceConfig, noSound } = this.state;
+      config, voiceConfig, noSound, lastLesson } = this.state;
 
     return (
       <React.Fragment>
@@ -220,7 +216,7 @@ class App extends React.Component {
                  courses={courses}
                  onLessonChange={this.onLessonChange}
                  onCourseChange={this.onCourseChange}
-                 lastLesson={this.lastLesson}
+                 lastLesson={lastLesson}
                  />
                </ErrorBoundary>
             </Paper>
