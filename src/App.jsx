@@ -24,8 +24,8 @@ import ReverseControl from './pages/ReverseControl';
 import NotFound from './pages/NotFound';
 
 import './App.css';
-import {getDataByCondition,  getArrayFromObject, getInitialState} from './functions';
-import {GET_DATA_PATH, GET_COURSES_PATH} from './constants';
+import {getArrayFromObject, getInitialState} from './functions';
+import {DATA_PATH, COURSES_PATH} from './constants';
 
 import {about} from './about';
 
@@ -110,17 +110,26 @@ class App extends React.Component {
 
   componentDidMount() {
     this.getCoursesData();
-    this.getBasicData();
   }
 
   getCoursesData = async () => {
-    const res = await axios.get(GET_COURSES_PATH);
-    this.setState({ isLoading: false, courses: res.data });
+    const {apiURL, useAPIData} = this.state.config;
+    const res = useAPIData ? await axios.get(apiURL) : await axios.get(COURSES_PATH);
+    this.setState({
+      isLoading: false,
+      courses: useAPIData ? res.data.courses : res.data
+    });
   }
 
-  getBasicData = async () => {
-    const res = await axios.get(GET_DATA_PATH);
-    this.setState({ isDataLoading: false, data: res.data });
+  getLessonData = async (lesson) => {
+    const {apiURL, useAPIData} = this.state.config;
+    const {currentCourse, currentLesson} = this.state;
+    const res = useAPIData ? await axios.get(`${apiURL}${currentCourse}/${currentLesson}`) : await axios.get(DATA_PATH);
+    this.setState({
+      isDataLoading: false,
+      content: useAPIData ? res.data.content : res.data.filter(el => (el.course === currentCourse && el.lesson === currentLesson)),
+      currentLesson: lesson
+    });
   }
 
   openModal = () => {
@@ -153,12 +162,13 @@ class App extends React.Component {
       for (let i = 1; i <= newLast; i++) {
         courseLessons.push(i);
       };
-      let courselesson = courseLessons.length > 0 ? courseLessons[0] : null;
+
       this.setState({
        currentCourse: course,
-       currentLesson: courselesson,
        lastLesson: newLast,
-       lessons: courseLessons
+       lessons: courseLessons,
+       currentLesson: null,
+       content: []
      });
     }
   }
@@ -166,11 +176,7 @@ class App extends React.Component {
 
   onLessonChange (lesson) {
    if (lesson !== this.state.currentLesson) {
-    const newData = getDataByCondition(this.state.lessons, this.state.currentCourse, lesson);
-    this.setState({
-      currentLesson: lesson,
-      content: newData.content
-    });
+    this.getLessonData(lesson);
    }
   }
 
@@ -224,10 +230,9 @@ class App extends React.Component {
 
               <Switch>
                <Route exact path='/' component={Main}/>
-               <Route path='/bormo' component={Bormo}/>
+               <Route path='/bormotun'  render={() => <Bormo content={content}/>} />
                <Route path='/control' component={Control}/>
                <Route path='/reversecontrol' component={ReverseControl}/>
-               {/* <Route path='/config' render={()=><BormoConfig/>}/> */}
                <Route component={NotFound} />
              </Switch>
 

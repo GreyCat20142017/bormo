@@ -194,7 +194,8 @@ class BormoLessons extends React.Component {
     });
   }
 
-  onPanelSwitch = () => {
+  onPanelSwitch = (evt) => {
+    console.log(evt);
     this.setState({expanded: !this.state.expanded});
   }
 

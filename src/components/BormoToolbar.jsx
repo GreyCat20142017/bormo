@@ -110,7 +110,7 @@ const BormoToolbar = ({classes, theme, burgerEl, onBurgerClick, onBurgerClose}) 
     <span className={classes.text}>Главная</span>
    </ToolbarLink>
 
-   <ToolbarLink to='/bormo' className={classes.menuLink} title='Бормотание'>
+   <ToolbarLink to='/bormotun' className={classes.menuLink} title='Бормотание'>
      <HeadsetIcon  className={classes.icon} fontSize='small' color='inherit' />
      <span className={classes.text}>Бормотание</span>
     </ToolbarLink>

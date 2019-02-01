@@ -6,8 +6,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+
+import classNames from 'classnames';
 
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import ImportExportIcon from '@material-ui/icons/ImportExport';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -18,7 +22,7 @@ import { voiceParams } from '../constants';
 
 const styles = theme => ({
   configWrapper: {
-    margin: '20px auto',
+    margin: '32px auto',
     padding: theme.spacing.unit
   },
   configButton: {
@@ -26,14 +30,17 @@ const styles = theme => ({
   },
   configGroup: {
     margin: theme.spacing.unit,
-    marginTop: theme.spacing.unit * 2
   },
   rightIcon: {
     marginLeft: theme.spacing.unit
   },
+  configPaper: {
+    marginBottom: '32px'
+  }
 });
 
 class BormoConfig extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {...props.config, ...props.voiceConfig, noSound: props.noSound};
@@ -47,15 +54,25 @@ class BormoConfig extends React.Component {
     this.setState({ [name]: value});
   };
 
-  sayTest = () => {
+  onInputChange = name => evt => {
+    this.setState({
+      [name]: evt.target.value,
+    });
+  };
 
-  }
+ checkVoice = () => {
+
+ };
+
+ checkAPI = () => {
+
+ };
 
   render() {
    const {isConfigOpen, classes, onThemeSelect, currentTheme, themes} = this.props;
    const {
     instantStart, instantNextMode, countErrorAtPrompt,
-    onlyEnglish, pitch, volume, noSound} = this.state;
+    onlyEnglish, pitch, volume, noSound, useAPIData, apiURL} = this.state;
 
    if (isConfigOpen) {
     return (
@@ -67,7 +84,7 @@ class BormoConfig extends React.Component {
       <div className={classes.configWrapper}>
         <Typography variant='h5' className={classes.configGroup}>Настройка приложения</Typography>
         <Typography variant='caption' className={classes.configGroup}>Общие параметры</Typography>
-        <Paper>
+        <Paper className={classes.configPaper}>
           <FormGroup className={classes.configGroup}>
           <FormControlLabel
             control={
@@ -103,8 +120,40 @@ class BormoConfig extends React.Component {
           />
         </FormGroup>
       </Paper>
+
+      <Typography variant='caption' className={classes.configGroup}>Адрес API</Typography>
+      <Paper className={classes.configPaper}>
+        <FormGroup  className={classes.configGroup}>
+         <FormControlLabel
+            control={
+              <Switch
+                checked={useAPIData}
+                onChange={this.onOptionChange('useAPIData')}
+                value='useAPIData'
+                color='primary'
+              />
+            }
+            label='использовать данные с удаленного сервера'
+          />
+         <TextField
+          id="outlined-dense"
+          label="адрес (например, http://localhost:3338/)"
+          className={classNames(classes.textField, classes.dense)}
+          margin="dense"
+          value={apiURL}
+          onChange={this.onInputChange('apiURL')}
+          variant="outlined"
+         />
+
+        </FormGroup>
+        <Button size='small' variant='contained' color='secondary' onClick={this.checkAPI} className={classes.configButton}>
+         Тест
+        <ImportExportIcon className={classes.rightIcon} fontSize='small'/>
+       </Button>
+       </Paper>
+
       <Typography variant='caption' className={classes.configGroup}>Параметры звука</Typography>
-      <Paper>
+      <Paper className={classes.configPaper}>
         <FormGroup  className={classes.configGroup}>
            <FormControlLabel
             control={<Switch checked={onlyEnglish} onChange={this.onOptionChange('onlyEnglish')} value='onlyEnglish' color='primary'/>}
@@ -119,14 +168,14 @@ class BormoConfig extends React.Component {
           <SimpleSlider name='pitch' params={voiceParams.pitch} value={pitch} onSliderChange={this.onSliderChange}/>
 
         </FormGroup>
-        <Button variant='contained' color='secondary' onClick={this.sayTest} className={classes.configButton}>
+        <Button size='small' variant='contained' color='secondary' onClick={this.checkVoice} className={classes.configButton}>
           Тест
           <VolumeUpIcon className={classes.rightIcon} fontSize='small'/>
         </Button>
       </Paper>
 
       <Typography variant='caption' className={classes.configGroup}>Цветовая тема (параметр применяется при выборе)</Typography>
-      <Paper>
+      <Paper  className={classes.configPaper}>
         <BormoThemeSelect onThemeSelect={onThemeSelect} currentTheme={currentTheme} themes={themes} fromConfig={true}/>
       </Paper>
 

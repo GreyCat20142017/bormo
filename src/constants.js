@@ -6,7 +6,7 @@ export const voiceParams = {
   pitch: {default: 1, min: 0, max: 2, step: 0.1, title: 'Высота звука'}
 };
 
-export const GET_DATA_PATH = 'data/bormo.json'
-export const GET_COURSES_PATH = 'data/courses.json'
+export const DATA_PATH = 'data/bormo.json'
+export const COURSES_PATH = 'data/courses.json'
 
 export const PAGE_LIMIT = 10;
