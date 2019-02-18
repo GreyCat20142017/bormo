@@ -51,8 +51,8 @@ export const getInitialState = (currentTheme) => (
       checkedModes: {
 
       },
-      useAPIData: false,
-      apiURL: 'http://localhost:3338/'
+      useAPIData: true,
+      apiURL: 'http://localhost:3377/'
     },
     noSound: true,
     voiceConfig: {

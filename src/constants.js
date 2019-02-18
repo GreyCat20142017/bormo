@@ -10,3 +10,5 @@ export const DATA_PATH = 'data/bormo.json'
 export const COURSES_PATH = 'data/courses.json'
 
 export const PAGE_LIMIT = 10;
+
+export const PAGINATION_STEP = 20;

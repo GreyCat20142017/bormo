@@ -114,20 +114,20 @@ class App extends React.Component {
 
   getCoursesData = async () => {
     const {apiURL, useAPIData} = this.state.config;
-    const res = useAPIData ? await axios.get(apiURL) : await axios.get(COURSES_PATH);
+    const res = useAPIData ? await axios.get(`${apiURL}courses/`) : await axios.get(COURSES_PATH);
     this.setState({
       isLoading: false,
-      courses: useAPIData ? res.data.courses : res.data
+      courses: res.data
     });
   }
 
   getLessonData = async (lesson) => {
     const {apiURL, useAPIData} = this.state.config;
     const {currentCourse, currentLesson} = this.state;
-    const res = useAPIData ? await axios.get(`${apiURL}${currentCourse}/${currentLesson}`) : await axios.get(DATA_PATH);
+    const res = useAPIData ? await axios.get(`${apiURL}courses/${currentCourse}/${lesson}`) : await axios.get(DATA_PATH);
     this.setState({
       isDataLoading: false,
-      content: useAPIData ? res.data.content : res.data.filter(el => (el.course === currentCourse && el.lesson === currentLesson)),
+      content: useAPIData ? res.data : res.data.filter(el => (el.course === currentCourse && el.lesson === currentLesson)),
       currentLesson: lesson
     });
   }

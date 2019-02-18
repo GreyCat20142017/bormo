@@ -187,15 +187,13 @@ class BormoLessons extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-        paginationTo: nextProps.lastLesson,
-        paginationStart: this.props.defaultStart,
-        paginationFinish: getPositionTo(this.props.defaultStart, nextProps.lastLesson, PAGE_LIMIT),
-        paginationStartTmp: this.props.defaultStart
+        paginationStart: nextProps.currentLesson || this.props.defaultStart,
+        paginationFinish: getPositionTo(nextProps.currentLesson || this.props.defaultStart, nextProps.lastLesson, PAGE_LIMIT),
+        paginationStartTmp: this.props.currentLesson || this.props.defaultStart
     });
   }
 
   onPanelSwitch = (evt) => {
-    console.log(evt);
     this.setState({expanded: !this.state.expanded});
   }
 
@@ -204,10 +202,13 @@ class BormoLessons extends React.Component {
   };
 
   onSwapParts = () => {
+    const newFirstPartState = !this.state.firstPart;
+    this.props.onLessonChange(newFirstPartState ? this.state.paginationStart : getPositionTo(this.state.paginationStart, this.state.paginationTo, PAGE_LIMIT))
     this.setState({firstPart: !this.state.firstPart});
   }
 
   onPageJump = () => {
+    this.props.onLessonChange(this.state.paginationStartTmp);
     this.setState({
       firstPart: true,
       paginationStart: this.state.paginationStartTmp,
@@ -217,6 +218,7 @@ class BormoLessons extends React.Component {
 
   onPrevClick = () => {
     const prev = getPrevTo(getSpecifiedStart(this.state), 1, PAGE_LIMIT);
+    this.props.onLessonChange(prev);
     this.setState({
       firstPart: true,
       paginationStart: prev,
@@ -227,6 +229,7 @@ class BormoLessons extends React.Component {
 
   onNextClick = () => {
     const next = getNextTo(getSpecifiedStart(this.state), this.state.paginationTo, PAGE_LIMIT);
+    this.props.onLessonChange(next);
     this.setState({
       firstPart: true,
       paginationStart: next,
