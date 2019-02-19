@@ -3,7 +3,7 @@ import {Route, Redirect} from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 
 
@@ -35,7 +35,7 @@ class NotFound extends React.Component {
     this.state = {needRedirect: false};
   }
 
-  setRedirect = () =>  {
+  setRedirect = () => {
     this.setState({needRedirect: true});
   }
 
@@ -43,8 +43,8 @@ class NotFound extends React.Component {
     const {classes} = this.props;
     const needRedirect = this.state.needRedirect;
     if (needRedirect) {
-      return  (
-        <Route  render={() => (<Redirect to='/' />)} />
+      return (
+        <Route render={() => (<Redirect to='/'/>)}/>
       )
     }
     return (
@@ -56,7 +56,7 @@ class NotFound extends React.Component {
           className={classes.button}
           onClick={this.setRedirect}>
           {'Перейти на главную'}
-          <ReportIcon className={classNames(classes.rightIcon, classes.iconSmall)} />
+          <ReportIcon className={classNames(classes.rightIcon, classes.iconSmall)}/>
         </Button>
       </section>)
   }

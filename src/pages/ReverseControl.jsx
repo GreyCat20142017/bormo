@@ -1,9 +1,9 @@
 import React from 'react';
 
 const ReverseControl = () => (
-	<div>
-		ReverseControl
-	</div>
+  <div>
+    ReverseControl
+  </div>
 );
 
 export default ReverseControl;

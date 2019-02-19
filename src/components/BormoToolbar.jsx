@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 
   asideText: {
-   [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none',
     }
   },
@@ -46,30 +46,30 @@ const styles = theme => ({
       color: theme.palette.primary.dark
     },
     '&:focus': {
-       boxShadow: `0 0 0 1px ${theme.palette.primary.light} inset`,
-       backgroundColor: theme.palette.primary.light
+      boxShadow: `0 0 0 1px ${theme.palette.primary.light} inset`,
+      backgroundColor: theme.palette.primary.light
     },
-     '&:active': {
+    '&:active': {
       backgroundImage: 'linear-gradient(to bottom, ' +
         theme.palette.primary.light + ' 0%, ' +
-        theme.palette.primary.main +' 50%, ' +
+        theme.palette.primary.main + ' 50%, ' +
         theme.palette.primary.light + ' 100%)',
       boxShadow: '0 3px 5px 2px ' + theme.palette.primary.dark,
       color: theme.palette.primary.contrastText,
     }
-   },
+  },
 
-   mobileOn: {
+  mobileOn: {
     display: 'none',
     [theme.breakpoints.down('sm')]: {
-     display: 'flex'
+      display: 'flex'
     }
   },
 
-   mobileOff: {
+  mobileOff: {
     display: 'flex',
     [theme.breakpoints.down('sm')]: {
-     display: 'none'
+      display: 'none'
     }
   },
 
@@ -80,64 +80,64 @@ const styles = theme => ({
 });
 
 const BurgerContent = ({classes, burgerEl, onBurgerClick, onBurgerClose}) => (
-     <Fragment>
-     <IconButton color='inherit' className={classes.mobileOn} title="Правописание, проверка..." onClick={onBurgerClick}>
-       <MenuIcon />
-     </IconButton>
+  <Fragment>
+    <IconButton color='inherit' className={classes.mobileOn} title="Правописание, проверка..." onClick={onBurgerClick}>
+      <MenuIcon/>
+    </IconButton>
 
-       <Menu
-          id='burger-menu'
-          anchorEl={burgerEl}
-          onClose={onBurgerClose}
-          open={Boolean(burgerEl)}>
-          <ToolbarLink to='/spelling' className={classes.menuLink} title='Правописание' onClick={onBurgerClose}>
-            <PACIcon  className={classes.icon} fontSize='small' color='inherit' />
-            <span >Правописание</span>
-          </ToolbarLink>
+    <Menu
+      id='burger-menu'
+      anchorEl={burgerEl}
+      onClose={onBurgerClose}
+      open={Boolean(burgerEl)}>
+      <ToolbarLink to='/spelling' className={classes.menuLink} title='Правописание' onClick={onBurgerClose}>
+        <PACIcon className={classes.icon} fontSize='small' color='inherit'/>
+        <span>Правописание</span>
+      </ToolbarLink>
 
-          <ToolbarLink to='/check' className={classes.menuLink} title='Проверка' onClick={onBurgerClose}>
-            <ListAltIcon  className={classes.icon} fontSize='small' color='inherit' />
-            <span>Проверка</span>
-          </ToolbarLink>
-        </Menu>
-    </Fragment>
+      <ToolbarLink to='/check' className={classes.menuLink} title='Проверка' onClick={onBurgerClose}>
+        <ListAltIcon className={classes.icon} fontSize='small' color='inherit'/>
+        <span>Проверка</span>
+      </ToolbarLink>
+    </Menu>
+  </Fragment>
 );
 
-const BormoToolbar = ({classes, theme, burgerEl, onBurgerClick, onBurgerClose})  => (
+const BormoToolbar = ({classes, theme, burgerEl, onBurgerClick, onBurgerClose}) => (
   <nav className={classes.menuList}>
-   <ToolbarLink exact to='/' className={classes.menuLink} title='Главная'>
-    <HomeIcon  className={classes.icon} fontSize='small' color='inherit' />
-    <span className={classes.text}>Главная</span>
-   </ToolbarLink>
-
-   <ToolbarLink to='/bormotun' className={classes.menuLink} title='Бормотание'>
-     <HeadsetIcon  className={classes.icon} fontSize='small' color='inherit' />
-     <span className={classes.text}>Бормотание</span>
+    <ToolbarLink exact to='/' className={classes.menuLink} title='Главная'>
+      <HomeIcon className={classes.icon} fontSize='small' color='inherit'/>
+      <span className={classes.text}>Главная</span>
     </ToolbarLink>
 
-   <ToolbarLink to='/control' className={classes.menuLink} title='Контроль'>
-    <DoneIcon  className={classes.icon} fontSize='small' color='inherit' />
-    <span className={classes.text}>Контроль</span>
-   </ToolbarLink>
+    <ToolbarLink to='/bormotun' className={classes.menuLink} title='Бормотание'>
+      <HeadsetIcon className={classes.icon} fontSize='small' color='inherit'/>
+      <span className={classes.text}>Бормотание</span>
+    </ToolbarLink>
 
-   <ToolbarLink to='/reversecontrol' className={classes.menuLink} title='Контроль наоборот'>
-    <DoneAllIcon  className={classes.icon} fontSize='small' color='inherit' />
-    <span className={classes.text}>Контроль наоборот</span>
-   </ToolbarLink>
+    <ToolbarLink to='/control' className={classes.menuLink} title='Контроль'>
+      <DoneIcon className={classes.icon} fontSize='small' color='inherit'/>
+      <span className={classes.text}>Контроль</span>
+    </ToolbarLink>
 
-   <div className={classes.mobileOff}>
-     <ToolbarLink to='/spelling' className={classes.menuLink} title='Правописание'>
-      <PACIcon  className={classes.icon} fontSize='small' color='inherit' />
-      <span className={classes.text}>Правописание</span>
-     </ToolbarLink>
+    <ToolbarLink to='/reversecontrol' className={classes.menuLink} title='Контроль наоборот'>
+      <DoneAllIcon className={classes.icon} fontSize='small' color='inherit'/>
+      <span className={classes.text}>Контроль наоборот</span>
+    </ToolbarLink>
 
-     <ToolbarLink to='/check' className={classes.menuLink} title='Проверка'>
-      <ListAltIcon  className={classes.icon} fontSize='small' color='inherit' />
-      <span className={classes.text}>Проверка</span>
-     </ToolbarLink>
-   </div>
+    <div className={classes.mobileOff}>
+      <ToolbarLink to='/spelling' className={classes.menuLink} title='Правописание'>
+        <PACIcon className={classes.icon} fontSize='small' color='inherit'/>
+        <span className={classes.text}>Правописание</span>
+      </ToolbarLink>
 
-   <BurgerContent classes={classes} burgerEl={burgerEl} onBurgerClick={onBurgerClick} onBurgerClose={onBurgerClose}/>
+      <ToolbarLink to='/check' className={classes.menuLink} title='Проверка'>
+        <ListAltIcon className={classes.icon} fontSize='small' color='inherit'/>
+        <span className={classes.text}>Проверка</span>
+      </ToolbarLink>
+    </div>
+
+    <BurgerContent classes={classes} burgerEl={burgerEl} onBurgerClick={onBurgerClick} onBurgerClose={onBurgerClose}/>
 
   </nav>
 );

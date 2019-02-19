@@ -11,4 +11,5 @@ export const COURSES_PATH = 'data/courses.json'
 
 export const PAGE_LIMIT = 10;
 
-export const PAGINATION_STEP = 20;
+//Изменять только одновременно с константой в bormob
+export const WORDS_PER_LESSON = 20;

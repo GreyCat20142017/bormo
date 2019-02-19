@@ -25,7 +25,7 @@ import NotFound from './pages/NotFound';
 
 import './App.css';
 import {getArrayFromObject, getInitialState} from './functions';
-import {DATA_PATH, COURSES_PATH} from './constants';
+import {DATA_PATH, COURSES_PATH, WORDS_PER_LESSON} from './constants';
 
 import {about} from './about';
 
@@ -89,7 +89,7 @@ const styles = theme => ({
 
 const Loader = ({classes}) => (
   <Paper className={classes.paperLoader}>
-     <Typography variant='caption' color='primary'>Загрузка...</Typography>
+    <Typography variant='caption' color='primary'>Загрузка...</Typography>
   </Paper>
 );
 
@@ -97,7 +97,7 @@ class App extends React.Component {
   static Loader = Loader;
 
   static defaultProps = {
-   themes: getArrayFromObject(MainTheme)
+    themes: getArrayFromObject(MainTheme)
   }
 
   constructor(props) {
@@ -127,7 +127,12 @@ class App extends React.Component {
     const res = useAPIData ? await axios.get(`${apiURL}courses/${currentCourse}/${lesson}`) : await axios.get(DATA_PATH);
     this.setState({
       isDataLoading: false,
-      content: useAPIData ? res.data : res.data.filter(el => (el.course === currentCourse && el.lesson === currentLesson)),
+      content: useAPIData ?
+        res.data :
+        res.data.filter(el => el.course === currentCourse).filter((el, ind) => {
+          const startInd = (parseInt(lesson, 10) - 1) * WORDS_PER_LESSON || 0;
+          return (ind >= startInd && ind < (startInd + WORDS_PER_LESSON));
+        }),
       currentLesson: lesson
     });
   }
@@ -150,37 +155,37 @@ class App extends React.Component {
 
   onConfigChange = () => {
 
- }
+  }
 
- onCourseChange (course, ind)  {
-   const {currentCourse, courses} = this.state;
-   if (course !== currentCourse) {
-     if (ind <=  courses.length) {
-      let newLast = courses[ind].lastlesson;
+  onCourseChange(course, ind) {
+    const {currentCourse, courses} = this.state;
+    if (course !== currentCourse) {
+      if (ind <= courses.length) {
+        let newLast = courses[ind].lastlesson;
 
-      let courseLessons = [];
-      for (let i = 1; i <= newLast; i++) {
-        courseLessons.push(i);
-      };
+        let courseLessons = [];
+        for (let i = 1; i <= newLast; i++) {
+          courseLessons.push(i);
+        }
 
-      this.setState({
-       currentCourse: course,
-       lastLesson: newLast,
-       lessons: courseLessons,
-       currentLesson: null,
-       content: []
-     });
+        this.setState({
+          currentCourse: course,
+          lastLesson: newLast,
+          lessons: courseLessons,
+          currentLesson: null,
+          content: []
+        });
+      }
     }
   }
-}
 
-  onLessonChange (lesson) {
-   if (lesson !== this.state.currentLesson) {
-    this.getLessonData(lesson);
-   }
+  onLessonChange(lesson) {
+    if (lesson !== this.state.currentLesson) {
+      this.getLessonData(lesson);
+    }
   }
 
-  onThemeSelect (themeKey) {
+  onThemeSelect(themeKey) {
     this.setState({currentTheme: MainTheme[themeKey]});
   }
 
@@ -189,81 +194,82 @@ class App extends React.Component {
     const {
       currentMode, currentCourse, currentLesson, lessons, courses, content,
       currentTheme, isLoading, isConfigOpen, isModalOpen,
-      config, voiceConfig, noSound, lastLesson } = this.state;
+      config, voiceConfig, noSound, lastLesson
+    } = this.state;
 
     return (
       <React.Fragment>
-        <CssBaseline />
+        <CssBaseline/>
         <MuiThemeProvider theme={currentTheme.themeObject}>
-        {isLoading ?
-          <Loader classes={classes}/>
-        :
-        <div className={classes.app}>
+          {isLoading ?
+            <Loader classes={classes}/>
+            :
+            <div className={classes.app}>
 
-          <Paper className={classes.paperHeader}>
-           <BormoHeader
-            theme={currentTheme}
-            openModal={this.openModal}
-            closeModal={this.closeModal}
-            openConfig={this.openConfig}
-            closeConfig={this.closeConfig}
-            onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
-            />
-          </Paper>
-
-          <Paper className={classes.paperMain}>
-            <Paper className={classes.paperAside}>
-              <ErrorBoundary>
-                <BormoAside
-                 currentMode={currentMode}
-                 currentCourse={currentCourse}
-                 currentLesson={currentLesson}
-                 lessons={lessons}
-                 courses={courses}
-                 onLessonChange={this.onLessonChange}
-                 onCourseChange={this.onCourseChange}
-                 lastLesson={lastLesson}
-                 />
-               </ErrorBoundary>
-            </Paper>
-            <Paper className={classes.contentMain} content={content}>
-
-              <Switch>
-               <Route exact path='/' component={Main}/>
-               <Route path='/bormotun'  render={() => <Bormo content={content}/>} />
-               <Route path='/control' component={Control}/>
-               <Route path='/reversecontrol' component={ReverseControl}/>
-               <Route component={NotFound} />
-             </Switch>
-
-           </Paper>
-          </Paper>
-
-          <Paper className={classes.paperFooter}>
-            <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}/>
-          </Paper>
-        </div>
-      }
-
-      <BormoConfig
-                  currentTheme={currentTheme}
-                  themes={themes}
-                  config={config}
-                  voiceConfig={voiceConfig}
-                  noSound={noSound}
-                  isConfigOpen={isConfigOpen}
+              <Paper className={classes.paperHeader}>
+                <BormoHeader
+                  theme={currentTheme}
+                  openModal={this.openModal}
+                  closeModal={this.closeModal}
+                  openConfig={this.openConfig}
                   closeConfig={this.closeConfig}
-                  onConfigChange={this.onConfigChange}
-                  onThemeSelect={this.onThemeSelect}/>
-      <BormoModal
-        title={'Бормотунчик - 2018. '}
-        text={about}
-        isModalOpen={isModalOpen}
-        closeModal={this.closeModal}/>
+                  onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
+                />
+              </Paper>
+
+              <Paper className={classes.paperMain}>
+                <Paper className={classes.paperAside}>
+                  <ErrorBoundary>
+                    <BormoAside
+                      currentMode={currentMode}
+                      currentCourse={currentCourse}
+                      currentLesson={currentLesson}
+                      lessons={lessons}
+                      courses={courses}
+                      onLessonChange={this.onLessonChange}
+                      onCourseChange={this.onCourseChange}
+                      lastLesson={lastLesson}
+                    />
+                  </ErrorBoundary>
+                </Paper>
+                <Paper className={classes.contentMain} content={content}>
+
+                  <Switch>
+                    <Route exact path='/' component={Main}/>
+                    <Route path='/bormotun' render={() => <Bormo content={content}/>}/>
+                    <Route path='/control' component={Control}/>
+                    <Route path='/reversecontrol' component={ReverseControl}/>
+                    <Route component={NotFound}/>
+                  </Switch>
+
+                </Paper>
+              </Paper>
+
+              <Paper className={classes.paperFooter}>
+                <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}/>
+              </Paper>
+            </div>
+          }
+
+          <BormoConfig
+            currentTheme={currentTheme}
+            themes={themes}
+            config={config}
+            voiceConfig={voiceConfig}
+            noSound={noSound}
+            isConfigOpen={isConfigOpen}
+            closeConfig={this.closeConfig}
+            onConfigChange={this.onConfigChange}
+            onThemeSelect={this.onThemeSelect}/>
+          <BormoModal
+            title={'Бормотунчик - 2018. '}
+            text={about}
+            isModalOpen={isModalOpen}
+            closeModal={this.closeModal}/>
 
 
-      </MuiThemeProvider>
-     </React.Fragment>
+        </MuiThemeProvider>
+      </React.Fragment>
     );
   }
 }

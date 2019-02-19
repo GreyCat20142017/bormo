@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -13,18 +13,18 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 
 const styles = theme => ({
   asideText: {
-   color: 'rgba(0, 0, 0, 0.26)',
-   fontWeight: '700',
-   textTransform: 'uppercase',
-   [theme.breakpoints.down('md')]: {
+    color: 'rgba(0, 0, 0, 0.26)',
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     }
   },
   asideTextActive: {
-   color: theme.palette.primary.main,
-   fontWeight: '700',
-   textTransform: 'uppercase',
-   [theme.breakpoints.down('md')]: {
+    color: theme.palette.primary.main,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     }
   },
@@ -41,11 +41,16 @@ const styles = theme => ({
 
 const CourseIcon = ({name, color, fontSize}) => {
   switch (name) {
-    case 'basic': return (<ReceiptIcon color={color} fontSize={fontSize}/>)
-    case 'ABC': return (<FormatColorTextIcon color={color} fontSize={fontSize}/>)
-    case 'book': return (<LibraryBooksIcon color={color} fontSize={fontSize}/>)
-    case 'other': return (<InboxIcon color={color} fontSize={fontSize}/>)
-    default:  return (<InboxIcon color={color} fontSize={fontSize}/>)
+    case 'basic':
+      return (<ReceiptIcon color={color} fontSize={fontSize}/>)
+    case 'ABC':
+      return (<FormatColorTextIcon color={color} fontSize={fontSize}/>)
+    case 'book':
+      return (<LibraryBooksIcon color={color} fontSize={fontSize}/>)
+    case 'other':
+      return (<InboxIcon color={color} fontSize={fontSize}/>)
+    default:
+      return (<InboxIcon color={color} fontSize={fontSize}/>)
   }
 }
 
@@ -58,13 +63,16 @@ class BormoCourse extends React.Component {
     const {currentCourse, item, classes} = this.props;
 
     return (
-      <ListItem button key={item.name} title={item.name.toUpperCase()} onClick={this.onCourseClick} className={classes.asideItem}>
+      <ListItem button key={item.name} title={item.name.toUpperCase()} onClick={this.onCourseClick}
+                className={classes.asideItem}>
         <ListItemIcon className={classes.asideIcon}>
-          <CourseIcon name={item.name} color={(item.name === currentCourse ) ? 'primary' : 'disabled'} fontSize='small'/>
+          <CourseIcon name={item.name} color={(item.name === currentCourse) ? 'primary' : 'disabled'} fontSize='small'/>
         </ListItemIcon>
-        <ListItemText primary={item.name} className={item.name === currentCourse ? classes.asideTextActive : classes.asideText} disableTypography={true}/>
+        <ListItemText primary={item.name}
+                      className={item.name === currentCourse ? classes.asideTextActive : classes.asideText}
+                      disableTypography={true}/>
       </ListItem>
-      )
+    )
   }
 }
 

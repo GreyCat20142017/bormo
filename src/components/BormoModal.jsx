@@ -7,11 +7,12 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const renderTextFromArray = (text) => text.map(
-   (paragraph, ind) => (paragraph === '' ? <br key={ind}/>  : <DialogContentText variant='body2' key={ind}> {paragraph} </DialogContentText>)
+  (paragraph, ind) => (paragraph === '' ? <br key={ind}/> :
+    <DialogContentText variant='body2' key={ind}> {paragraph} </DialogContentText>)
 );
 
 const BormoModal = ({isModalOpen, title, subtitle, text, closeModal}) => {
-   if (isModalOpen) {
+  if (isModalOpen) {
     return (
       <div>
         <Dialog
@@ -22,7 +23,7 @@ const BormoModal = ({isModalOpen, title, subtitle, text, closeModal}) => {
         >
           <DialogTitle id='alert-dialog-title'>{title}</DialogTitle>
           <DialogContent>
-            {Array.isArray(text) ? renderTextFromArray(text): text}
+            {Array.isArray(text) ? renderTextFromArray(text) : text}
           </DialogContent>
           <DialogActions>
             <Button onClick={closeModal} variant='contained' color='primary' autoFocus>
@@ -32,8 +33,7 @@ const BormoModal = ({isModalOpen, title, subtitle, text, closeModal}) => {
         </Dialog>
       </div>
     )
-  }
-  else {
+  } else {
     return (null)
   }
 }

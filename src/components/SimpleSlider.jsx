@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
 
@@ -11,8 +11,8 @@ const styles = theme => ({
     margin: 0
   },
   slider: {
-    padding: theme.spacing.unit/2,
-    margin: theme.spacing.unit/2
+    padding: theme.spacing.unit / 2,
+    margin: theme.spacing.unit / 2
   }
 });
 
@@ -23,24 +23,29 @@ class SimpleSlider extends React.Component {
     verticalOnMobile: false
   }
 
-  state = {
-    value: this.props.value || this.props.params.default || 1
-  };
+  constructor(props) {
+    super(props);
+    this.state = {value: this.props.params.default};
+  }
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-    this.props.onSliderChange(this.props.name, value);
+  componentWillReceiveProps(nextProps) {
+    this.setState({value: nextProps.params.default});
+  }
+
+  handleChange = (event, newValue) => {
+    this.props.onSliderChange(this.props.name, newValue);
+    this.setState({value: newValue});
   };
 
   render() {
-    const { classes, params, noTitle, verticalOnMobile } = this.props;
-    const { value } = this.state;
+    const {classes, params, noTitle, verticalOnMobile} = this.props;
+    const {value} = this.state;
 
     return (
       <div className={verticalOnMobile ? classes.sliderWrapperVertical : classes.sliderWrapper}>
-        {noTitle ?  null : <Typography id='Slider'>{params.title + ': ' +  Math.round(10 * value) / 10}</Typography>}
+        {noTitle ? null : <Typography id='Slider'>{params.title + ': ' + Math.round(10 * value) / 10}</Typography>}
         <Slider
-          classes={{ container: classes.slider }}
+          classes={{container: classes.slider}}
           value={value}
           disabled={params.min >= params.max}
           min={params.min}

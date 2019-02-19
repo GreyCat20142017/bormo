@@ -4,7 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 
 const styles = theme => ({
@@ -37,12 +37,12 @@ class Bred extends React.Component {
 
   onThemeChange = evt => {
     const newTheme = evt.target.value;
-    this.setState({ [evt.target.name]: newTheme});
+    this.setState({[evt.target.name]: newTheme});
     this.props.onThemeSelect(newTheme);
   };
 
   render() {
-    const { classes, themes, fromConfig = false } = this.props;
+    const {classes, themes, fromConfig = false} = this.props;
 
     return (
       <form className={fromConfig ? classes.rootFromConfig : classes.root} autoComplete='off'>
@@ -55,14 +55,15 @@ class Bred extends React.Component {
             }}
             title='Выбор темы интерфейса'
           >
-           {themes.length === 0 ?  null : themes.map(el =>
-            <MenuItem className={classes.item} value={el.themeKey} key={el.themeKey} title={el.themeDescription}>{el.themeName}</MenuItem>
+            {themes.length === 0 ? null : themes.map(el =>
+              <MenuItem className={classes.item} value={el.themeKey} key={el.themeKey}
+                        title={el.themeDescription}>{el.themeName}</MenuItem>
             )}
           </Select>
         </FormControl>
       </form>
-      )
-    }
+    )
   }
+}
 
 export default withStyles(styles)(Bred);

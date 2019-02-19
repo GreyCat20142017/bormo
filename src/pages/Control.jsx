@@ -1,9 +1,9 @@
 import React from 'react';
 
 const Control = () => (
-	<div>
-		Control
-	</div>
+  <div>
+    Control
+  </div>
 );
 
 export default Control;

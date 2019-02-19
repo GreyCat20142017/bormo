@@ -1,6 +1,6 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -19,13 +19,14 @@ import SwapCallsIcon from '@material-ui/icons/SwapCalls';
 import BormoLesson from './BormoLesson';
 import SimpleSlider from './SimpleSlider';
 
-import {PAGE_LIMIT} from '../constants';
+// import {PAGE_LIMIT} from '../constants';
+const PAGE_LIMIT = 10;
 
 const styles = theme => ({
   root: {
     width: '100%',
   },
- fab: {
+  fab: {
     margin: theme.spacing.unit,
     marginRight: 'auto',
     marginLeft: 'auto',
@@ -73,9 +74,9 @@ const styles = theme => ({
       justifyContent: 'center',
       margin: 0,
       padding: '4px'
-     }
- },
-   expanded: {
+    }
+  },
+  expanded: {
     display: 'flex'
   },
   collapsed: {
@@ -92,18 +93,19 @@ const styles = theme => ({
   lessonLiFirst: {
     [theme.breakpoints.down('md')]: {
       '&:nth-of-type(n+6)': {
-         display: 'none'
+        display: 'none'
       }
     }
   },
   lessonLiSecond: {
     [theme.breakpoints.down('md')]: {
       '&:nth-of-type(-n+5)': {
-         display: 'none'
+        display: 'none'
       }
     }
   },
-   actions: {
+  actions: {
+    padding: '4px',
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column'
     }
@@ -126,22 +128,23 @@ const styles = theme => ({
     [theme.breakpoints.down('md')]: {
       display: 'none'
     }
-}});
+  }
+});
 
-const getPositionTo = (position, max, limit) => (position +  Math.min(limit, max - position + 1) - 1);
+const getPositionTo = (position, max, limit) => (position + Math.min(limit, max - position + 1) - 1);
 const getNextTo = (position, max, limit) => ((position + limit) >= max ? position : position + limit);
 const getPrevTo = (position, min, limit) => ((position - limit) <= 1 ? 1 : position - limit);
 const getSpecifiedStart = (state) => (state.expanded && state.paginationStart !== state.paginationStartTmp ?
-      state.paginationStartTmp : state.paginationStart);
+  state.paginationStartTmp : state.paginationStart);
 
-const Lessons = ({ lessons,  currentLesson, onLessonChange, classes, expanded, firstPart, start, finish }) => {
+const Lessons = ({lessons, currentLesson, onLessonChange, classes, expanded, firstPart, start, finish}) => {
   let list = [];
 
   for (let i = start; i <= finish; i++) {
     list.push(
-    <li key={i} className={firstPart ? classes.lessonLiFirst : classes.lessonLiSecond}>
-      <BormoLesson item={lessons[i - 1]} currentLesson={currentLesson} onLessonChange={onLessonChange}/>
-    </li>);
+      <li key={i} className={firstPart ? classes.lessonLiFirst : classes.lessonLiSecond}>
+        <BormoLesson item={lessons[i - 1]} currentLesson={currentLesson} onLessonChange={onLessonChange}/>
+      </li>);
   }
   return (
     <ul className={classNames(classes.lessonList, expanded ? classes.expanded : classes.collapsed)}>
@@ -150,61 +153,68 @@ const Lessons = ({ lessons,  currentLesson, onLessonChange, classes, expanded, f
   )
 };
 
-const BackwardForward = ({currentClass, onPrevClick, onNextClick}) => (
-  <Fragment>
+const BackwardForward = ({currentClass, onPrevClick, onNextClick, classes}) => (
+  <ExpansionPanelActions className={classes.actions}>
     <div className={currentClass}>
-      <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу назад' onClick={onPrevClick}>
-      <ArrowBackIcon />
+      <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу назад'
+                  onClick={onPrevClick}>
+        <ArrowBackIcon/>
       </IconButton>
     </div>
     <div className={currentClass}>
-      <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу вперед' onClick={onNextClick}>
-      <ArrowForwardIcon />
+      <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу вперед'
+                  onClick={onNextClick}>
+        <ArrowForwardIcon/>
       </IconButton>
     </div>
-  </Fragment>
+  </ExpansionPanelActions>
 );
-
 
 class BormoLessons extends React.Component {
   static Lessons = Lessons;
   static defaultProps = {
-    defaultStart:  1
+    defaultStart: 1
   };
 
   constructor(props) {
     super(props);
+    const start = PAGE_LIMIT <= this.props.lastLesson ? this.props.currentLesson || this.props.defaultStart : this.props.defaultStart;
     this.state = {
       expanded: false,
       firstPart: false,
       paginationFrom: this.props.defaultStart,
       paginationTo: this.props.lastLesson,
-      paginationStart: this.props.defaultStart,
+      paginationStart: start,
       paginationFinish: getPositionTo(this.props.defaultStart, this.props.lastLesson, PAGE_LIMIT),
-      paginationStartTmp: this.props.defaultStart
+      paginationStartTmp: start
     };
   }
 
   componentWillReceiveProps(nextProps) {
+    const start = PAGE_LIMIT <= nextProps.lastLesson ? nextProps.currentLesson || this.props.defaultStart : this.props.defaultStart;
     this.setState({
-        paginationStart: nextProps.currentLesson || this.props.defaultStart,
-        paginationFinish: getPositionTo(nextProps.currentLesson || this.props.defaultStart, nextProps.lastLesson, PAGE_LIMIT),
-        paginationStartTmp: this.props.currentLesson || this.props.defaultStart
+      paginationTo: nextProps.lastLesson,
+      paginationStart: start,
+      paginationFinish: getPositionTo(nextProps.currentLesson || this.props.defaultStart, nextProps.lastLesson, PAGE_LIMIT),
+      paginationStartTmp: start
     });
   }
 
-  onPanelSwitch = (evt) => {
-    this.setState({expanded: !this.state.expanded});
+  onPanelSwitch = () => {
+    this.setState({
+      expanded: !this.state.expanded,
+      paginationStartTmp: this.props.currentLesson || this.props.defaultStart
+    });
   }
 
   onSliderChange = (name, value) => {
-    this.setState({ [name]: value});
+    this.setState({[name]: value});
   };
 
   onSwapParts = () => {
     const newFirstPartState = !this.state.firstPart;
-    this.props.onLessonChange(newFirstPartState ? this.state.paginationStart : getPositionTo(this.state.paginationStart, this.state.paginationTo, PAGE_LIMIT))
-    this.setState({firstPart: !this.state.firstPart});
+    this.props.onLessonChange(newFirstPartState ? this.state.paginationStart : getPositionTo(this.state.paginationStart, this.state.paginationTo, PAGE_LIMIT));
+    this.setState({firstPart: newFirstPartState});
   }
 
   onPageJump = () => {
@@ -212,78 +222,84 @@ class BormoLessons extends React.Component {
     this.setState({
       firstPart: true,
       paginationStart: this.state.paginationStartTmp,
-      paginationFinish:  getPositionTo(this.state.paginationStartTmp, this.state.paginationTo, PAGE_LIMIT)
+      paginationFinish: getPositionTo(this.state.paginationStartTmp, this.state.paginationTo, PAGE_LIMIT),
+      expanded: false
     });
   }
 
-  onPrevClick = () => {
+  onPrevClick = (evt) => {
+    evt.stopPropagation();
     const prev = getPrevTo(getSpecifiedStart(this.state), 1, PAGE_LIMIT);
     this.props.onLessonChange(prev);
     this.setState({
       firstPart: true,
       paginationStart: prev,
       paginationStartTmp: prev,
-      paginationFinish:  getPositionTo(prev, this.state.paginationTo, PAGE_LIMIT)
+      paginationFinish: getPositionTo(prev, this.state.paginationTo, PAGE_LIMIT)
     });
   }
 
-  onNextClick = () => {
+  onNextClick = (evt) => {
+    evt.stopPropagation();
     const next = getNextTo(getSpecifiedStart(this.state), this.state.paginationTo, PAGE_LIMIT);
     this.props.onLessonChange(next);
     this.setState({
       firstPart: true,
       paginationStart: next,
       paginationStartTmp: next,
-      paginationFinish:  getPositionTo(next, this.state.paginationTo, PAGE_LIMIT)
+      paginationFinish: getPositionTo(next, this.state.paginationTo, PAGE_LIMIT)
     });
   }
 
-  render () {
-  const {classes, lessons, currentLesson, onLessonChange, lastLesson} = this.props;
-  const {expanded, paginationStart, paginationFinish, paginationStartTmp, firstPart} = this.state;
-  const sliderParams = {default: paginationStart, min: 1, max: lastLesson, step: 1, title: ''};
+  render() {
+    const {classes, lessons, currentLesson, onLessonChange, lastLesson} = this.props;
+    const {expanded, paginationStart, paginationFinish, paginationStartTmp, firstPart} = this.state;
+    const sliderParams = {default: currentLesson || paginationStartTmp, min: 1, max: lastLesson, step: 1, title: ''};
+    return (lastLesson ?
+        <div className={classes.root}>
+          <ExpansionPanel expanded={expanded} onChange={this.onPanelSwitch}>
+            <ExpansionPanelSummary expanded={expanded} expandIcon={<ExpandMoreIcon/>}>
 
-  return (lastLesson ?
-    <div className={classes.root}>
-      <ExpansionPanel expanded={expanded} onChange={this.onPanelSwitch}>
-        <ExpansionPanelSummary expanded={expanded} expandIcon={<ExpandMoreIcon />}>
+              <BackwardForward currentClass={classes.column} onPrevClick={this.onPrevClick}
+                               onNextClick={this.onNextClick} classes={classes}/>
 
-        <BackwardForward currentClass={classes.column} onPrevClick={this.onPrevClick} onNextClick={this.onNextClick}/>
+            </ExpansionPanelSummary>
+            <Divider/>
+            <ExpansionPanelDetails className={classes.details}>
+              <SimpleSlider noTitle={true} name='paginationStartTmp' params={sliderParams}
+                            onSliderChange={this.onSliderChange}/>
+            </ExpansionPanelDetails>
+            <Divider/>
+            <ExpansionPanelActions className={classes.actions}>
+              <Fab variant="extended" color='inherit' className={classes.fab}
+                   title={'Перейти к странице "Урок ' + paginationStartTmp + ' - ..."'}
+                   onClick={this.onPageJump}>
+                {'c ' + paginationStartTmp}
+              </Fab>
+              <BackwardForward currentClass={classes.columnMobile} onPrevClick={this.onPrevClick}
+                               onNextClick={this.onNextClick} classes={classes}/>
+            </ExpansionPanelActions>
+          </ExpansionPanel>
+          <IconButton size='small' color='secondary'
+                      className={expanded ? classes.hidden : classes.swapBtn}
+                      title={'Переключить части текущей страницы'} onClick={this.onSwapParts}>
+            <SwapCallsIcon/>
+          </IconButton>
 
-        </ExpansionPanelSummary>
-        <Divider/>
-        <ExpansionPanelDetails className={classes.details}>
-          <SimpleSlider noTitle={true} name='paginationStartTmp' params={sliderParams} value={paginationStartTmp} onSliderChange={this.onSliderChange}/>
-        </ExpansionPanelDetails>
-        <Divider/>
-        <ExpansionPanelActions className={classes.actions}>
-          <Fab variant="extended" color='inherit' className={classes.fab}
-            title={'Перейти к странице "Урок ' + paginationStartTmp + ' - ..."'}
-            onClick={this.onPageJump}>
-            {'c ' + paginationStartTmp}
-          </Fab>
-          <BackwardForward currentClass={classes.columnMobile} onPrevClick={this.onPrevClick} onNextClick={this.onNextClick}/>
-         </ExpansionPanelActions>
-      </ExpansionPanel>
-      <IconButton size='small' color='secondary'
-        className={expanded ? classes.hidden : classes.swapBtn} title={'Переключить части текущей страницы'} onClick={this.onSwapParts}>
-         <SwapCallsIcon />
-      </IconButton>
-
-      <Lessons
-        lessons={lessons}
-        currentLesson={currentLesson}
-        classes={classes}
-        onLessonChange={onLessonChange}
-        expanded={!expanded}
-        start={paginationStart}
-        finish={paginationFinish}
-        firstPart={firstPart}
-      />
-    </div>
-    :
-    <Typography variant='caption' className={classes.message}>Не выбран курс или нет уроков</Typography>
-  );
+          <Lessons
+            lessons={lessons}
+            currentLesson={currentLesson}
+            classes={classes}
+            onLessonChange={onLessonChange}
+            expanded={!expanded}
+            start={paginationStart}
+            finish={paginationFinish}
+            firstPart={firstPart}
+          />
+        </div>
+        :
+        <Typography variant='caption' className={classes.message}>Не выбран курс или нет уроков</Typography>
+    );
   }
 }
 

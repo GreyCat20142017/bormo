@@ -19,15 +19,15 @@
 //     }
 //   };
 
- export const getArrayFromObject = (obj) =>  Object.keys(obj).map(key => obj[key]);
+export const getArrayFromObject = (obj) => Object.keys(obj).map(key => obj[key]);
 
- // const getUniqueFromArray =  (entities) => {
- //    let temporaryObject = {};
- //    entities.forEach(item => {
- //      temporaryObject[item.toString()] = true;
- //    });
- //    return Object.keys(temporaryObject).map(key => key);
- //  };
+// const getUniqueFromArray =  (entities) => {
+//    let temporaryObject = {};
+//    entities.forEach(item => {
+//      temporaryObject[item.toString()] = true;
+//    });
+//    return Object.keys(temporaryObject).map(key => key);
+//  };
 
 
 export const getInitialState = (currentTheme) => (
@@ -48,10 +48,8 @@ export const getInitialState = (currentTheme) => (
       instantStart: false,
       instantNextMode: true,
       countErrorAtPrompt: true,
-      checkedModes: {
-
-      },
-      useAPIData: true,
+      checkedModes: {},
+      useAPIData: false,
       apiURL: 'http://localhost:3377/'
     },
     noSound: true,
@@ -61,7 +59,7 @@ export const getInitialState = (currentTheme) => (
       english: '',
       volume: 1, //0 - 1 step 0.2
       rate: 1,  //0.1 - 10 step 0.1
-      pitch : 1 //0 - 2 step 0.1
+      pitch: 1 //0 - 2 step 0.1
     }
 
   }
