@@ -15,7 +15,7 @@ const NeutralTheme = createMuiTheme({
 const BrightTheme = createMuiTheme({
   palette: {
     primary: {main: deepPurple[400], light: deepPurple[300], dark: deepPurple[900], contrastText: white},
-    secondary: {main: orange[400], dark: orange[600], contrastText: black},
+    secondary: {main: grey[300], dark: grey[500], contrastText: black},
     error: {main: orange[900]},
   },
   typography: {
@@ -29,7 +29,7 @@ const BrightTheme = createMuiTheme({
 const GreyTheme = createMuiTheme({
   palette: {
     primary: {main: blueGrey[500], light: blueGrey[300], dark: blueGrey[900], contrastText: black},
-    secondary: {main: orange[400], dark: orange[600], contrastText: black},
+    secondary: {main: amber[200], dark: amber[400], contrastText: black},
     error: {main: orange[900]},
   },
   typography: {
@@ -40,7 +40,7 @@ const GreyTheme = createMuiTheme({
 const AmberTheme = createMuiTheme({
   palette: {
     primary: {main: amber[200], light: amber[50], dark: amber[800], contrastText: black},
-    secondary: {main: grey[300], dark: grey[500], contrastText: black},
+    secondary: {main: grey[500], dark: grey[600], contrastText: white},
     error: {main: orange[900]},
   },
   typography: {

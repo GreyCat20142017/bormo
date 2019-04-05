@@ -52,7 +52,7 @@ export const getInitialState = (currentTheme) => (
       useAPIData: false,
       apiURL: 'http://localhost:3377/'
     },
-    noSound: true,
+    soundMuted: false,
     voiceConfig: {
       onlyEnglish: true,
       russian: '',

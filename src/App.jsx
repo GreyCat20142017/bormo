@@ -23,6 +23,7 @@ import Control from './pages/Control';
 import ReverseControl from './pages/ReverseControl';
 import NotFound from './pages/NotFound';
 
+import SpeakerVoice from './SpeakerVoice.js'
 import './App.css';
 import {getArrayFromObject, getInitialState} from './functions';
 import {DATA_PATH, COURSES_PATH, WORDS_PER_LESSON} from './constants';
@@ -103,13 +104,21 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = getInitialState(MainTheme.neutral);
-    this.onCourseChange = this.onCourseChange.bind(this);
-    this.onLessonChange = this.onLessonChange.bind(this);
-    this.onThemeSelect = this.onThemeSelect.bind(this);
+    this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
+  }
+
+  initCurrentSpeaker = (voices) => {
+    this.voiceList = voices;
+    this.bormoSpeaker.setSpeaker(voices);
+    this.bormoSpeaker.mute(this.state.soundMuted);
+    // this.bormoSpeaker.speak('test');
   }
 
   componentDidMount() {
     this.getCoursesData();
+    if (this.bormoSpeaker.supportSound) {
+      this.bormoSpeaker.getVoiceList(this.initCurrentSpeaker);
+    }
   }
 
   getCoursesData = async () => {
@@ -123,7 +132,7 @@ class App extends React.Component {
 
   getLessonData = async (lesson) => {
     const {apiURL, useAPIData} = this.state.config;
-    const {currentCourse, currentLesson} = this.state;
+    const {currentCourse} = this.state;
     const res = useAPIData ? await axios.get(`${apiURL}courses/${currentCourse}/${lesson}`) : await axios.get(DATA_PATH);
     this.setState({
       isDataLoading: false,
@@ -157,7 +166,7 @@ class App extends React.Component {
 
   }
 
-  onCourseChange(course, ind) {
+  onCourseChange = (course, ind) => {
     const {currentCourse, courses} = this.state;
     if (course !== currentCourse) {
       if (ind <= courses.length) {
@@ -179,13 +188,13 @@ class App extends React.Component {
     }
   }
 
-  onLessonChange(lesson) {
+  onLessonChange = (lesson) => {
     if (lesson !== this.state.currentLesson) {
       this.getLessonData(lesson);
     }
   }
 
-  onThemeSelect(themeKey) {
+  onThemeSelect = (themeKey) => {
     this.setState({currentTheme: MainTheme[themeKey]});
   }
 
@@ -194,7 +203,7 @@ class App extends React.Component {
     const {
       currentMode, currentCourse, currentLesson, lessons, courses, content,
       currentTheme, isLoading, isConfigOpen, isModalOpen,
-      config, voiceConfig, noSound, lastLesson
+      config, voiceConfig, soundMuted, lastLesson
     } = this.state;
 
     return (
@@ -236,7 +245,7 @@ class App extends React.Component {
 
                   <Switch>
                     <Route exact path='/' component={Main}/>
-                    <Route path='/bormotun' render={() => <Bormo content={content}/>}/>
+                    <Route path='/bormotun' render={() => <Bormo content={content} bormoSpeaker={this.bormoSpeaker}/>}/>
                     <Route path='/control' component={Control}/>
                     <Route path='/reversecontrol' component={ReverseControl}/>
                     <Route component={NotFound}/>
@@ -256,7 +265,8 @@ class App extends React.Component {
             themes={themes}
             config={config}
             voiceConfig={voiceConfig}
-            noSound={noSound}
+            soundMuted={soundMuted}
+            bormoSpeaker={this.bormoSpeaker}
             isConfigOpen={isConfigOpen}
             closeConfig={this.closeConfig}
             onConfigChange={this.onConfigChange}

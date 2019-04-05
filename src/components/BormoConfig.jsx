@@ -7,6 +7,8 @@ import Switch from '@material-ui/core/Switch';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import classNames from 'classnames';
 
@@ -17,7 +19,7 @@ import {withStyles} from '@material-ui/core/styles';
 
 import SimpleSlider from './SimpleSlider'
 import BormoThemeSelect from './BormoThemeSelect';
-import {voiceParams} from '../constants';
+import {voiceParams, VOICE_TEST_PHRASE, PREFFERABLE_VOICE} from '../constants';
 
 
 const styles = theme => ({
@@ -41,9 +43,20 @@ const styles = theme => ({
 
 class BormoConfig extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {...props.config, ...props.voiceConfig, noSound: props.noSound};
+    this.voices = window.speechSynthesis.getVoices().filter((item) => item.lang.slice(0, 2) === 'en');
+    this.bormoSpeaker = Object.assign({}, this.props.bormoSpeaker);
+    const currentVoice = this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : '';
+    this.state = {...props.config, ...props.voiceConfig, soundMuted: props.soundMuted, currentVoice: currentVoice};
+    //mytodo Разобраться с параметрами голоса: высота, громкость и т.д. После выбора другого - фигня
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.bormoSpeaker = Object.assign({}, nextProps.bormoSpeaker);
+    this.voices = window.speechSynthesis.getVoices().filter((item) => item.lang.slice(0, 2) === 'en');
+    this.setState({currentVoice: this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : '',
+      ...nextProps.voiceConfig});
   }
 
   onOptionChange = name => event => {
@@ -52,6 +65,12 @@ class BormoConfig extends React.Component {
 
   onSliderChange = (name, value) => {
     this.setState({[name]: value});
+    if (name.indexOf('volume') !== -1) {
+      this.bormoSpeaker.speaker.ssu['volume'] = value;
+    }
+    if (name.indexOf('pitch') !== -1) {
+      this.bormoSpeaker.speaker.ssu['pitch'] = value;
+    }
   };
 
   onInputChange = name => evt => {
@@ -61,19 +80,37 @@ class BormoConfig extends React.Component {
   };
 
   checkVoice = () => {
-
+    this.bormoSpeaker.speak(VOICE_TEST_PHRASE);
   };
+
+  onVoiceChange = (evt) => {
+    const currentVoice = evt.target.value;
+    if (this.voices.length > 0 && currentVoice) {
+      const voice = this.voices.find((item) => item.name === currentVoice);
+      if (voice) {
+        const {volume, pitch, rate} = this.state;
+        this.bormoSpeaker.setAnotherVoice(voice, {
+          volume: volume,
+          pitch: pitch,
+          rate: rate
+        })
+        this.setState({currentVoice: currentVoice});
+      }
+    }
+  }
 
   checkAPI = () => {
 
   };
 
-  render() {
+  render () {
+
     const {isConfigOpen, classes, onThemeSelect, currentTheme, themes} = this.props;
     const {
       instantStart, instantNextMode, countErrorAtPrompt,
-      onlyEnglish, pitch, volume, noSound, useAPIData, apiURL
+      onlyEnglish, pitch, volume, soundMuted, useAPIData, apiURL, currentVoice
     } = this.state;
+
 
     if (isConfigOpen) {
       return (
@@ -149,7 +186,7 @@ class BormoConfig extends React.Component {
               </FormGroup>
               <Button size='small' variant='contained' color='secondary' onClick={this.checkAPI}
                       className={classes.configButton}>
-                Тест
+                Тест API
                 <ImportExportIcon className={classes.rightIcon} fontSize='small'/>
               </Button>
             </Paper>
@@ -157,28 +194,44 @@ class BormoConfig extends React.Component {
             <Typography variant='caption' className={classes.configGroup}>Параметры звука</Typography>
             <Paper className={classes.configPaper}>
               <FormGroup className={classes.configGroup}>
+                <Typography variant="subtitle1">{this.bormoSpeaker.getVoiceSupport()}</Typography>
                 <FormControlLabel
                   control={<Switch checked={onlyEnglish} onChange={this.onOptionChange('onlyEnglish')}
-                                   value='onlyEnglish' color='primary'/>}
+                                   value='onlyEnglish' color='primary' disabled={true}/>}
                   label='при доступности синтеза речи озвучивать только английский'
                 />
 
                 <FormControlLabel
-                  control={<Switch checked={noSound} onChange={this.onOptionChange('noSound')} value='noSound'
+                  control={<Switch checked={soundMuted} onChange={this.onOptionChange('soundMuted')} value='soundMuted'
                                    color='primary'/>}
                   label='беззвучный режим'
                 />
                 <SimpleSlider name='volume' params={voiceParams.volume} value={volume}
                               onSliderChange={this.onSliderChange}/>
+                <Typography variant='caption' className={classes.configGroup}>Чем больше значение параметра "Высота",
+                  тем выше звук: </Typography>
                 <SimpleSlider name='pitch' params={voiceParams.pitch} value={pitch}
                               onSliderChange={this.onSliderChange}/>
 
               </FormGroup>
               <Button size='small' variant='contained' color='secondary' onClick={this.checkVoice}
                       className={classes.configButton}>
-                Тест
+                Тест звука
                 <VolumeUpIcon className={classes.rightIcon} fontSize='small'/>
               </Button>
+              <Select
+                value={currentVoice}
+                onChange={this.onVoiceChange}
+                inputProps={{
+                  name: 'choice'
+                }}
+                title='Выбор синтезатора речи'
+              >
+                {this.voices.length === 0 ? null : this.voices.map(el =>
+                  <MenuItem className={classes.item} value={el.name} key={el.name}
+                            title={el.name}>{el.name}</MenuItem>
+                )}
+              </Select>
             </Paper>
 
             <Typography variant='caption' className={classes.configGroup}>Цветовая тема (параметр применяется при
