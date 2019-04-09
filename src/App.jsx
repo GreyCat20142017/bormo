@@ -111,6 +111,14 @@ class App extends React.Component {
     this.voiceList = voices;
     this.bormoSpeaker.setSpeaker(voices);
     this.bormoSpeaker.mute(this.state.soundMuted);
+    if (this.bormoSpeaker.speaker) {
+      this.setState({
+        voiceConfig: Object.assign({}, {
+          volume: this.bormoSpeaker.speaker.ssu.volume,
+          pitch: this.bormoSpeaker.speaker.ssu.pitch,
+          rate: this.bormoSpeaker.speaker.ssu.rate
+        })});
+    }
     // this.bormoSpeaker.speak('test');
   }
 

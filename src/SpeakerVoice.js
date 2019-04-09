@@ -1,13 +1,25 @@
 import {PREFFERABLE_VOICE} from "./constants";
 
+
 class SpeakerVoice {
-  constructor (muteValue, params = {volume: 1, rate: 1.2, pitch: 1}) {
+
+  constructor (muteValue, params = {volume: 1, rate: 1, pitch: 1}) {
     this.supportSound = 'speechSynthesis' in window;
     this.supportEnglish = false;
     this.speaker = null;
     this.speakerMuted = muteValue;
     this.params = params;
   }
+
+  resetParams = (ssu, params, voice = null) => {
+    if (voice) {
+      ssu.voice = voice;
+    }
+    ssu.volume = params.volume;
+    ssu.rate = params.rate;
+    ssu.pitch = params.pitch;
+  };
+
 
   getVoiceList = async (cb) => {
     const tmp = window.speechSynthesis.getVoices();
@@ -16,10 +28,7 @@ class SpeakerVoice {
 
   resetVoice = (voice) => {
     const ssu = new SpeechSynthesisUtterance('');
-    ssu.voice = voice;
-    ssu.volume = this.params.volume;
-    ssu.rate = this.params.rate;
-    ssu.pitch = this.params.pitch;
+    this.resetParams(ssu, this.params, voice);
     const language = voice.lang.slice(0, 2);
     this.supportEnglish = (language === 'en');
     this.speaker = {'ssu': ssu, 'voice': ssu.voice, 'lang': language};
@@ -39,9 +48,9 @@ class SpeakerVoice {
     }
   }
 
-  setAnotherVoice = (newVoice, params) => {
-    if (this.supportSound && newVoice && params) {
-      this.params = Object.assign({}, params);
+  setAnotherVoice = (newVoice, newParams) => {
+    if (this.supportSound && newVoice && newParams) {
+      this.params = Object.assign({}, newParams);
       this.resetVoice(newVoice);
     }
   }
@@ -57,15 +66,11 @@ class SpeakerVoice {
       ssu.text = text;
       if (window.navigator.userAgent.indexOf("Firefox") >= 0) {
         ssu = new SpeechSynthesisUtterance(text);
-        ssu.rate = 0.9;
-        ssu.pitch = 1;
-        ssu.voice = voice;
+        this.resetParams(ssu, this.params, voice);
       }
-      ;
       if (text) {
         window.speechSynthesis.speak(ssu);
       }
-      ;
     }
   }
 

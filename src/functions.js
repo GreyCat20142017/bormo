@@ -30,6 +30,13 @@ export const getArrayFromObject = (obj) => Object.keys(obj).map(key => obj[key])
 //  };
 
 
+
+export const getRound = (number, precision) => {
+  precision = precision || 0;
+  return Math.round(number * Math.pow(10, precision)) / Math.pow(10, precision);
+}
+
+
 export const getInitialState = (currentTheme) => (
   {
     isModalOpen: false,

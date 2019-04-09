@@ -19,7 +19,8 @@ import {withStyles} from '@material-ui/core/styles';
 
 import SimpleSlider from './SimpleSlider'
 import BormoThemeSelect from './BormoThemeSelect';
-import {voiceParams, VOICE_TEST_PHRASE, PREFFERABLE_VOICE} from '../constants';
+import {voiceParams, VOICE_TEST_PHRASE} from '../constants';
+import {getRound} from '../functions';
 
 
 const styles = theme => ({
@@ -46,17 +47,16 @@ class BormoConfig extends React.Component {
   constructor (props) {
     super(props);
     this.voices = window.speechSynthesis.getVoices().filter((item) => item.lang.slice(0, 2) === 'en');
-    this.bormoSpeaker = Object.assign({}, this.props.bormoSpeaker);
+    this.bormoSpeaker = this.props.bormoSpeaker;
     const currentVoice = this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : '';
     this.state = {...props.config, ...props.voiceConfig, soundMuted: props.soundMuted, currentVoice: currentVoice};
-    //mytodo Разобраться с параметрами голоса: высота, громкость и т.д. После выбора другого - фигня
   }
 
   componentWillReceiveProps (nextProps) {
-    this.bormoSpeaker = Object.assign({}, nextProps.bormoSpeaker);
+    this.bormoSpeaker = nextProps.bormoSpeaker;
     this.voices = window.speechSynthesis.getVoices().filter((item) => item.lang.slice(0, 2) === 'en');
-    this.setState({currentVoice: this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : '',
-      ...nextProps.voiceConfig});
+    const currentVoice = this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : ''
+    this.setState({ ...nextProps.voiceConfig, currentVoice: currentVoice});
   }
 
   onOptionChange = name => event => {
@@ -64,13 +64,11 @@ class BormoConfig extends React.Component {
   };
 
   onSliderChange = (name, value) => {
-    this.setState({[name]: value});
-    if (name.indexOf('volume') !== -1) {
-      this.bormoSpeaker.speaker.ssu['volume'] = value;
+    const newValue = getRound(value, 1);
+    if (typeof this.bormoSpeaker.speaker.ssu[name] !== 'undefined') {
+      this.bormoSpeaker.speaker.ssu[name] = newValue;
     }
-    if (name.indexOf('pitch') !== -1) {
-      this.bormoSpeaker.speaker.ssu['pitch'] = value;
-    }
+    this.setState({[name]: newValue});
   };
 
   onInputChange = name => evt => {
@@ -110,7 +108,6 @@ class BormoConfig extends React.Component {
       instantStart, instantNextMode, countErrorAtPrompt,
       onlyEnglish, pitch, volume, soundMuted, useAPIData, apiURL, currentVoice
     } = this.state;
-
 
     if (isConfigOpen) {
       return (

@@ -17,27 +17,33 @@ const styles = theme => ({
 });
 
 
+const getRefinedValue = (currentValue, currentParams) => (
+  (currentValue >= currentParams.min) && (currentValue <= currentParams.max) ?
+    currentValue :
+    currentParams.default
+);
+
 class SimpleSlider extends React.Component {
   static defaultProps = {
     noTitle: false,
     verticalOnMobile: false
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {value: this.props.params.default};
+    this.state = {value: getRefinedValue(this.props.value, this.props.params)};
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({value: nextProps.params.default});
+  componentWillReceiveProps (nextProps) {
+    this.setState({value: getRefinedValue(nextProps.value, nextProps.params)});
   }
 
-  handleChange = (event, newValue) => {
-    this.props.onSliderChange(this.props.name, newValue);
-    this.setState({value: newValue});
+  handleChange = (event, value) => {
+    this.props.onSliderChange(this.props.name, value);
+    this.setState({value: value});
   };
 
-  render() {
+  render () {
     const {classes, params, noTitle, verticalOnMobile} = this.props;
     const {value} = this.state;
 

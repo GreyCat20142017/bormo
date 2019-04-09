@@ -1,14 +1,14 @@
 export const drawerWidth = 180;
 
 export const voiceParams = {
-  volume: {default: 1, min: 0, max: 1, step: 0.2, title: 'Громкость'},
+  volume: {default: 1, min: 0, max: 1, step: 0.1, title: 'Громкость'},
   rate: {default: 1, min: 0.1, max: 10, step: 0.1, title: 'Скорость'},
   pitch: {default: 1, min: 0, max: 2, step: 0.1, title: 'Высота звука'}
 };
 
 export const PREFFERABLE_VOICE = 'Google UK English';
 
-export const DATA_PATH = 'data/bormoSpeaker.json'
+export const DATA_PATH = 'data/bormo.json'
 export const COURSES_PATH = 'data/courses.json'
 
 export const PAGE_LIMIT = 10;
