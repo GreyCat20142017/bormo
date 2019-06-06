@@ -13,7 +13,7 @@ import {withStyles} from '@material-ui/core/styles';
 import BormoFooter from './components/BormoFooter';
 import BormoHeader from './components/BormoHeader';
 import BormoAside from './components/BormoAside';
-import BormoConfig from './components/BormoConfig';
+import BormoConfig from './components/config/BormoConfig';
 import BormoModal from './components/BormoModal';
 import ErrorBoundary from './components/ErrorBoundary';
 

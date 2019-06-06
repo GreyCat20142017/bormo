@@ -17,10 +17,10 @@ import ImportExportIcon from '@material-ui/icons/ImportExport';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import SimpleSlider from './SimpleSlider'
-import BormoThemeSelect from './BormoThemeSelect';
-import {voiceParams, VOICE_TEST_PHRASE} from '../constants';
-import {getRound} from '../functions';
+import SimpleSlider from '../SimpleSlider'
+import BormoThemeSelect from '../BormoThemeSelect';
+import {voiceParams, VOICE_TEST_PHRASE} from '../../constants';
+import {getRound} from '../../functions';
 
 
 const styles = theme => ({

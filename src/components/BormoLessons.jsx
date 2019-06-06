@@ -9,7 +9,6 @@ import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import Divider from '@material-ui/core/Divider';
 import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
-
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -21,6 +20,7 @@ import SimpleSlider from './SimpleSlider';
 
 // import {PAGE_LIMIT} from '../constants';
 const PAGE_LIMIT = 10;
+
 
 const styles = theme => ({
   root: {
