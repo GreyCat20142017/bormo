@@ -1,9 +1,8 @@
 import React from 'react';
-
+import {withRouter} from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles';
 
 import Fab from '@material-ui/core/Fab';
-
 
 const styles = theme => ({
   btn: {
@@ -24,7 +23,11 @@ const styles = theme => ({
 
 class BormoLesson extends React.Component {
 
-  onLessonClick = () => this.props.onLessonChange(this.props.item);
+  onLessonClick = () => {
+    if (this.props.location.pathname === '/') {
+      this.props.history.push('/bormotun');    }
+    this.props.onLessonChange(this.props.item);
+  };
 
   render() {
     const {currentLesson, item, classes} = this.props;
@@ -41,5 +44,5 @@ class BormoLesson extends React.Component {
   }
 }
 
-export default withStyles(styles)(BormoLesson);
+export default withStyles(styles)(withRouter(BormoLesson));
 

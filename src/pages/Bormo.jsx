@@ -2,18 +2,18 @@ import React, {Component} from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import PauseIcon from '@material-ui/icons/Pause';
 import StopIcon from '@material-ui/icons/Stop';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 import {withStyles} from '@material-ui/core/styles';
+import classNames from 'classnames';
 
-const TIMER_INTERVAL = 1000;
-const TIMER_STATUS = {started: 'started', stopped: 'stopped', paused: 'paused'};
+import {WORDS_PER_LESSON, BORMO_STATUS} from '../constants';
+
+const TIMER_INTERVAL = 3000;
+
 
 const styles = theme => ({
   cardList: {
@@ -27,10 +27,9 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'center',
     }
-
   },
   cardItem: {
-    minWidth: '47%',
+    minWidth: '100%',
     margin: theme.spacing.unit,
     [theme.breakpoints.down('sm')]: {
       margin: '4px',
@@ -48,17 +47,55 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       fontSize: 14
     }
+  },
+  part: {
+    width: '30%',
+    textAlign: 'center',
+    paddingLeft: '1%',
+    paddingRight: '1%',
+    [theme.breakpoints.down('md')]: {
+      width: '90%',
+      margin: 'auto'
+    }
+  },
+  partDesktopOnly : {
+    [theme.breakpoints.down('md')]: {
+      display: 'none'
+    }
+  },
+  parts: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    align: 'stretch'
+  },
+  currentWord: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '50px'
+  },
+  controls: {
+    margin: '50px auto 10px auto',
+    maxWidth: '200px',
+    maxHeight: '50px',
+    alignSelf: 'flex-end'
+  },
+  paper: {
+    padding: '8px',
+    margin: '8px',
+    width: '100%',
+    alignSelf: 'center'
   }
-
 });
 
-const WordList = ({content, classes, currentIndex}) => (
-  <ul className={classes.cardList}>
-    {content.map((item, ind) =>
-      <li className={classes.cardItem} key={ind}>
-        <Paper className={classes.card}>
 
-          <Typography className={classes.title} variant='h6' color={ind === currentIndex ? 'error' : 'textSecondary'}>
+const ListPart = ({content, classes, currentIndex, startIndex}) => (
+  <ul className={classes.cardList}>
+    {content.slice(startIndex, startIndex + Math.floor(WORDS_PER_LESSON / 2)).map((item, ind) =>
+      <li className={classes.cardItem} key={ind + startIndex}>
+        <Paper className={classes.card}>
+          <Typography className={classes.title} variant='h6'
+                      color={(ind + startIndex) === currentIndex ? 'error' : 'textSecondary'}
+                      title={item.russian}>
             {item.english}
           </Typography>
 
@@ -66,18 +103,20 @@ const WordList = ({content, classes, currentIndex}) => (
       </li>
     )
     }
-  </ul>
-);
+  </ul>);
+
 
 class Bormo extends Component {
 
   constructor (props) {
     super(props);
     this.state = {
-      currentIndex: 0, maxIndex: this.props.content.length - 1, timerStatus: TIMER_STATUS.stopped,
-      alternation: 1
+      currentIndex: 0,
+      maxIndex: this.props.content.length - 1,
+      timerStatus: BORMO_STATUS.STOPPED,
+      interval: null
     };
-    this.interval = null;
+
     this.ticks = this.ticks.bind(this);
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
@@ -86,47 +125,44 @@ class Bormo extends Component {
     if (this.interval) {
       clearInterval(this.interval);
     }
-    this.setState({currentIndex: 0, maxIndex: nextProps.content.length - 1, timerStatus: TIMER_STATUS.stopped});
-  }
-
-  componentDidMount () {
-    // this.interval = setInterval(this.getNext, TIMER_INTERVAL);
-    // this.timerStatus = TIMER_STATUS.started;
+    this.setState({
+      currentIndex: 0,
+      maxIndex: nextProps.content.length - 1,
+      timerStatus: BORMO_STATUS.STOPPED,
+      interval: null
+    });
   }
 
 
   ticks () {
-    if (this.state.timerStatus === TIMER_STATUS.started) {
-      const {currentIndex, maxIndex, alternation} = this.state;
-
-      if (this.state.alternation % 3 === 0) {
-        let nextIndex = ((currentIndex + 1) <= maxIndex) ? currentIndex + 1 : 0;
-        this.setState({
-          currentIndex: nextIndex, alternation: alternation + 1
-        });
-      } else if (this.state.alternation % 2 === 0) {
-        this.setState({alternation: alternation + 1});
-      } else {
-        this.setState({alternation: alternation + 1});
-        this.bormoSpeaker.speak(this.props.content[currentIndex].english);
-      }
-    }
+    this.setState((state) => {
+      const {currentIndex, maxIndex} = state;
+      const nextIndex = ((currentIndex + 1) <= maxIndex) ? currentIndex + 1 : 0;
+      this.bormoSpeaker.speak(this.props.content[nextIndex].english);
+      return ({
+        currentIndex: nextIndex,
+      });
+    });
   }
 
   timerStart = () => {
+    const currentIndex = this.state.currentIndex;
     clearInterval(this.interval);
     this.interval = setInterval(this.ticks, TIMER_INTERVAL);
-    this.setState({currentIndex: 0, timerStatus: TIMER_STATUS.started, alternation: 1});
+    if (currentIndex >= 0 && currentIndex < this.props.content.length) {
+      this.bormoSpeaker.speak(this.props.content[currentIndex].english);
+    }
+    this.setState({currentIndex: this.state.currentIndex, timerStatus: BORMO_STATUS.STARTED});
   }
 
   timerPause = () => {
     clearInterval(this.interval);
-    this.setState({timerStatus: TIMER_STATUS.paused});
+    this.setState({timerStatus: BORMO_STATUS.PAUSED});
   }
 
   timerStop = () => {
     clearInterval(this.interval);
-    this.setState({currentIndex: 0, timerStatus: TIMER_STATUS.stopped});
+    this.setState({currentIndex: 0, timerStatus: BORMO_STATUS.STOPPED});
   }
 
   componentWillUnmount () {
@@ -136,31 +172,59 @@ class Bormo extends Component {
   render () {
     const {content, classes} = this.props;
     const {currentIndex, maxIndex} = this.state;
-    const currentTranslate = (currentIndex <= maxIndex && currentIndex > 0) ? content[currentIndex].russian : '';
+    const currentWord = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].english : '';
+    const currentTranslate = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].russian : '';
+
     return (
       <div className='bormo__wrapper'>
-        <WordList content={content} classes={classes} currentIndex={currentIndex}/>
-        {content.length > 0 ?
-          <Card>
-            <CardContent>
-              <Typography variant="h6">
-                {currentTranslate}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <IconButton className={classes.button} title='Старт' onClick={this.timerStart}>
-                <PlayArrowIcon/>
-              </IconButton>
-              <IconButton className={classes.button} title='Пауза' onClick={this.timerPause}>
-                <PauseIcon/>
-              </IconButton>
-              <IconButton className={classes.button} title='Стоп' onClick={this.timerStop}>
-                <StopIcon/>
-              </IconButton>
-            </CardActions>
-          </Card>
-          : null
-        }
+        <div className={classes.parts}>
+          <div className={classNames(classes.part, classes.partDesktopOnly)}>
+            <ListPart content={content} classes={classes} currentIndex={currentIndex} startIndex={0}/>
+          </div>
+
+          <div className={classes.part}>
+            {content.length > 0 ?
+              <div className={classes.currentWord}>
+                <Paper className={classes.paper}>
+                  <Typography component="h5" variant="h5" color="error">
+                    {currentWord}
+                  </Typography>
+                </Paper>
+                <Paper className={classes.paper}>
+                  <Typography component="h5" variant="h5">
+                    {currentTranslate}
+                  </Typography>
+                </Paper>
+
+
+                <div className={classes.controls}>
+                  <IconButton aria-label="Старт" className={classes.margin} onClick={this.timerStart}>
+                    <PlayArrowIcon/>
+                  </IconButton>
+                  <IconButton aria-label="Пауза" className={classes.margin} onClick={this.timerPause}>
+                    <PauseIcon/>
+                  </IconButton>
+                  <IconButton aria-label="Стоп" className={classes.margin} onClick={this.timerStop}>
+                    <StopIcon/>
+                  </IconButton>
+                </div>
+                <Typography component="p" variant="body2">
+                  {'' + (currentIndex + 1) + ' из '+ (maxIndex+1)}
+                </Typography>
+
+              </div>
+              : null
+            }
+          </div>
+
+
+          <div className={classNames(classes.part, classes.partDesktopOnly)}>
+            <ListPart content={content} classes={classes} currentIndex={currentIndex}
+                      startIndex={Math.floor(WORDS_PER_LESSON / 2)}/>
+          </div>
+
+        </div>
+
       </div>
     );
   }
