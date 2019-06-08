@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/bormo/precache-manifest.1b3584acd636059899b588d5c3cd6d90.js"
+  "/bormo/precache-manifest.6ef198ef252f748478f189f650a14b10.js"
 );
 
 workbox.clientsClaim();
