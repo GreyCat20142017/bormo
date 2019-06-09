@@ -43,19 +43,19 @@ const styles = theme => ({
     overflowX: 'hidden',
     textAlign: 'center'
   },
-  column: {
-    flexBasis: '33.33%',
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    }
-  },
-  columnMobile: {
-    display: 'none',
-    [theme.breakpoints.down('md')]: {
-      flexBasis: '100%',
-      display: 'flex'
-    }
-  },
+  // column: {
+  //   flexBasis: '33.33%',
+  //   [theme.breakpoints.down('md')]: {
+  //     display: 'none'
+  //   }
+  // },
+  // columnMobile: {
+  //   display: 'none',
+  //   [theme.breakpoints.down('md')]: {
+  //     flexBasis: '100%',
+  //     display: 'flex'
+  //   }
+  // },
   btn: {
     textTransform: 'none',
     padding: '0',
@@ -70,11 +70,11 @@ const styles = theme => ({
     width: '90%',
     padding: '10px',
     listStyle: 'none',
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'center',
-      margin: 0,
-      padding: '4px'
-    }
+    // [theme.breakpoints.down('md')]: {
+    //   justifyContent: 'center',
+    //   margin: 0,
+    //   padding: '4px'
+    // }
   },
   expanded: {
     display: 'flex'
@@ -86,48 +86,48 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     padding: theme.spacing.unit,
     textAlign: 'center',
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    }
+    // [theme.breakpoints.down('md')]: {
+    //   display: 'none'
+    // }
   },
-  lessonLiFirst: {
-    [theme.breakpoints.down('md')]: {
-      '&:nth-of-type(n+6)': {
-        display: 'none'
-      }
-    }
-  },
-  lessonLiSecond: {
-    [theme.breakpoints.down('md')]: {
-      '&:nth-of-type(-n+5)': {
-        display: 'none'
-      }
-    }
-  },
+  // lessonLiFirst: {
+  //   [theme.breakpoints.down('md')]: {
+  //     '&:nth-of-type(n+6)': {
+  //       display: 'none'
+  //     }
+  //   }
+  // },
+  // lessonLiSecond: {
+  //   [theme.breakpoints.down('md')]: {
+  //     '&:nth-of-type(-n+5)': {
+  //       display: 'none'
+  //     }
+  //   }
+  // },
   actions: {
     padding: '4px',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column'
-    }
+    // [theme.breakpoints.down('md')]: {
+    //   flexDirection: 'column'
+    // }
   },
   swapBtn: {
-    display: 'none',
-    [theme.breakpoints.down('md')]: {
-      flexBasis: '100%',
-      marginTop: '4px',
-      marginBottom: '4px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      display: 'block'
-    }
+    // display: 'none',
+    // [theme.breakpoints.down('md')]: {
+    //   flexBasis: '100%',
+    //   marginTop: '4px',
+    //   marginBottom: '4px',
+    //   marginLeft: 'auto',
+    //   marginRight: 'auto',
+    //   display: 'block'
+    // }
   },
   hidden: {
-    display: 'none'
+    // display: 'none'
   },
   extend: {
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    }
+    // [theme.breakpoints.down('md')]: {
+    //   display: 'none'
+    // }
   }
 });
 
@@ -302,6 +302,5 @@ class BormoLessons extends React.Component {
     );
   }
 }
-
 
 export default withStyles(styles)(BormoLessons);

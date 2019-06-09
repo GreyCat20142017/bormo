@@ -25,7 +25,8 @@ class BormoLesson extends React.Component {
 
   onLessonClick = () => {
     if (this.props.location.pathname === '/') {
-      this.props.history.push('/bormotun');    }
+      this.props.history.push('/bormotun');
+    }
     this.props.onLessonChange(this.props.item);
   };
 

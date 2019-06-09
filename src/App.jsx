@@ -1,14 +1,18 @@
 import React from 'react';
-import {Route, Switch, withRouter} from 'react-router-dom';
-import axios from 'axios';
 
+import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
-import MainTheme from './MainTheme';
+import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
+import MenuIcon from '@material-ui/icons/Menu';
+import Toolbar from '@material-ui/core/Toolbar';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import Typography from '@material-ui/core/Typography';
-
 import {withStyles} from '@material-ui/core/styles';
+
+import axios from "axios";
 
 import BormoFooter from './components/BormoFooter';
 import BormoHeader from './components/BormoHeader';
@@ -23,70 +27,49 @@ import Control from './pages/Control';
 import ReverseControl from './pages/ReverseControl';
 import NotFound from './pages/NotFound';
 
-import SpeakerVoice from './SpeakerVoice.js'
-import './App.css';
-import {getArrayFromObject, getInitialState} from './functions';
-import {DATA_PATH, COURSES_PATH, WORDS_PER_LESSON} from './constants';
+import MainTheme from "./MainTheme";
+import SpeakerVoice from "./SpeakerVoice";
 
-import {about} from './about';
+import {getArrayFromObject, getInitialState} from "./functions";
+import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON, DRAWER_WIDTH} from "./constants";
+import {Route, Switch} from "react-router-dom";
+import {about} from "./about";
+
 
 const styles = theme => ({
-  app: {
-    height: '100vh',
-    overflow: 'hidden'
-  },
-
-  contentMain: {
-    width: '90%',
-    fexShrink: 1,
-    [theme.breakpoints.down('xs')]: {
-      width: '84%',
-    }
-  },
-
-  paperAside: {
-    width: '11%',
-    minWidth: '115px',
-
-    [theme.breakpoints.down('xs')]: {
-      width: '15%',
-      minWidth: '65px'
-    }
-  },
-
-  paperLoader: {
-    top: 0,
-    left: 0,
-    height: '100vh',
-    width: '100%',
-    position: 'fixed',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    padding: '10%',
-    textAlign: 'center',
-    zIndex: '10'
-  },
-
-  paperMain: {
-    height: '100%',
-    overflowY: 'auto',
+  root: {
     display: 'flex',
-    padding: '10px 10px 60px',
-    width: '100%',
-    justifyContent: 'space-between'
-
+    alignItems: 'stretch'
   },
-
-  paperHeader: {
-    minHeight: '50px',
-    overflowY: 'auto'
+  drawer: {
+    padding: '20px',
+    [theme.breakpoints.up('sm')]: {
+      width: DRAWER_WIDTH,
+      flexShrink: 0,
+    },
   },
-
-  paperFooter: {
-    height: '54px',
-    overflowY: 'auto'
+  appBar: {
+    marginLeft: DRAWER_WIDTH,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${DRAWER_WIDTH}px)`,
+    },
   },
-
+  menuButton: {
+    marginRight: 20,
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: DRAWER_WIDTH,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+  },
 });
+
 
 const Loader = ({classes}) => (
   <Paper className={classes.paperLoader}>
@@ -95,13 +78,14 @@ const Loader = ({classes}) => (
 );
 
 class App extends React.Component {
+
   static Loader = Loader;
 
   static defaultProps = {
     themes: getArrayFromObject(MainTheme)
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = getInitialState(MainTheme.neutral);
     this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
@@ -117,12 +101,13 @@ class App extends React.Component {
           volume: this.bormoSpeaker.speaker.ssu.volume,
           pitch: this.bormoSpeaker.speaker.ssu.pitch,
           rate: this.bormoSpeaker.speaker.ssu.rate
-        })});
+        })
+      });
     }
     // this.bormoSpeaker.speak('test');
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.getCoursesData();
     if (this.bormoSpeaker.supportSound) {
       this.bormoSpeaker.getVoiceList(this.initCurrentSpeaker);
@@ -206,7 +191,11 @@ class App extends React.Component {
     this.setState({currentTheme: MainTheme[themeKey]});
   }
 
-  render() {
+  handleDrawerToggle = () => {
+    this.setState(state => ({mobileOpen: !state.mobileOpen}));
+  };
+
+  render () {
     const {classes, themes} = this.props;
     const {
       currentMode, currentCourse, currentLesson, lessons, courses, content,
@@ -214,59 +203,91 @@ class App extends React.Component {
       config, voiceConfig, soundMuted, lastLesson
     } = this.state;
 
+    const drawer = (
+      <ErrorBoundary>
+        <BormoAside
+          currentMode={currentMode}
+          currentCourse={currentCourse}
+          currentLesson={currentLesson}
+          lessons={lessons}
+          courses={courses}
+          onLessonChange={this.onLessonChange}
+          onCourseChange={this.onCourseChange}
+          lastLesson={lastLesson}
+        />
+      </ErrorBoundary>
+    );
+
     return (
       <React.Fragment>
         <CssBaseline/>
         <MuiThemeProvider theme={currentTheme.themeObject}>
-          {isLoading ?
-            <Loader classes={classes}/>
-            :
-            <div className={classes.app}>
+          <div className={classes.root}>
+            <CssBaseline/>
+            <AppBar position="fixed" className={classes.appBar}>
+              <Toolbar>
+                <IconButton
+                  color="inherit"
+                  aria-label="Open drawer"
+                  onClick={this.handleDrawerToggle}
+                  className={classes.menuButton}
+                >
+                  <MenuIcon/>
+                </IconButton>
 
-              <Paper className={classes.paperHeader}>
                 <BormoHeader
                   theme={currentTheme}
                   openModal={this.openModal}
                   closeModal={this.closeModal}
                   openConfig={this.openConfig}
                   closeConfig={this.closeConfig}
-                  onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
-                />
-              </Paper>
+                  onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}/>
 
-              <Paper className={classes.paperMain}>
-                <Paper className={classes.paperAside}>
-                  <ErrorBoundary>
-                    <BormoAside
-                      currentMode={currentMode}
-                      currentCourse={currentCourse}
-                      currentLesson={currentLesson}
-                      lessons={lessons}
-                      courses={courses}
-                      onLessonChange={this.onLessonChange}
-                      onCourseChange={this.onCourseChange}
-                      lastLesson={lastLesson}
-                    />
-                  </ErrorBoundary>
-                </Paper>
-                <Paper className={classes.contentMain} content={content}>
+              </Toolbar>
+            </AppBar>
 
-                  <Switch>
-                    <Route exact path='/' component={Main}/>
-                    <Route path='/bormotun' render={() => <Bormo content={content} bormoSpeaker={this.bormoSpeaker}/>}/>
-                    <Route path='/control' component={Control}/>
-                    <Route path='/reversecontrol' component={ReverseControl}/>
-                    <Route component={NotFound}/>
-                  </Switch>
+            <nav className={classes.drawer}>
+              <Hidden smUp implementation="css">
+                <Drawer
+                  variant="temporary"
+                  anchor={'left'}
+                  open={this.state.mobileOpen}
+                  onClose={this.handleDrawerToggle}
+                  classes={{
+                    paper: classes.drawerPaper,
+                  }}
+                >
+                  {drawer}
+                </Drawer>
+              </Hidden>
+              <Hidden xsDown implementation="css">
+                <Drawer
+                  classes={{
+                    paper: classes.drawerPaper,
+                  }}
+                  variant="permanent"
+                  open
+                >
+                  {drawer}
+                </Drawer>
+              </Hidden>
+            </nav>
 
-                </Paper>
-              </Paper>
+            <main className={classes.content}>
+              <Switch>
+                <Route exact path='/' component={Main}/>
+                <Route path='/bormotun' render={() => <Bormo content={content} bormoSpeaker={this.bormoSpeaker}/>}/>
+                <Route path='/control' component={Control}/>
+                <Route path='/reversecontrol' component={ReverseControl}/>
+                <Route component={NotFound}/>
+              </Switch>
+            </main>
 
-              <Paper className={classes.paperFooter}>
-                <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}/>
-              </Paper>
-            </div>
-          }
+            <Paper className={classes.paperFooter}>
+              <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}/>
+            </Paper>
+
+          </div>
 
           <BormoConfig
             currentTheme={currentTheme}
@@ -285,7 +306,6 @@ class App extends React.Component {
             isModalOpen={isModalOpen}
             closeModal={this.closeModal}/>
 
-
         </MuiThemeProvider>
       </React.Fragment>
     );
@@ -293,5 +313,4 @@ class App extends React.Component {
 }
 
 
-export default withStyles(styles)(withRouter(App));
-
+export default withStyles(styles, {withTheme: true})(App);

@@ -23,3 +23,5 @@ export const BORMO_STATUS = {
 }
 
 export const VOICE_TEST_PHRASE = 'This is a voice test';
+
+export const DRAWER_WIDTH = 240;

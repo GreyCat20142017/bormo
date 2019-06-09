@@ -14,12 +14,17 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import BormoThemeSelect from './BormoThemeSelect';
 
 import {withStyles} from '@material-ui/core/styles';
+import {DRAWER_WIDTH} from "../constants";
 
 
 const styles = theme => ({
   appBar: {
     top: 'auto',
     bottom: 0,
+    marginLeft: DRAWER_WIDTH,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${DRAWER_WIDTH}px)`,
+    },
   },
   toolbar: {
     alignItems: 'center',

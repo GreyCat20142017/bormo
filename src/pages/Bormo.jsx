@@ -129,8 +129,8 @@ class Bormo extends Component {
       currentIndex: 0,
       maxIndex: nextProps.content.length - 1,
       timerStatus: BORMO_STATUS.STOPPED,
-      interval: null
     });
+    this.interval = null;
   }
 
 

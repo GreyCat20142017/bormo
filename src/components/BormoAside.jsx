@@ -8,26 +8,7 @@ import {withStyles} from '@material-ui/core/styles';
 import BormoCourse from './BormoCourse';
 import BormoLessons from './BormoLessons';
 
-const styles = theme => ({
-  aside: {
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'relative'
-  },
-
-  asideWrapperCourse: {
-    position: 'relative',
-    maxHeight: '120px',
-    overflowY: 'auto'
-  },
-
-  asideWrapperLesson: {
-    position: 'relative',
-    maxHeight: '400px',
-    overflowY: 'hidden'
-  }
-
-});
+const styles = theme => ({});
 
 const Courses = ({courses, currentCourse, onCourseChange, classes}) => (
   <List dense={true}>
@@ -41,15 +22,18 @@ const Courses = ({courses, currentCourse, onCourseChange, classes}) => (
 class BormoAside extends React.Component {
   static Courses = Courses;
 
-  render() {
+  render () {
     const {
       classes,
       courses, currentCourse, lastLesson, onCourseChange,
       lessons, currentLesson, onLessonChange
     } = this.props;
 
+
     return (
-      <nav className={classes.aside}>
+      <div>
+        <Divider/>
+        <div className={classes.toolbar}/>
         <div className={classes.asideWrapperCourse}>
           <Courses key={'courses'} courses={courses} currentCourse={currentCourse} classes={classes}
                    onCourseChange={onCourseChange}/>
@@ -63,7 +47,7 @@ class BormoAside extends React.Component {
             lastLesson={lastLesson}
             onLessonChange={onLessonChange}/>
         </div>
-      </nav>
+      </div>
     )
   }
 }

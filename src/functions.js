@@ -67,7 +67,7 @@ export const getInitialState = (currentTheme) => (
       volume: 1, //0 - 1 step 0.2
       rate: 1,  //0.1 - 10 step 0.1
       pitch: 1 //0 - 2 step 0.1
-    }
-
+    },
+     mobileOpen: false
   }
 );
