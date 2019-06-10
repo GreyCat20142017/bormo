@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/bormo/static/js/runtime~main.edf9e18d.js"
   },
   {
-    "revision": "5f985c8c69398df7e593",
-    "url": "/bormo/static/js/main.5f985c8c.chunk.js"
+    "revision": "8e5aaf8f668260f82750",
+    "url": "/bormo/static/js/main.8e5aaf8f.chunk.js"
   },
   {
     "revision": "2624ab92b60716f2d9bc",
     "url": "/bormo/static/js/1.2624ab92.chunk.js"
   },
   {
-    "revision": "5f985c8c69398df7e593",
+    "revision": "8e5aaf8f668260f82750",
     "url": "/bormo/static/css/main.be54076a.chunk.css"
   },
   {
-    "revision": "f95eb0aafcdf11c52569d265ff7d7ffa",
+    "revision": "cbc1c3ad0f967826303dd563c91d98bd",
     "url": "/bormo/index.html"
   }
 ];
