@@ -34,7 +34,7 @@ import MainTheme from './MainTheme';
 import SpeakerVoice from './SpeakerVoice';
 
 import {getArrayFromObject, getInitialState} from './functions';
-import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON, DRAWER_WIDTH} from './constants';
+import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON, DRAWER_WIDTH, SERVER_ROOT} from './constants';
 import {Route, Switch} from 'react-router-dom';
 import {about} from './about';
 
@@ -302,13 +302,13 @@ class App extends React.Component {
                 <Typography variant='caption'>Данные загружаются...</Typography> :
 
                 <Switch>
-                  <Route exact path='/' component={Main}/>
-                  <Route path='/bormotun' render={() =>
+                  <Route exact path={SERVER_ROOT} component={Main}/>
+                  <Route path={SERVER_ROOT + 'bormotun'} render={() =>
                     <Bormo content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                            currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}/>
                   }/>
-                  <Route path='/control' component={Control}/>
-                  <Route path='/reversecontrol' component={ReverseControl}/>
+                  <Route path={SERVER_ROOT + 'control'} component={Control}/>
+                  <Route path={SERVER_ROOT + 'reversecontrol'} component={ReverseControl}/>
                   <Route component={NotFound}/>
                 </Switch>
               }

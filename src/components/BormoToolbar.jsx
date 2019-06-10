@@ -13,6 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {withStyles} from '@material-ui/core/styles';
 
 import ToolbarLink from './ToolbarLink';
+import {SERVER_ROOT} from "../constants";
 
 
 const styles = theme => ({
@@ -83,27 +84,27 @@ const styles = theme => ({
 const SwitchableContent = ({classes, burgerEl, onBurgerClick, onBurgerClose}) => (
   <Fragment>
 
-    <ToolbarLink to='/bormotun' className={classes.menuLink} title='Бормотание' onClick={onBurgerClose}>
+    <ToolbarLink to={SERVER_ROOT + 'bormotun'} className={classes.menuLink} title='Бормотание' onClick={onBurgerClose}>
       <HeadsetIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Бормотание</span>
     </ToolbarLink>
 
-    <ToolbarLink to='/control' className={classes.menuLink} title='Контроль' onClick={onBurgerClose}>
+    <ToolbarLink to={SERVER_ROOT + 'control'} className={classes.menuLink} title='Контроль' onClick={onBurgerClose}>
       <DoneIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Контроль</span>
     </ToolbarLink>
 
-    <ToolbarLink to='/reversecontrol' className={classes.menuLink} title='Контроль наоборот' onClick={onBurgerClose}>
+    <ToolbarLink to={SERVER_ROOT + 'reversecontrol'} className={classes.menuLink} title='Контроль наоборот' onClick={onBurgerClose}>
       <DoneAllIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Контроль наоборот</span>
     </ToolbarLink>
 
-    <ToolbarLink to='/spelling' className={classes.menuLink} title='Правописание' onClick={onBurgerClose}>
+    <ToolbarLink to={SERVER_ROOT + 'spelling'} className={classes.menuLink} title='Правописание' onClick={onBurgerClose}>
       <PACIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Правописание</span>
     </ToolbarLink>
 
-    <ToolbarLink to='/check' className={classes.menuLink} title='Проверка' onClick={onBurgerClose}>
+    <ToolbarLink to={SERVER_ROOT + 'check'} className={classes.menuLink} title='Проверка' onClick={onBurgerClose}>
       <ListAltIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Проверка</span>
     </ToolbarLink>
@@ -113,7 +114,7 @@ const SwitchableContent = ({classes, burgerEl, onBurgerClick, onBurgerClose}) =>
 
 const BurgerContent = (props) => (
   <Fragment>
-    <IconButton color='inherit' className={props.classes.mobileOn} title="Правописание, проверка..."
+    <IconButton color='inherit' className={props.classes.mobileOn} title="Пункты главного меню..."
                 onClick={props.onBurgerClick}>
       <MenuIcon/>
     </IconButton>
@@ -131,7 +132,7 @@ const BurgerContent = (props) => (
 const BormoToolbar = ({classes, theme, burgerEl, onBurgerClick, onBurgerClose}) => {
   const props = {classes, theme, burgerEl, onBurgerClick, onBurgerClose};
   return (<nav className={classes.menuList}>
-    <ToolbarLink exact to='/' className={classes.menuLink} title='Главная'>
+    <ToolbarLink exact to={SERVER_ROOT} className={classes.menuLink} title='Главная'>
       <HomeIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Главная</span>
     </ToolbarLink>

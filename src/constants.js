@@ -1,5 +1,3 @@
-export const drawerWidth = 180;
-
 export const voiceParams = {
   volume: {default: 1, min: 0, max: 1, step: 0.1, title: 'Громкость'},
   rate: {default: 1, min: 0.1, max: 10, step: 0.1, title: 'Скорость'},
@@ -25,3 +23,7 @@ export const BORMO_STATUS = {
 export const VOICE_TEST_PHRASE = 'This is a voice test';
 
 export const DRAWER_WIDTH = 260;
+
+const url = window.location.origin;
+export const SERVER_ROOT = (url.match(/github\.io/gi)) ? '/bormo/' : '/';
+

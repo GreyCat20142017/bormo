@@ -3,6 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles';
 
 import Fab from '@material-ui/core/Fab';
+import {SERVER_ROOT} from "../constants";
 
 const styles = theme => ({
   btn: {
@@ -16,8 +17,8 @@ const styles = theme => ({
 class BormoLesson extends React.Component {
 
   onLessonClick = () => {
-    if (this.props.location.pathname === '/') {
-      this.props.history.push('/bormotun');
+    if (this.props.location.pathname === SERVER_ROOT) {
+      this.props.history.push(SERVER_ROOT + 'bormotun');
     }
     this.props.onLessonChange(this.props.item, true);
   };
