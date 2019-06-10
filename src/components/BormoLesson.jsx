@@ -10,14 +10,6 @@ const styles = theme => ({
     flexShrink: 1,
     margin: theme.spacing.unit,
     padding: theme.spacing.unit,
-    [theme.breakpoints.down('lg')]: {
-      margin: '4px',
-      padding: '2px'
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '30px',
-      height: '20px'
-    }
   }
 });
 
@@ -27,7 +19,7 @@ class BormoLesson extends React.Component {
     if (this.props.location.pathname === '/') {
       this.props.history.push('/bormotun');
     }
-    this.props.onLessonChange(this.props.item);
+    this.props.onLessonChange(this.props.item, true);
   };
 
   render() {

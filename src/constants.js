@@ -11,7 +11,7 @@ export const PREFFERABLE_VOICE = 'Google UK English';
 export const DATA_PATH = 'data/bormo.json'
 export const COURSES_PATH = 'data/courses.json'
 
-export const PAGE_LIMIT = 10;
+export const PAGE_LIMIT = 9;
 
 //Изменять только одновременно с константой в bormob
 export const WORDS_PER_LESSON = 20;
@@ -24,4 +24,4 @@ export const BORMO_STATUS = {
 
 export const VOICE_TEST_PHRASE = 'This is a voice test';
 
-export const DRAWER_WIDTH = 240;
+export const DRAWER_WIDTH = 260;

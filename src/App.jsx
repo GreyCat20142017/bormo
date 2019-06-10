@@ -3,16 +3,19 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
+import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import Typography from '@material-ui/core/Typography';
+import AppIcon from '@material-ui/icons/Apps';
+import OffIcon from '@material-ui/icons/HighlightOff';
+
 import {withStyles} from '@material-ui/core/styles';
 
-import axios from "axios";
+import axios from 'axios';
 
 import BormoFooter from './components/BormoFooter';
 import BormoHeader from './components/BormoHeader';
@@ -27,13 +30,13 @@ import Control from './pages/Control';
 import ReverseControl from './pages/ReverseControl';
 import NotFound from './pages/NotFound';
 
-import MainTheme from "./MainTheme";
-import SpeakerVoice from "./SpeakerVoice";
+import MainTheme from './MainTheme';
+import SpeakerVoice from './SpeakerVoice';
 
-import {getArrayFromObject, getInitialState} from "./functions";
-import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON, DRAWER_WIDTH} from "./constants";
-import {Route, Switch} from "react-router-dom";
-import {about} from "./about";
+import {getArrayFromObject, getInitialState} from './functions';
+import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON, DRAWER_WIDTH} from './constants';
+import {Route, Switch} from 'react-router-dom';
+import {about} from './about';
 
 
 const styles = theme => ({
@@ -67,6 +70,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
+    minHeight: '90vh'
   },
 });
 
@@ -104,7 +108,6 @@ class App extends React.Component {
         })
       });
     }
-    // this.bormoSpeaker.speak('test');
   }
 
   componentDidMount () {
@@ -128,7 +131,7 @@ class App extends React.Component {
     const {currentCourse} = this.state;
     const res = useAPIData ? await axios.get(`${apiURL}courses/${currentCourse}/${lesson}`) : await axios.get(DATA_PATH);
     this.setState({
-      isDataLoading: false,
+      isLoading: false,
       content: useAPIData ?
         res.data :
         res.data.filter(el => el.course === currentCourse).filter((el, ind) => {
@@ -181,7 +184,10 @@ class App extends React.Component {
     }
   }
 
-  onLessonChange = (lesson) => {
+  onLessonChange = (lesson, hidePanel = false) => {
+    if (hidePanel) {
+      this.setState(state => ({mobileOpen: false}));
+    }
     if (lesson !== this.state.currentLesson) {
       this.getLessonData(lesson);
     }
@@ -202,6 +208,15 @@ class App extends React.Component {
       currentTheme, isLoading, isConfigOpen, isModalOpen,
       config, voiceConfig, soundMuted, lastLesson
     } = this.state;
+
+    const contentMissingMessage = content.length === 0 ?
+      <React.Fragment>
+        <Typography variant='body2' component='p'>Необходимо выбрать курс и урок...</Typography>
+        <Hidden smUp implementation='css'>
+          <Typography variant='caption' component='p'>Для открытия панели выбора используется этот пункт меню:</Typography>
+          <AppIcon/>
+        </Hidden>
+      </React.Fragment> : null;
 
     const drawer = (
       <ErrorBoundary>
@@ -224,15 +239,16 @@ class App extends React.Component {
         <MuiThemeProvider theme={currentTheme.themeObject}>
           <div className={classes.root}>
             <CssBaseline/>
-            <AppBar position="fixed" className={classes.appBar}>
+            <AppBar position='fixed' className={classes.appBar}>
               <Toolbar>
                 <IconButton
-                  color="inherit"
-                  aria-label="Open drawer"
+                  color='secondary'
+                  aria-label='Открыть панель'
                   onClick={this.handleDrawerToggle}
                   className={classes.menuButton}
+                  title='Открыть панель выбора курса и уроков'
                 >
-                  <MenuIcon/>
+                  <AppIcon/>
                 </IconButton>
 
                 <BormoHeader
@@ -247,25 +263,33 @@ class App extends React.Component {
             </AppBar>
 
             <nav className={classes.drawer}>
-              <Hidden smUp implementation="css">
+              <Hidden smUp implementation='css'>
                 <Drawer
-                  variant="temporary"
+                  variant='temporary'
                   anchor={'left'}
                   open={this.state.mobileOpen}
                   onClose={this.handleDrawerToggle}
-                  classes={{
-                    paper: classes.drawerPaper,
-                  }}
+                  classes={{paper: classes.drawerPaper}}
                 >
-                  {drawer}
+                  <React.Fragment>
+                    <IconButton
+                      color='secondary'
+                      aria-label='Закрыть панель'
+                      onClick={this.handleDrawerToggle}
+                      className={classes.menuButton}
+                      title='Закрыть панель выбора курса и уроков без выбора'
+                    >
+                      <OffIcon/>
+                    </IconButton>
+                    <Divider/>
+                    {drawer}
+                  </React.Fragment>
                 </Drawer>
               </Hidden>
-              <Hidden xsDown implementation="css">
+              <Hidden xsDown implementation='css'>
                 <Drawer
-                  classes={{
-                    paper: classes.drawerPaper,
-                  }}
-                  variant="permanent"
+                  classes={{paper: classes.drawerPaper}}
+                  variant='permanent'
                   open
                 >
                   {drawer}
@@ -274,13 +298,20 @@ class App extends React.Component {
             </nav>
 
             <main className={classes.content}>
-              <Switch>
-                <Route exact path='/' component={Main}/>
-                <Route path='/bormotun' render={() => <Bormo content={content} bormoSpeaker={this.bormoSpeaker}/>}/>
-                <Route path='/control' component={Control}/>
-                <Route path='/reversecontrol' component={ReverseControl}/>
-                <Route component={NotFound}/>
-              </Switch>
+              {isLoading ?
+                <Typography variant='caption'>Данные загружаются...</Typography> :
+
+                <Switch>
+                  <Route exact path='/' component={Main}/>
+                  <Route path='/bormotun' render={() =>
+                    <Bormo content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
+                           currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}/>
+                  }/>
+                  <Route path='/control' component={Control}/>
+                  <Route path='/reversecontrol' component={ReverseControl}/>
+                  <Route component={NotFound}/>
+                </Switch>
+              }
             </main>
 
             <Paper className={classes.paperFooter}>

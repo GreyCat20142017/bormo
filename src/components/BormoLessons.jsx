@@ -13,14 +13,11 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SwapCallsIcon from '@material-ui/icons/SwapCalls';
 
 import BormoLesson from './BormoLesson';
 import SimpleSlider from './SimpleSlider';
 
-// import {PAGE_LIMIT} from '../constants';
-const PAGE_LIMIT = 10;
-
+import {PAGE_LIMIT} from '../constants';
 
 const styles = theme => ({
   root: {
@@ -43,19 +40,6 @@ const styles = theme => ({
     overflowX: 'hidden',
     textAlign: 'center'
   },
-  // column: {
-  //   flexBasis: '33.33%',
-  //   [theme.breakpoints.down('md')]: {
-  //     display: 'none'
-  //   }
-  // },
-  // columnMobile: {
-  //   display: 'none',
-  //   [theme.breakpoints.down('md')]: {
-  //     flexBasis: '100%',
-  //     display: 'flex'
-  //   }
-  // },
   btn: {
     textTransform: 'none',
     padding: '0',
@@ -69,12 +53,7 @@ const styles = theme => ({
     alignItems: 'flex-start',
     width: '90%',
     padding: '10px',
-    listStyle: 'none',
-    // [theme.breakpoints.down('md')]: {
-    //   justifyContent: 'center',
-    //   margin: 0,
-    //   padding: '4px'
-    // }
+    listStyle: 'none'
   },
   expanded: {
     display: 'flex'
@@ -85,49 +64,10 @@ const styles = theme => ({
   message: {
     margin: theme.spacing.unit,
     padding: theme.spacing.unit,
-    textAlign: 'center',
-    // [theme.breakpoints.down('md')]: {
-    //   display: 'none'
-    // }
+    textAlign: 'center'
   },
-  // lessonLiFirst: {
-  //   [theme.breakpoints.down('md')]: {
-  //     '&:nth-of-type(n+6)': {
-  //       display: 'none'
-  //     }
-  //   }
-  // },
-  // lessonLiSecond: {
-  //   [theme.breakpoints.down('md')]: {
-  //     '&:nth-of-type(-n+5)': {
-  //       display: 'none'
-  //     }
-  //   }
-  // },
   actions: {
-    padding: '4px',
-    // [theme.breakpoints.down('md')]: {
-    //   flexDirection: 'column'
-    // }
-  },
-  swapBtn: {
-    // display: 'none',
-    // [theme.breakpoints.down('md')]: {
-    //   flexBasis: '100%',
-    //   marginTop: '4px',
-    //   marginBottom: '4px',
-    //   marginLeft: 'auto',
-    //   marginRight: 'auto',
-    //   display: 'block'
-    // }
-  },
-  hidden: {
-    // display: 'none'
-  },
-  extend: {
-    // [theme.breakpoints.down('md')]: {
-    //   display: 'none'
-    // }
+    padding: '4px'
   }
 });
 
@@ -137,12 +77,12 @@ const getPrevTo = (position, min, limit) => ((position - limit) <= 1 ? 1 : posit
 const getSpecifiedStart = (state) => (state.expanded && state.paginationStart !== state.paginationStartTmp ?
   state.paginationStartTmp : state.paginationStart);
 
-const Lessons = ({lessons, currentLesson, onLessonChange, classes, expanded, firstPart, start, finish}) => {
+const Lessons = ({lessons, currentLesson, onLessonChange, classes, expanded, start, finish}) => {
   let list = [];
 
   for (let i = start; i <= finish; i++) {
     list.push(
-      <li key={i} className={firstPart ? classes.lessonLiFirst : classes.lessonLiSecond}>
+      <li key={i}>
         <BormoLesson item={lessons[i - 1]} currentLesson={currentLesson} onLessonChange={onLessonChange}/>
       </li>);
   }
@@ -181,7 +121,6 @@ class BormoLessons extends React.Component {
     const start = PAGE_LIMIT <= this.props.lastLesson ? this.props.currentLesson || this.props.defaultStart : this.props.defaultStart;
     this.state = {
       expanded: false,
-      firstPart: false,
       paginationFrom: this.props.defaultStart,
       paginationTo: this.props.lastLesson,
       paginationStart: start,
@@ -211,16 +150,9 @@ class BormoLessons extends React.Component {
     this.setState({[name]: value});
   };
 
-  onSwapParts = () => {
-    const newFirstPartState = !this.state.firstPart;
-    this.props.onLessonChange(newFirstPartState ? this.state.paginationStart : getPositionTo(this.state.paginationStart, this.state.paginationTo, PAGE_LIMIT));
-    this.setState({firstPart: newFirstPartState});
-  }
-
   onPageJump = () => {
     this.props.onLessonChange(this.state.paginationStartTmp);
     this.setState({
-      firstPart: true,
       paginationStart: this.state.paginationStartTmp,
       paginationFinish: getPositionTo(this.state.paginationStartTmp, this.state.paginationTo, PAGE_LIMIT),
       expanded: false
@@ -232,7 +164,6 @@ class BormoLessons extends React.Component {
     const prev = getPrevTo(getSpecifiedStart(this.state), 1, PAGE_LIMIT);
     this.props.onLessonChange(prev);
     this.setState({
-      firstPart: true,
       paginationStart: prev,
       paginationStartTmp: prev,
       paginationFinish: getPositionTo(prev, this.state.paginationTo, PAGE_LIMIT)
@@ -244,7 +175,6 @@ class BormoLessons extends React.Component {
     const next = getNextTo(getSpecifiedStart(this.state), this.state.paginationTo, PAGE_LIMIT);
     this.props.onLessonChange(next);
     this.setState({
-      firstPart: true,
       paginationStart: next,
       paginationStartTmp: next,
       paginationFinish: getPositionTo(next, this.state.paginationTo, PAGE_LIMIT)
@@ -253,7 +183,7 @@ class BormoLessons extends React.Component {
 
   render() {
     const {classes, lessons, currentLesson, onLessonChange, lastLesson} = this.props;
-    const {expanded, paginationStart, paginationFinish, paginationStartTmp, firstPart} = this.state;
+    const {expanded, paginationStart, paginationFinish, paginationStartTmp} = this.state;
     const sliderParams = {default: currentLesson || paginationStartTmp, min: 1, max: lastLesson, step: 1, title: ''};
     return (lastLesson ?
         <div className={classes.root}>
@@ -265,13 +195,14 @@ class BormoLessons extends React.Component {
 
             </ExpansionPanelSummary>
             <Divider/>
-            <ExpansionPanelDetails className={classes.details}>
+            <ExpansionPanelDetails className={classes.details} style={{touchAction: 'none', msTouchAction: 'none'}}
+            >
               <SimpleSlider noTitle={true} name='paginationStartTmp' params={sliderParams}
                             onSliderChange={this.onSliderChange}/>
             </ExpansionPanelDetails>
             <Divider/>
             <ExpansionPanelActions className={classes.actions}>
-              <Fab variant="extended" color='inherit' className={classes.fab}
+              <Fab variant='extended' color='inherit' className={classes.fab}
                    title={'Перейти к странице "Урок ' + paginationStartTmp + ' - ..."'}
                    onClick={this.onPageJump}>
                 {'c ' + paginationStartTmp}
@@ -280,11 +211,6 @@ class BormoLessons extends React.Component {
                                onNextClick={this.onNextClick} classes={classes}/>
             </ExpansionPanelActions>
           </ExpansionPanel>
-          <IconButton size='small' color='secondary'
-                      className={expanded ? classes.hidden : classes.swapBtn}
-                      title={'Переключить части текущей страницы'} onClick={this.onSwapParts}>
-            <SwapCallsIcon/>
-          </IconButton>
 
           <Lessons
             lessons={lessons}
@@ -294,7 +220,6 @@ class BormoLessons extends React.Component {
             expanded={!expanded}
             start={paginationStart}
             finish={paginationFinish}
-            firstPart={firstPart}
           />
         </div>
         :

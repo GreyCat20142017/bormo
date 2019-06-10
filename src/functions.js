@@ -50,7 +50,6 @@ export const getInitialState = (currentTheme) => (
     content: [],
     data: [],
     isLoading: true,
-    isDataLoading: true,
     config: {
       instantStart: false,
       instantNextMode: true,

@@ -15,27 +15,18 @@ const styles = theme => ({
   asideText: {
     color: 'rgba(0, 0, 0, 0.26)',
     fontWeight: '700',
-    textTransform: 'uppercase',
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
-    }
+    textTransform: 'uppercase'
   },
   asideTextActive: {
     color: theme.palette.primary.main,
     fontWeight: '700',
-    textTransform: 'uppercase',
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
-    }
+    textTransform: 'uppercase'
   },
   asideItem: {
     flexShrink: '1'
   },
   asideIcon: {
-    marginRight: '2px',
-    [theme.breakpoints.down('md')]: {
-      margin: '0 auto'
-    }
+    marginRight: '2px'
   }
 });
 
@@ -59,7 +50,7 @@ class BormoCourse extends React.Component {
 
   onCourseClick = () => this.props.onCourseChange(this.props.item.name, this.props.ind);
 
-  render() {
+  render () {
     const {currentCourse, item, classes} = this.props;
 
     return (

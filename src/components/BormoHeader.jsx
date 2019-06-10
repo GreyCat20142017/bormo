@@ -71,8 +71,7 @@ class BormoHeader extends React.Component {
     const {burgerEl, anchorEl} = this.state;
     return (
       <div className={classes.bar}>
-      {/*<AppBar position='static' color='primary' className={classes.appbar}>*/}
-        {/*<Toolbar className={classes.toolbar}>*/}
+
           <Typography variant='h5' color='inherit' className={classes.switchable}>
             Бормо<span className={classes.switchablePart}>тунчик</span>
           </Typography>
@@ -90,8 +89,7 @@ class BormoHeader extends React.Component {
             <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
           </Menu>
       </div>
-      //   </Toolbar>
-      // </AppBar>
+
 
     )
   }

@@ -94,7 +94,7 @@ const ListPart = ({content, classes, currentIndex, startIndex}) => (
       <li className={classes.cardItem} key={ind + startIndex}>
         <Paper className={classes.card}>
           <Typography className={classes.title} variant='h6'
-                      color={(ind + startIndex) === currentIndex ? 'error' : 'textSecondary'}
+                      color={(ind + startIndex) === currentIndex ? 'error' : 'secondary'}
                       title={item.russian}>
             {item.english}
           </Typography>
@@ -170,7 +170,7 @@ class Bormo extends Component {
   }
 
   render () {
-    const {content, classes} = this.props;
+    const {content, classes, currentLesson, currentCourse, contentMissingMessage} = this.props;
     const {currentIndex, maxIndex} = this.state;
     const currentWord = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].english : '';
     const currentTranslate = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].russian : '';
@@ -186,34 +186,34 @@ class Bormo extends Component {
             {content.length > 0 ?
               <div className={classes.currentWord}>
                 <Paper className={classes.paper}>
-                  <Typography component="h5" variant="h5" color="error">
+                  <Typography component='p' variant='h5' color='inherit'>
                     {currentWord}
                   </Typography>
                 </Paper>
                 <Paper className={classes.paper}>
-                  <Typography component="h5" variant="h5">
+                  <Typography component='p' variant='h5' color='inherit'>
                     {currentTranslate}
                   </Typography>
                 </Paper>
 
 
                 <div className={classes.controls}>
-                  <IconButton aria-label="Старт" className={classes.margin} onClick={this.timerStart}>
+                  <IconButton aria-label='Старт' className={classes.margin} onClick={this.timerStart}>
                     <PlayArrowIcon/>
                   </IconButton>
-                  <IconButton aria-label="Пауза" className={classes.margin} onClick={this.timerPause}>
+                  <IconButton aria-label='Пауза' className={classes.margin} onClick={this.timerPause}>
                     <PauseIcon/>
                   </IconButton>
-                  <IconButton aria-label="Стоп" className={classes.margin} onClick={this.timerStop}>
+                  <IconButton aria-label='Стоп' className={classes.margin} onClick={this.timerStop}>
                     <StopIcon/>
                   </IconButton>
                 </div>
-                <Typography component="p" variant="body2">
-                  {'' + (currentIndex + 1) + ' из '+ (maxIndex+1)}
+                <Typography component='p' variant='body2'>
+                  {'' + currentCourse.toUpperCase() + ', урок ' + currentLesson +': ' + (currentIndex + 1) + ' из '+ (maxIndex+1)}
                 </Typography>
 
               </div>
-              : null
+              : contentMissingMessage
             }
           </div>
 
