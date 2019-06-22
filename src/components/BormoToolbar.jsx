@@ -28,8 +28,11 @@ const styles = theme => ({
   },
   text: {
     marginLeft: '7px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       display: 'none'
+    },
+    [theme.breakpoints.down('md')]: {
+      display: 'flex'
     }
   },
   menuLink: {

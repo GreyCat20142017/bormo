@@ -27,3 +27,8 @@ export const DRAWER_WIDTH = 260;
 const url = window.location.origin;
 export const SERVER_ROOT = (url.match(/github\.io/gi)) ? '/bormo/' : '/';
 
+export const KEYCODES = {
+  ESC: 27,
+  ENTER: 13,
+  TAB: 32
+};
