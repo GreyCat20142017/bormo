@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import PauseIcon from '@material-ui/icons/Pause';
 import StopIcon from '@material-ui/icons/Stop';
+import DoneIcon from '@material-ui/icons/Done';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 import {withStyles} from '@material-ui/core/styles';
@@ -102,21 +103,20 @@ const getActiveAmount = (stateArray) => (
   }, 0)
 );
 
-const ListPart = ({content, classes, currentIndex, startIndex, memorized}) => (
+const ListPart = ({content, classes, currentIndex, startIndex, memorized, switchDisableOne}) => (
   <ul className={classes.cardList}>
     {content.slice(startIndex, startIndex + Math.floor(WORDS_PER_LESSON / 2)).map((item, ind) =>
       <li className={classes.cardItem} key={ind + startIndex}>
         <Paper className={classNames(classes.card, isInactive(ind + startIndex, memorized) ? classes.colorized : null)}>
           <Typography className={classes.title} variant='h6'
                       color={(ind + startIndex) === currentIndex ? 'error' : 'secondary'}
-                      title={item.russian}>
+                      title={'Перевод: "' + item.russian + '". Клик мышью переключает состояние слова...'}
+                      onClick={() => switchDisableOne(ind + startIndex)}>
             {item.english}
           </Typography>
-
         </Paper>
       </li>
-    )
-    }
+    )}
   </ul>);
 
 const getInitialMemorized = (length) => {
@@ -126,7 +126,7 @@ const getInitialMemorized = (length) => {
 
 class Bormo extends Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       currentIndex: 0,
@@ -140,7 +140,7 @@ class Bormo extends Component {
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.interval) {
       clearInterval(this.interval);
     }
@@ -154,9 +154,9 @@ class Bormo extends Component {
   }
 
 
-  ticks () {
+  ticks() {
     this.setState((state) => {
-      const {currentIndex, maxIndex, memorized} = state;
+      const {currentIndex, memorized} = state;
       const before = memorized.filter((item) => (!item.inactive && item.index < currentIndex));
       const after = memorized.filter((item) => (!item.inactive && item.index > currentIndex));
       const active = [...after, ...before];
@@ -202,31 +202,38 @@ class Bormo extends Component {
     this.setState({currentIndex: 0, timerStatus: BORMO_STATUS.STOPPED});
   }
 
-  disableCurrent = () => {
-    const {currentIndex, memorized} = this.state;
-    const newMemorized = [...memorized.slice(0, currentIndex), {
-      index: currentIndex,
-      inactive: true
-    }, ...memorized.slice(currentIndex + 1)];
-    this.setState({memorized: newMemorized});
+  switchDisableCurrent = () => {
+    this.switchDisableOne(this.state.currentIndex);
   }
 
-  onKeyPress = (evt) => {
-    if (evt.keyCode === KEYCODES.ENTER || evt.keyCode === KEYCODES.TAB) {
-      this.disableCurrent();
+  switchDisableOne = (index) => {
+    const {memorized, timerStatus} = this.state;
+    if (timerStatus == BORMO_STATUS.STARTED) {
+      const newMemorized = [...memorized.slice(0, index), {
+        index: index,
+        inactive: !memorized[index].inactive
+      }, ...memorized.slice(index + 1)];
+      this.setState({memorized: newMemorized});
     }
   }
 
-  componentDidMount () {
+  onKeyPress = (evt) => {
+    if ((evt.keyCode === KEYCODES.ENTER || evt.keyCode === KEYCODES.SPACE) &&
+      !evt.target.hasAttribute('data-done')) {
+      this.switchDisableCurrent();
+    }
+  }
+
+  componentDidMount() {
     document.addEventListener('keydown', this.onKeyPress);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearInterval(this.interval);
     document.removeEventListener('keydown', this.onKeyPress);
   }
 
-  render () {
+  render() {
     const {content, classes, currentLesson, currentCourse, contentMissingMessage} = this.props;
     const {currentIndex, maxIndex, memorized} = this.state;
     const currentWord = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].english : '';
@@ -238,7 +245,7 @@ class Bormo extends Component {
         <div className={classes.parts}>
           <div className={classNames(classes.part, classes.partDesktopOnly)}>
             <ListPart content={content} classes={classes} currentIndex={currentIndex} startIndex={0}
-                      memorized={memorized}/>
+                      memorized={memorized} switchDisableOne={this.switchDisableOne}/>
           </div>
 
           <div className={classes.part}>
@@ -267,13 +274,18 @@ class Bormo extends Component {
                   <IconButton aria-label='Стоп' className={classes.margin} onClick={this.timerStop} title="Стоп">
                     <StopIcon/>
                   </IconButton>
+
+                  <IconButton aria-label='Отметить' className={classes.margin} onClick={this.switchDisableCurrent}
+                              data-done="true" title="Отметить слово как изученное">
+                    <DoneIcon/>
+                  </IconButton>
                 </div>
                 <Typography component='p' variant='body2'>
                   {'' + currentCourse.toUpperCase() + ', урок ' + currentLesson + ' (' + (currentIndex + 1) + ' из ' + (maxIndex + 1) + ')'}
                 </Typography>
 
                 <Typography component='p' variant='caption'>
-                  TAB или ENTER - отметить текущее слово как изученное
+                  SPACE или ENTER - отметить текущее слово как изученное
                 </Typography>
 
               </div>
@@ -284,7 +296,8 @@ class Bormo extends Component {
 
           <div className={classNames(classes.part, classes.partDesktopOnly)}>
             <ListPart content={content} classes={classes} currentIndex={currentIndex}
-                      startIndex={Math.floor(WORDS_PER_LESSON / 2)} memorized={memorized}/>
+                      startIndex={Math.floor(WORDS_PER_LESSON / 2)} memorized={memorized}
+                      switchDisableOne={this.switchDisableOne}/>
           </div>
 
         </div>

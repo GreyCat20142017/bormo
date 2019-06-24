@@ -55,7 +55,7 @@ export const getInitialState = (currentTheme) => (
       instantNextMode: true,
       countErrorAtPrompt: true,
       checkedModes: {},
-      useAPIData: true,
+      useAPIData: false,
       apiURL: 'http://localhost:3377/'
     },
     soundMuted: false,

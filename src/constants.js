@@ -30,5 +30,6 @@ export const SERVER_ROOT = (url.match(/github\.io/gi)) ? '/bormo/' : '/';
 export const KEYCODES = {
   ESC: 27,
   ENTER: 13,
-  TAB: 32
+  SPACE: 32,
+  TAB: 9
 };
