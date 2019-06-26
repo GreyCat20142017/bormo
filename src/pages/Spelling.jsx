@@ -1,9 +1,9 @@
 import React from 'react';
 
-const ReverseControl = () => (
+const Spelling = () => (
   <div>
     ReverseControl
   </div>
 );
 
-export default ReverseControl;
+export default Spelling;

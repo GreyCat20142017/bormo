@@ -40,12 +40,6 @@ const styles = theme => ({
       fontSize: 14
     }
   },
-  controls: {
-    margin: '50px auto 10px auto',
-    maxWidth: '200px',
-    maxHeight: '50px',
-    alignSelf: 'flex-end'
-  },
   paper: {
     padding: '8px',
     margin: '8px',
@@ -57,15 +51,31 @@ const styles = theme => ({
   },
   currentWord: {
     width: '80%',
-    margin: '0 auto'
+    margin: '20px auto',
+    fontWeight: 'bold',
+    [theme.breakpoints.down('sm')]: {
+      margin: '0 auto',
+      width: '60%',
+    }
   },
   currentPaper: {
-    padding: '8px',
     [theme.breakpoints.down('sm')]: {
-      padding: 0,
-      fontSize: 10
+      padding: 0
     }
-  }
+  },
+
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: '0 2%'
+  },
+
+  badge: {
+    padding: `0 ${theme.spacing.unit}px`,
+    textTransform: 'uppercase'
+  },
+
 });
 
 export {styles};

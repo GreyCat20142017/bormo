@@ -27,7 +27,6 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Main from './pages/Main';
 import Bormo from './pages/Bormo';
 import Control from './pages/Control';
-import ReverseControl from './pages/ReverseControl';
 
 import NotFound from './pages/NotFound';
 import MainTheme from './MainTheme';
@@ -288,9 +287,14 @@ class App extends React.Component {
                   }/>
                   <Route path={SERVER_ROOT + 'control'} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                             currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}/>
+                             currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
+                             reverse={false}/>
                   }/>
-                  <Route path={SERVER_ROOT + 'reversecontrol'} component={ReverseControl}/>
+                  <Route path={SERVER_ROOT + 'reversecontrol'} render={() =>
+                    <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
+                             currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
+                             reverse={true}/>
+                  }/>
                   <Route component={NotFound}/>
                 </Switch>
               }
