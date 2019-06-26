@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import PauseIcon from '@material-ui/icons/Pause';
 import StopIcon from '@material-ui/icons/Stop';
@@ -11,117 +12,28 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 
+import {styles} from './Bormo.css.js';
+import {isInactive, getActiveAmount, getInitialMemorized} from './pagesCommon';
 import {WORDS_PER_LESSON, BORMO_STATUS, KEYCODES} from '../constants';
 
 const TIMER_INTERVAL = 3000;
-
-
-const styles = theme => ({
-  cardList: {
-    listStyle: 'none',
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    width: '100%',
-    paddingLeft: '2.2%',
-    paddingRight: '2.2%',
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'center',
-    }
-  },
-  cardItem: {
-    minWidth: '100%',
-    margin: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      margin: '4px',
-      minWidth: '90%'
-    }
-  },
-  card: {
-    padding: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      padding: '2px',
-      marginTop: '0'
-    }
-  },
-  title: {
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14
-    }
-  },
-  part: {
-    width: '30%',
-    textAlign: 'center',
-    paddingLeft: '1%',
-    paddingRight: '1%',
-    [theme.breakpoints.down('md')]: {
-      width: '90%',
-      margin: 'auto'
-    }
-  },
-  partDesktopOnly: {
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    }
-  },
-  parts: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    align: 'stretch'
-  },
-  currentWord: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: '50px'
-  },
-  controls: {
-    margin: '50px auto 10px auto',
-    maxWidth: '200px',
-    maxHeight: '50px',
-    alignSelf: 'flex-end'
-  },
-  paper: {
-    padding: '8px',
-    margin: '8px',
-    width: '100%',
-    alignSelf: 'center'
-  },
-  colorized: {
-    backgroundColor: 'rgb(232, 232, 232)'
-  }
-
-});
-
-const isInactive = (index, stateArray) => {
-  return stateArray[index].inactive;
-};
-
-const getActiveAmount = (stateArray) => (
-  stateArray.reduce((amount, current) => {
-    amount += (current.inactive ? 0 : 1);
-    return amount;
-  }, 0)
-);
 
 const ListPart = ({content, classes, currentIndex, startIndex, memorized, switchDisableOne}) => (
   <ul className={classes.cardList}>
     {content.slice(startIndex, startIndex + Math.floor(WORDS_PER_LESSON / 2)).map((item, ind) =>
       <li className={classes.cardItem} key={ind + startIndex}>
         <Paper className={classNames(classes.card, isInactive(ind + startIndex, memorized) ? classes.colorized : null)}>
-          <Typography className={classes.title} variant='h6'
-                      color={(ind + startIndex) === currentIndex ? 'error' : 'secondary'}
-                      title={'Перевод: "' + item.russian + '". Клик мышью переключает состояние слова...'}
-                      onClick={() => switchDisableOne(ind + startIndex)}>
-            {item.english}
-          </Typography>
+          <Tooltip title={'Перевод: "' + item.russian + '"'} className={classes.tooltip}>
+            <Typography className={classes.title} variant='h6'
+                        color={(ind + startIndex) === currentIndex ? 'error' : 'secondary'}
+                        onClick={() => switchDisableOne(ind + startIndex)}>
+              {item.english}
+            </Typography>
+          </Tooltip>
         </Paper>
       </li>
     )}
   </ul>);
-
-const getInitialMemorized = (length) => {
-  return "?".repeat(length).split("").map((item, ind) => (({index: ind, inactive: false})))
-};
 
 
 class Bormo extends Component {
@@ -208,7 +120,7 @@ class Bormo extends Component {
 
   switchDisableOne = (index) => {
     const {memorized, timerStatus} = this.state;
-    if (timerStatus == BORMO_STATUS.STARTED) {
+    if (timerStatus === BORMO_STATUS.STARTED) {
       const newMemorized = [...memorized.slice(0, index), {
         index: index,
         inactive: !memorized[index].inactive

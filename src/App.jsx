@@ -1,4 +1,5 @@
 import React from 'react';
+import {Route, Switch} from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,64 +17,27 @@ import OffIcon from '@material-ui/icons/HighlightOff';
 import {withStyles} from '@material-ui/core/styles';
 
 import axios from 'axios';
-
 import BormoFooter from './components/BormoFooter';
 import BormoHeader from './components/BormoHeader';
 import BormoAside from './components/BormoAside';
 import BormoConfig from './components/config/BormoConfig';
 import BormoModal from './components/BormoModal';
-import ErrorBoundary from './components/ErrorBoundary';
 
+import ErrorBoundary from './components/ErrorBoundary';
 import Main from './pages/Main';
 import Bormo from './pages/Bormo';
 import Control from './pages/Control';
 import ReverseControl from './pages/ReverseControl';
+
 import NotFound from './pages/NotFound';
-
 import MainTheme from './MainTheme';
+
 import SpeakerVoice from './SpeakerVoice';
-
+import {styles} from './App.css.js';
 import {getArrayFromObject, getInitialState} from './functions';
-import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON, DRAWER_WIDTH, SERVER_ROOT} from './constants';
-import {Route, Switch} from 'react-router-dom';
+import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON, SERVER_ROOT} from './constants';
+
 import {about} from './about';
-
-
-const styles = theme => ({
-  root: {
-    display: 'flex',
-    alignItems: 'stretch'
-  },
-  drawer: {
-    padding: '20px',
-    [theme.breakpoints.up('sm')]: {
-      width: DRAWER_WIDTH,
-      flexShrink: 0,
-    },
-  },
-  appBar: {
-    marginLeft: DRAWER_WIDTH,
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${DRAWER_WIDTH}px)`,
-    },
-  },
-  menuButton: {
-    marginRight: 20,
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: DRAWER_WIDTH,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    minHeight: '90vh'
-  },
-});
-
 
 const Loader = ({classes}) => (
   <Paper className={classes.paperLoader}>
@@ -197,11 +161,25 @@ class App extends React.Component {
     this.setState({currentTheme: MainTheme[themeKey]});
   }
 
-  handleDrawerToggle = () => {
+  onDrawerToggle = () => {
     this.setState(state => ({mobileOpen: !state.mobileOpen}));
-  };
+  }
 
-  render () {
+  onPreviousClick = () => {
+    const {currentLesson} = this.state;
+    if (currentLesson > 1) {
+      this.onLessonChange(currentLesson - 1);
+    }
+  }
+
+  onNextClick = () => {
+    const {lastLesson, currentLesson} = this.state;
+    if (currentLesson < lastLesson) {
+      this.onLessonChange(currentLesson + 1);
+    }
+  }
+
+  render() {
     const {classes, themes} = this.props;
     const {
       currentMode, currentCourse, currentLesson, lessons, courses, content,
@@ -213,7 +191,8 @@ class App extends React.Component {
       <React.Fragment>
         <Typography variant='body2' component='p'>Необходимо выбрать курс и урок...</Typography>
         <Hidden smUp implementation='css'>
-          <Typography variant='caption' component='p'>Для открытия панели выбора используется этот пункт меню:</Typography>
+          <Typography variant='caption' component='p'>Для открытия панели выбора используется этот пункт
+            меню:</Typography>
           <AppIcon/>
         </Hidden>
       </React.Fragment> : null;
@@ -244,7 +223,7 @@ class App extends React.Component {
                 <IconButton
                   color='secondary'
                   aria-label='Открыть панель'
-                  onClick={this.handleDrawerToggle}
+                  onClick={this.onDrawerToggle}
                   className={classes.menuButton}
                   title='Открыть панель выбора курса и уроков'
                 >
@@ -268,14 +247,14 @@ class App extends React.Component {
                   variant='temporary'
                   anchor={'left'}
                   open={this.state.mobileOpen}
-                  onClose={this.handleDrawerToggle}
+                  onClose={this.onDrawerToggle}
                   classes={{paper: classes.drawerPaper}}
                 >
                   <React.Fragment>
                     <IconButton
                       color='secondary'
                       aria-label='Закрыть панель'
-                      onClick={this.handleDrawerToggle}
+                      onClick={this.onDrawerToggle}
                       className={classes.menuButton}
                       title='Закрыть панель выбора курса и уроков без выбора'
                     >
@@ -307,7 +286,10 @@ class App extends React.Component {
                     <Bormo content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                            currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}/>
                   }/>
-                  <Route path={SERVER_ROOT + 'control'} component={Control}/>
+                  <Route path={SERVER_ROOT + 'control'} render={() =>
+                    <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
+                             currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}/>
+                  }/>
                   <Route path={SERVER_ROOT + 'reversecontrol'} component={ReverseControl}/>
                   <Route component={NotFound}/>
                 </Switch>
@@ -315,7 +297,8 @@ class App extends React.Component {
             </main>
 
             <Paper className={classes.paperFooter}>
-              <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}/>
+              <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
+                           onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
             </Paper>
 
           </div>
@@ -342,6 +325,5 @@ class App extends React.Component {
     );
   }
 }
-
 
 export default withStyles(styles, {withTheme: true})(App);

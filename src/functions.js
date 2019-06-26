@@ -1,13 +1,3 @@
-// const shuffleArray = (entities) => {
-//     let sortableEntities = entities.slice();
-//     for (let i = sortableEntities.length - 1; i > 0; i--) {
-//       let j = Math.floor(Math.random() * (i + 1));
-//       let temporaryValue = sortableEntities[i];
-//       sortableEntities[i] = sortableEntities[j];
-//       sortableEntities[j] = temporaryValue;
-//     }
-//     return sortableEntities;
-//   };
 
 // const getStringCompareResult =  (left, right) => {
 //     if (left > right) {

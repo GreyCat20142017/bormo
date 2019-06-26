@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 
-import RefreshRoundedIcon from '@material-ui/icons/RefreshRounded';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SearchIcon from '@material-ui/icons/Search';
@@ -57,7 +57,7 @@ const styles = theme => ({
   }
 });
 
-const BormoFooter = ({classes, theme, ...rest}) => (
+const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, ...rest}) => (
   <AppBar position='fixed' color='primary' className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
 
@@ -67,16 +67,16 @@ const BormoFooter = ({classes, theme, ...rest}) => (
       <BormoThemeSelect {...rest} className={classes.mobileOff}/>
 
       <div className={classes.fabButtons}>
-        <Fab color='primary' aria-label='Предыдущий урок' title='Предыдущий урок' className={classes.fabButton}
-             size='small'>
+        <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок' className={classes.fabButton}
+             size='small' onClick={onPreviousClick}>
           <ArrowBackIcon/>
         </Fab>
-        <Fab color='secondary' aria-label='Старт/перезапуск' title='Старт/перезапуск' className={classes.fabButton}
+        <Fab color='primary' aria-label='Справка' title='Справка' className={classes.fabButton}
              size='small'>
-          <RefreshRoundedIcon/>
+          <HelpOutlineIcon/>
         </Fab>
-        <Fab color='primary' aria-label='Следующий урок' title='Cледующий урок' className={classes.fabButton}
-             size='small'>
+        <Fab color='secondary' aria-label='Следующий урок' title='Cледующий урок' className={classes.fabButton}
+             size='small' onClick={onNextClick}>
           <ArrowForwardIcon/>
         </Fab>
       </div>
