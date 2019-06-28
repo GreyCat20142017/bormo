@@ -22,25 +22,7 @@ import BormoThemeSelect from '../BormoThemeSelect';
 import {voiceParams, VOICE_TEST_PHRASE} from '../../constants';
 import {getRound} from '../../functions';
 
-
-const styles = theme => ({
-  configWrapper: {
-    margin: '32px auto',
-    padding: theme.spacing.unit
-  },
-  configButton: {
-    margin: theme.spacing.unit
-  },
-  configGroup: {
-    margin: theme.spacing.unit,
-  },
-  rightIcon: {
-    marginLeft: theme.spacing.unit
-  },
-  configPaper: {
-    marginBottom: '32px'
-  }
-});
+import {styles} from './BormoConfig.css.js';
 
 class BormoConfig extends React.Component {
 

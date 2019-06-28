@@ -7,28 +7,7 @@ import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 import {SERVER_ROOT} from "../constants";
 
-
-const styles = theme => ({
-  page404: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  page404__header: {
-    textAlign: 'center'
-  },
-  button: {
-    margin: theme.spacing.unit,
-  },
-  rightIcon: {
-    marginLeft: theme.spacing.unit,
-  },
-  iconSmall: {
-    fontSize: 20,
-  },
-});
+import {styles} from './NotFound.css.js';
 
 class NotFound extends React.Component {
   constructor(props) {

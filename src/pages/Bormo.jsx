@@ -18,6 +18,13 @@ import {WORDS_PER_LESSON, BORMO_STATUS, KEYCODES} from '../constants';
 
 const TIMER_INTERVAL = 3000;
 
+const getBormoInitialState = (props) => ({
+  currentIndex: 0,
+  maxIndex: props.content.length - 1,
+  timerStatus: BORMO_STATUS.STOPPED,
+  memorized: getInitialMemorized(props.content.length)
+});
+
 const ListPart = ({content, classes, currentIndex, startIndex, memorized, switchDisableOne}) => (
   <ul className={classes.cardList}>
     {content.slice(startIndex, startIndex + Math.floor(WORDS_PER_LESSON / 2)).map((item, ind) =>
@@ -40,14 +47,7 @@ class Bormo extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      currentIndex: 0,
-      maxIndex: this.props.content.length - 1,
-      timerStatus: BORMO_STATUS.STOPPED,
-      interval: null,
-      memorized: getInitialMemorized(this.props.content.length)
-    };
-
+    this.state = getBormoInitialState(this.props);
     this.ticks = this.ticks.bind(this);
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
@@ -56,12 +56,7 @@ class Bormo extends Component {
     if (this.interval) {
       clearInterval(this.interval);
     }
-    this.setState({
-      currentIndex: 0,
-      maxIndex: nextProps.content.length - 1,
-      timerStatus: BORMO_STATUS.STOPPED,
-      memorized: getInitialMemorized(nextProps.content.length)
-    });
+    this.setState(getBormoInitialState(nextProps));
     this.interval = null;
   }
 

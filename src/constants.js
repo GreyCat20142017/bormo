@@ -33,3 +33,5 @@ export const KEYCODES = {
   SPACE: 32,
   TAB: 9
 };
+
+export const LANGUAGES = {EN: 'english', RU: 'russian'};

@@ -5,8 +5,8 @@ import Divider from '@material-ui/core/Divider';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import BormoCourse from './BormoCourse';
-import BormoLessons from './BormoLessons';
+import BormoCourse from './aside/BormoCourse';
+import BormoLessons from './aside/BormoLessons';
 
 const styles = theme => ({});
 

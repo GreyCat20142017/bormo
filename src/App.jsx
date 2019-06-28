@@ -17,8 +17,8 @@ import OffIcon from '@material-ui/icons/HighlightOff';
 import {withStyles} from '@material-ui/core/styles';
 
 import axios from 'axios';
-import BormoFooter from './components/BormoFooter';
-import BormoHeader from './components/BormoHeader';
+import BormoFooter from './components/footer/BormoFooter';
+import BormoHeader from './components/header/BormoHeader';
 import BormoAside from './components/BormoAside';
 import BormoConfig from './components/config/BormoConfig';
 import BormoModal from './components/BormoModal';
@@ -27,6 +27,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Main from './pages/Main';
 import Bormo from './pages/Bormo';
 import Control from './pages/Control';
+import Spelling from './pages/Spelling';
 
 import NotFound from './pages/NotFound';
 import MainTheme from './MainTheme';
@@ -292,6 +293,11 @@ class App extends React.Component {
                   }/>
                   <Route path={SERVER_ROOT + 'reversecontrol'} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
+                             currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
+                             reverse={true}/>
+                  }/>
+                  <Route path={SERVER_ROOT + 'spelling'} render={() =>
+                    <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
                              reverse={true}/>
                   }/>

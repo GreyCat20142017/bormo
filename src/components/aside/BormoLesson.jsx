@@ -1,9 +1,9 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles/index';
 
-import Fab from '@material-ui/core/Fab';
-import {SERVER_ROOT} from "../constants";
+import Fab from '@material-ui/core/Fab/index';
+import {SERVER_ROOT} from "../../constants";
 
 const styles = theme => ({
   btn: {

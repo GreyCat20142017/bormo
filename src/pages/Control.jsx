@@ -10,24 +10,12 @@ import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 
 import {styles} from './Control.css.js';
-import {isInactive, getActiveAmount, getInitialMemorized, getRandomOrder, shuffleArray} from './pagesCommon';
+
+import {
+  isInactive, getTranslateLanguage, getOriginLanguage, getModeInitialState, getCurrentTranslate
+} from './pagesCommon';
 
 import {WORDS_PER_LESSON, BORMO_STATUS} from '../constants';
-
-const getTranslate = (reverse) => (reverse ?  'english' : 'russian');
-
-const getOrigin = (reverse) => (reverse ? 'russian' :  'english');
-
-const getControlInitialState = (props) => ({
-  currentIndex: 0,
-  maxIndex: props.content.length - 1,
-  timerStatus: BORMO_STATUS.STARTED,
-  memorized: getInitialMemorized(props.content.length),
-  randomOrder: getRandomOrder(props.content.length),
-  content: shuffleArray(props.content),
-  errorCount: 0,
-  okCount: 0
-});
 
 const ListPart = ({content, classes, currentIndex, startIndex, memorized, switchDisableOne, reverse}) => (
 
@@ -40,7 +28,7 @@ const ListPart = ({content, classes, currentIndex, startIndex, memorized, switch
           <Typography className={classes.title} variant='h6'
                       color='secondary'
                       onClick={() => switchDisableOne(ind + startIndex)}>
-            {item[getOrigin(reverse)]}
+            {item[getOriginLanguage(reverse)]}
           </Typography>
 
         </Paper>
@@ -53,19 +41,21 @@ class Control extends Component {
 
   constructor(props) {
     super(props);
-    this.state = getControlInitialState(this.props);
-    this.bormoSpeaker = this.props.bormoSpeaker;    
+    this.state = getModeInitialState(this.props);
+    this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(getControlInitialState(nextProps));
+    this.setState(getModeInitialState(nextProps));
   }
 
   switchDisableOne = (index) => {
     const {content, reverse} = this.props;
     const {memorized, timerStatus, currentIndex, maxIndex, randomOrder, errorCount, okCount} = this.state;
 
-    if (timerStatus === BORMO_STATUS.STARTED && content[index][getTranslate(reverse)] === content[randomOrder[currentIndex]][getTranslate(reverse)]) {
+    if (timerStatus === BORMO_STATUS.STARTED &&
+      content[index][getTranslateLanguage(reverse)] === content[randomOrder[currentIndex]][getTranslateLanguage(reverse)]) {
+
       const newMemorized = [...memorized.slice(0, index), {
         index: index,
         inactive: !memorized[index].inactive
@@ -80,15 +70,24 @@ class Control extends Component {
     }
   }
 
+  speakSomething = (currentIndex, maxIndex, randomOrder, reverse, content) => {
+    const {timerStatus} = this.state;
+    if (timerStatus === BORMO_STATUS.STARTED) {
+      if (reverse) {
+        this.bormoSpeaker.speak(getCurrentTranslate(currentIndex, maxIndex, randomOrder, reverse, content));
+      } else {
+        this.bormoSpeaker.speak(getCurrentTranslate(currentIndex - 1, maxIndex, randomOrder, true, content));
+      }
+    }
+  }
+
   render() {
     const {classes, currentLesson, currentCourse, contentMissingMessage, reverse} = this.props;
     const {content, currentIndex, maxIndex, memorized, randomOrder, errorCount, okCount} = this.state;
-    const currentTranslate = (currentIndex >= 0 && randomOrder[currentIndex] <= maxIndex && randomOrder[currentIndex] >= 0) ?
-      content[randomOrder[currentIndex]][getTranslate(reverse)] : '';
-    const activeAmount = getActiveAmount(memorized);
-
+    const currentTranslate = getCurrentTranslate(currentIndex, maxIndex, randomOrder, reverse, content);
 
     if (content.length > 0) {
+      this.speakSomething(currentIndex, maxIndex, randomOrder, reverse, content);
 
       return (<React.Fragment>
 
@@ -101,14 +100,14 @@ class Control extends Component {
 
           <Paper className={classNames(classes.paper, classes.currentPaper, classes.currentWord)}>
             <Typography component='p' variant='h6' color='inherit' align='center'>
-              {activeAmount === 0 ?
-                'Все слова этого урока отмечены правильно'+  (errorCount > 0 ? ', но число ошибок: ' +  errorCount : '...'):
+              {okCount === content.length ?
+                'Урок "' + currentCourse + ' № ' + currentLesson + '" пройден ' + '. Число ошибок: ' + errorCount :
                 currentTranslate}
             </Typography>
           </Paper>
 
           <Badge className={classes.badge} color='primary' badgeContent={errorCount}
-            title={'Количество ошибок: ' + errorCount}>
+                 title={'Количество ошибок: ' + errorCount}>
             <ErrorIcon fontSize='large' color='error'/>
           </Badge>
 
@@ -131,7 +130,6 @@ class Control extends Component {
                       startIndex={Math.floor(WORDS_PER_LESSON / 2)} memorized={memorized}
                       switchDisableOne={this.switchDisableOne} reverse={reverse}/>
           </div>
-
         </div>
 
       </React.Fragment>)
