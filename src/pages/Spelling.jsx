@@ -37,6 +37,7 @@ class Control extends Component {
     evt.preventDefault();
     const {currentIndex, content, maxIndex, translate, errorCount, okCount} = this.state;
     if (content[currentIndex][LANGUAGES.EN].trim() === translate.trim()) {
+      this.bormoSpeaker.speak(translate);
       if (currentIndex === maxIndex) {
         this.setState({
           translate: '',

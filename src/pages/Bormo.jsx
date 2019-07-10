@@ -14,7 +14,7 @@ import classNames from 'classnames';
 
 import {styles} from './Bormo.css.js';
 import {isInactive, getActiveAmount, getInitialMemorized} from './pagesCommon';
-import {WORDS_PER_LESSON, BORMO_STATUS, KEYCODES} from '../constants';
+import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES} from '../constants';
 
 const TIMER_INTERVAL = 3000;
 
@@ -125,7 +125,7 @@ class Bormo extends Component {
   }
 
   onKeyPress = (evt) => {
-    if ((evt.keyCode === KEYCODES.ENTER || evt.keyCode === KEYCODES.SPACE) &&
+    if ((evt.keyCode === KEY_CODES.ENTER || evt.keyCode === KEY_CODES.SPACE) &&
       !evt.target.hasAttribute('data-done')) {
       this.switchDisableCurrent();
     }
@@ -142,7 +142,7 @@ class Bormo extends Component {
 
   render() {
     const {content, classes, currentLesson, currentCourse, contentMissingMessage} = this.props;
-    const {currentIndex, maxIndex, memorized} = this.state;
+    const {currentIndex, maxIndex, memorized, timerStatus} = this.state;
     const currentWord = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].english : '';
     const currentTranslate = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].russian : '';
     const activeAmount = getActiveAmount(memorized);
@@ -181,11 +181,13 @@ class Bormo extends Component {
                   <IconButton aria-label='Стоп' className={classes.margin} onClick={this.timerStop} title="Стоп">
                     <StopIcon/>
                   </IconButton>
-
+                  {timerStatus === BORMO_STATUS.STARTED ?
                   <IconButton aria-label='Отметить' className={classes.margin} onClick={this.switchDisableCurrent}
                               data-done="true" title="Отметить слово как изученное">
                     <DoneIcon/>
                   </IconButton>
+                    : null
+                  }
                 </div>
                 <Typography component='p' variant='body2'>
                   {'' + currentCourse.toUpperCase() + ', урок ' + currentLesson + ' (' + (currentIndex + 1) + ' из ' + (maxIndex + 1) + ')'}

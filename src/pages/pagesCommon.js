@@ -56,7 +56,8 @@ export const getModeInitialState = ({content, reverse}) => {
     randomOrder: randomOrder,
     content: shuffleArray(content),
     errorCount: 0,
-    okCount: 0
+    okCount: 0,
+    wasError: false
   });
 }
 

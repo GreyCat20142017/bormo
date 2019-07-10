@@ -19,7 +19,7 @@ import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
 import BormoFooter from './components/footer/BormoFooter';
 import BormoHeader from './components/header/BormoHeader';
-import BormoAside from './components/BormoAside';
+import BormoAside from './components/aside/BormoAside';
 import BormoConfig from './components/config/BormoConfig';
 import BormoModal from './components/BormoModal';
 
@@ -53,7 +53,7 @@ class App extends React.Component {
     themes: getArrayFromObject(MainTheme)
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = getInitialState(MainTheme.neutral);
     this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
@@ -74,7 +74,7 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getCoursesData();
     if (this.bormoSpeaker.supportSound) {
       this.bormoSpeaker.getVoiceList(this.initCurrentSpeaker);
@@ -83,25 +83,42 @@ class App extends React.Component {
 
   getCoursesData = async () => {
     const {apiURL, useAPIData} = this.state.config;
-    const res = useAPIData ? await axios.get(`${apiURL}courses/`) : await axios.get(COURSES_PATH);
+    let result = [];
+    let res = [];
+    try {
+      res = await axios.get(`${apiURL}`);
+      result = res && (res.status === 200) ? res.data.info : [];
+    } catch (err) {
+      res = await axios.get(COURSES_PATH);
+      result = res ? res.data : [];
+    }
     this.setState({
       isLoading: false,
-      courses: res.data
+      courses: result
     });
+
   }
 
   getLessonData = async (lesson) => {
     const {apiURL, useAPIData} = this.state.config;
     const {currentCourse} = this.state;
-    const res = useAPIData ? await axios.get(`${apiURL}courses/${currentCourse}/${lesson}`) : await axios.get(DATA_PATH);
+    let result = [];
+    let res = [];
+    try {
+      res = await axios.get(`${apiURL}`,
+        {params: {course: currentCourse, lesson: lesson}});
+      result = res && (res.status === 200) ? res.data.content : [];
+    } catch (err) {
+      res = await axios.get(DATA_PATH);
+      result = res.data.filter(el => el.course === currentCourse).filter((el, ind) => {
+        const startInd = (parseInt(lesson, 10) - 1) * WORDS_PER_LESSON || 0;
+        return (ind >= startInd && ind < (startInd + WORDS_PER_LESSON));
+      });
+    }
+
     this.setState({
       isLoading: false,
-      content: useAPIData ?
-        res.data :
-        res.data.filter(el => el.course === currentCourse).filter((el, ind) => {
-          const startInd = (parseInt(lesson, 10) - 1) * WORDS_PER_LESSON || 0;
-          return (ind >= startInd && ind < (startInd + WORDS_PER_LESSON));
-        }),
+      content: result,
       currentLesson: lesson
     });
   }
@@ -298,8 +315,8 @@ class App extends React.Component {
                   }/>
                   <Route path={SERVER_ROOT + 'spelling'} render={() =>
                     <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                             currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                             reverse={true}/>
+                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
+                              reverse={true}/>
                   }/>
                   <Route component={NotFound}/>
                 </Switch>

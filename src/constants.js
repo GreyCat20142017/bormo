@@ -27,7 +27,7 @@ export const DRAWER_WIDTH = 260;
 const url = window.location.origin;
 export const SERVER_ROOT = (url.match(/github\.io/gi)) ? '/bormo/' : '/';
 
-export const KEYCODES = {
+export const KEY_CODES = {
   ESC: 27,
   ENTER: 13,
   SPACE: 32,
@@ -35,3 +35,13 @@ export const KEYCODES = {
 };
 
 export const LANGUAGES = {EN: 'english', RU: 'russian'};
+
+
+export const DATA_SOURCES = {
+  PHP_LOCAL: 'http://bormophp.local:8080/courses.php',
+  NODE_LOCAL: 'http://localhost:3377/',
+  PHP_HOSING: 'Источник данных недоступен',
+  NODE_HOSTING: 'Источник данных недоступен'
+};
+
+export const STATUS_OK = 200;

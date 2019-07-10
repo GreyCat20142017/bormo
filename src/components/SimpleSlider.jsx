@@ -53,9 +53,9 @@ class SimpleSlider extends React.Component {
         <Slider
           classes={{container: classes.slider}}
           value={value}
-          disabled={params.min >= params.max}
-          min={params.min}
-          max={params.max}
+          disabled={parseInt(params.min, 10) >= parseInt(params.max, 10)}
+          min={parseInt(params.min, 10)}
+          max={parseInt(params.max, 10)}
           step={params.step}
           vertical={verticalOnMobile}
           aria-labelledby='Slider'

@@ -50,44 +50,53 @@ class Control extends Component {
   }
 
   switchDisableOne = (index) => {
-    const {content, reverse} = this.props;
-    const {memorized, timerStatus, currentIndex, maxIndex, randomOrder, errorCount, okCount} = this.state;
+    const {reverse} = this.props;
+    const {content, memorized, timerStatus, currentIndex, maxIndex, randomOrder, errorCount, okCount} = this.state;
 
     if (timerStatus === BORMO_STATUS.STARTED &&
       content[index][getTranslateLanguage(reverse)] === content[randomOrder[currentIndex]][getTranslateLanguage(reverse)]) {
+
+      // this.bormoSpeaker.speak(content[randomOrder[currentIndex]][LANGUAGES.EN]);
 
       const newMemorized = [...memorized.slice(0, index), {
         index: index,
         inactive: !memorized[index].inactive
       }, ...memorized.slice(index + 1)];
       if (currentIndex < maxIndex) {
-        this.setState({memorized: newMemorized, currentIndex: currentIndex + 1, okCount: okCount + 1});
+        this.setState({memorized: newMemorized, currentIndex: currentIndex + 1, okCount: okCount + 1, wasError: false});
       } else {
-        this.setState({memorized: newMemorized, timerStatus: BORMO_STATUS.STOPPED, okCount: okCount + 1});
+        this.setState({
+          memorized: newMemorized,
+          timerStatus: BORMO_STATUS.STOPPED,
+          okCount: okCount + 1,
+          wasError: false
+        });
       }
     } else {
-      this.setState({errorCount: errorCount + 1});
+      this.setState({errorCount: errorCount + 1, wasError: true});
     }
   }
 
-  speakSomething = (currentIndex, maxIndex, randomOrder, reverse, content) => {
+  speakSomething = (currentIndex, maxIndex, randomOrder, reverse, content, wasError) => {
     const {timerStatus} = this.state;
     if (timerStatus === BORMO_STATUS.STARTED) {
       if (reverse) {
         this.bormoSpeaker.speak(getCurrentTranslate(currentIndex, maxIndex, randomOrder, reverse, content));
       } else {
-        this.bormoSpeaker.speak(getCurrentTranslate(currentIndex - 1, maxIndex, randomOrder, true, content));
+        const text = wasError ? 'Not right.' : getCurrentTranslate(currentIndex - 1, maxIndex, randomOrder, true, content);
+        this.bormoSpeaker.speak(text);
       }
     }
   }
 
   render() {
     const {classes, currentLesson, currentCourse, contentMissingMessage, reverse} = this.props;
-    const {content, currentIndex, maxIndex, memorized, randomOrder, errorCount, okCount} = this.state;
+    const {content, currentIndex, maxIndex, memorized, randomOrder, errorCount, okCount, wasError} = this.state;
     const currentTranslate = getCurrentTranslate(currentIndex, maxIndex, randomOrder, reverse, content);
 
     if (content.length > 0) {
-      this.speakSomething(currentIndex, maxIndex, randomOrder, reverse, content);
+
+      this.speakSomething(currentIndex, maxIndex, randomOrder, reverse, content, wasError);
 
       return (<React.Fragment>
 
@@ -101,7 +110,7 @@ class Control extends Component {
           <Paper className={classNames(classes.paper, classes.currentPaper, classes.currentWord)}>
             <Typography component='p' variant='h6' color='inherit' align='center'>
               {okCount === content.length ?
-                'Урок "' + currentCourse + ' № ' + currentLesson + '" пройден ' + '. Число ошибок: ' + errorCount :
+                'Урок "' + currentCourse + ' № ' + currentLesson + '" пройден. Число ошибок: ' + errorCount :
                 currentTranslate}
             </Typography>
           </Paper>

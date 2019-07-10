@@ -1,3 +1,6 @@
+import {DATA_SOURCES} from './constants';
+
+
 export const getArrayFromObject = (obj) => Object.keys(obj).map(key => obj[key]);
 
 export const getRound = (number, precision) => {
@@ -23,8 +26,8 @@ export const getInitialState = (currentTheme) => (
       instantNextMode: true,
       countErrorAtPrompt: true,
       checkedModes: {},
-      useAPIData: false,
-      apiURL: 'http://localhost:3377/'
+      useAPIData: true,
+      apiURL: DATA_SOURCES.PHP_LOCAL
     },
     soundMuted: false,
     voiceConfig: {
