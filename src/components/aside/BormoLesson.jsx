@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles/index';
 
 import Fab from '@material-ui/core/Fab/index';
-import {SERVER_ROOT} from "../../constants";
+import {ROUTES, SWITCHABLE_ROUTES} from '../../routes';
 
 const styles = theme => ({
   btn: {
@@ -17,8 +17,8 @@ const styles = theme => ({
 class BormoLesson extends React.Component {
 
   onLessonClick = () => {
-    if (this.props.location.pathname === SERVER_ROOT) {
-      this.props.history.push(SERVER_ROOT + 'bormotun');
+    if (SWITCHABLE_ROUTES.indexOf(this.props.location.pathname) !== -1) {
+      this.props.history.push(ROUTES.BORMO);
     }
     this.props.onLessonChange(this.props.item, true);
   };

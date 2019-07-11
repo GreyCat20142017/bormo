@@ -36,12 +36,13 @@ export const KEY_CODES = {
 
 export const LANGUAGES = {EN: 'english', RU: 'russian'};
 
+export const SKYENG_URL = `https://dictionary.skyeng.ru/api/public/v1/words/search`;
 
 export const DATA_SOURCES = {
-  PHP_LOCAL: 'http://bormophp.local:8080/courses.php',
-  NODE_LOCAL: 'http://localhost:3377/',
-  PHP_HOSING: 'Источник данных недоступен',
-  NODE_HOSTING: 'Источник данных недоступен'
+  PHP_LOCAL: {COURSES: 'http://bormophp.local:8080/courses.php', SEARCH: 'http://bormophp.local:8080/search.php'},
+  NODE_LOCAL: {COURSES: 'http://localhost:3377/courses', SEARCH: 'http://localhost:3377/search'},
+  PHP_HOSING: {COURSES: 'Источник данных недоступен', SEARCH: 'Источник данных недоступен'},
+  NODE_HOSTING: {COURSES: 'Источник данных недоступен', SEARCH: 'Источник данных недоступен'}
 };
 
 export const STATUS_OK = 200;

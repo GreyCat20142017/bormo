@@ -20,22 +20,24 @@ import axios from 'axios';
 import BormoFooter from './components/footer/BormoFooter';
 import BormoHeader from './components/header/BormoHeader';
 import BormoAside from './components/aside/BormoAside';
-import BormoConfig from './components/config/BormoConfig';
 import BormoModal from './components/BormoModal';
-
 import ErrorBoundary from './components/ErrorBoundary';
-import Main from './pages/Main';
-import Bormo from './pages/Bormo';
-import Control from './pages/Control';
-import Spelling from './pages/Spelling';
 
-import NotFound from './pages/NotFound';
+import Main from './pages/main/Main';
+import Bormo from './pages/bormo/Bormo';
+import Control from './pages/control/Control';
+import Spelling from './pages/spelling/Spelling';
+import BormoConfig from './pages/config/BormoConfig';
+import Search from './pages/search/Search';
+
+import NotFound from './pages/notfound/NotFound';
 import MainTheme from './MainTheme';
 
 import SpeakerVoice from './SpeakerVoice';
 import {styles} from './App.css.js';
 import {getArrayFromObject, getInitialState} from './functions';
-import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON, SERVER_ROOT} from './constants';
+import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON} from './constants';
+import {ROUTES} from './routes';
 
 import {about} from './about';
 
@@ -82,13 +84,18 @@ class App extends React.Component {
   }
 
   getCoursesData = async () => {
-    const {apiURL, useAPIData} = this.state.config;
+    let {apiURL, useAPIData} = this.state.config;
     let result = [];
     let res = [];
-    try {
-      res = await axios.get(`${apiURL}`);
-      result = res && (res.status === 200) ? res.data.info : [];
-    } catch (err) {
+    if (useAPIData) {
+      try {
+        res = await axios.get(`${apiURL}`);
+        result = res && (res.status === 200) ? res.data.info : [];
+      } catch (err) {
+        useAPIData = false;
+      }
+    }
+    if (!useAPIData) {
       res = await axios.get(COURSES_PATH);
       result = res ? res.data : [];
     }
@@ -100,15 +107,20 @@ class App extends React.Component {
   }
 
   getLessonData = async (lesson) => {
-    const {apiURL, useAPIData} = this.state.config;
+    let {apiURL, useAPIData} = this.state.config;
     const {currentCourse} = this.state;
     let result = [];
     let res = [];
-    try {
-      res = await axios.get(`${apiURL}`,
-        {params: {course: currentCourse, lesson: lesson}});
-      result = res && (res.status === 200) ? res.data.content : [];
-    } catch (err) {
+    if (useAPIData) {
+      try {
+        res = await axios.get(`${apiURL}`,
+          {params: {course: currentCourse, lesson: lesson}});
+        result = res && (res.status === 200) ? res.data.content : [];
+      } catch (err) {
+        useAPIData = false;
+      }
+    }
+    if (!useAPIData) {
       res = await axios.get(DATA_PATH);
       result = res.data.filter(el => el.course === currentCourse).filter((el, ind) => {
         const startInd = (parseInt(lesson, 10) - 1) * WORDS_PER_LESSON || 0;
@@ -137,6 +149,14 @@ class App extends React.Component {
 
   closeConfig = () => {
     this.setState({isConfigOpen: false});
+  }
+
+  openSearch = () => {
+    this.setState({isSearchOpen: true});
+  }
+
+  closeSearch = () => {
+    this.setState({isSearchOpen: false});
   }
 
   onConfigChange = () => {
@@ -200,7 +220,7 @@ class App extends React.Component {
     const {classes, themes} = this.props;
     const {
       currentMode, currentCourse, currentLesson, lessons, courses, content,
-      currentTheme, isLoading, isConfigOpen, isModalOpen,
+      currentTheme, isLoading, isConfigOpen, isModalOpen, isSearchOpen,
       config, voiceConfig, soundMuted, lastLesson
     } = this.state;
 
@@ -298,25 +318,42 @@ class App extends React.Component {
                 <Typography variant='caption'>Данные загружаются...</Typography> :
 
                 <Switch>
-                  <Route exact path={SERVER_ROOT} component={Main}/>
-                  <Route path={SERVER_ROOT + 'bormotun'} render={() =>
+                  <Route exact path={ROUTES.MAIN} component={Main}/>
+                  <Route path={ROUTES.BORMO} render={() =>
                     <Bormo content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                            currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}/>
                   }/>
-                  <Route path={SERVER_ROOT + 'control'} render={() =>
+                  <Route path={ROUTES.CONTROL} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
                              reverse={false}/>
                   }/>
-                  <Route path={SERVER_ROOT + 'reversecontrol'} render={() =>
+                  <Route path={ROUTES.REVERSE} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
                              reverse={true}/>
                   }/>
-                  <Route path={SERVER_ROOT + 'spelling'} render={() =>
+                  <Route path={ROUTES.SPELLING} render={() =>
                     <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                               currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
                               reverse={true}/>
+                  }/>
+                  <Route path={ROUTES.SEARCH} render={() =>
+                    <Search bormoSpeaker={this.bormoSpeaker} isSearchOpen={isSearchOpen}
+                            closeSearch={this.closeSearch}/>
+                  }/>
+                  <Route path={ROUTES.CONFIG} render={() =>
+                    <BormoConfig
+                      currentTheme={currentTheme}
+                      themes={themes}
+                      config={config}
+                      voiceConfig={voiceConfig}
+                      soundMuted={soundMuted}
+                      bormoSpeaker={this.bormoSpeaker}
+                      isConfigOpen={isConfigOpen}
+                      closeConfig={this.closeConfig}
+                      onConfigChange={this.onConfigChange}
+                      onThemeSelect={this.onThemeSelect}/>
                   }/>
                   <Route component={NotFound}/>
                 </Switch>
@@ -325,22 +362,12 @@ class App extends React.Component {
 
             <Paper className={classes.paperFooter}>
               <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
-                           onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
+                           onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                           onSearchClick={this.onSearchClick}/>
             </Paper>
 
           </div>
 
-          <BormoConfig
-            currentTheme={currentTheme}
-            themes={themes}
-            config={config}
-            voiceConfig={voiceConfig}
-            soundMuted={soundMuted}
-            bormoSpeaker={this.bormoSpeaker}
-            isConfigOpen={isConfigOpen}
-            closeConfig={this.closeConfig}
-            onConfigChange={this.onConfigChange}
-            onThemeSelect={this.onThemeSelect}/>
           <BormoModal
             title={'Бормотунчик - 2018. '}
             text={about}

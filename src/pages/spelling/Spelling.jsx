@@ -9,8 +9,8 @@ import ErrorIcon from '@material-ui/icons/Error';
 import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 
-import {BORMO_STATUS, LANGUAGES} from "../constants";
-import {getSpellInitialState} from "./pagesCommon";
+import {BORMO_STATUS, LANGUAGES} from "../../constants";
+import {getSpellInitialState} from "../pagesCommon";
 
 import {styles} from './Spelling.css.js';
 

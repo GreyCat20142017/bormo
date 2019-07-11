@@ -17,8 +17,8 @@ import ImportExportIcon from '@material-ui/icons/ImportExport';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import SimpleSlider from '../SimpleSlider'
-import BormoThemeSelect from '../BormoThemeSelect';
+import SimpleSlider from '../../components/SimpleSlider'
+import BormoThemeSelect from '../../components/BormoThemeSelect';
 import {voiceParams, VOICE_TEST_PHRASE} from '../../constants';
 import {getRound} from '../../functions';
 

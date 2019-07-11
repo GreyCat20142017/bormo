@@ -13,8 +13,8 @@ import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 
 import {styles} from './Bormo.css.js';
-import {isInactive, getActiveAmount, getInitialMemorized} from './pagesCommon';
-import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES} from '../constants';
+import {isInactive, getActiveAmount, getInitialMemorized} from '../pagesCommon';
+import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES} from '../../constants';
 
 const TIMER_INTERVAL = 3000;
 

@@ -15,8 +15,10 @@ import BormoThemeSelect from '../BormoThemeSelect';
 
 import {withStyles} from '@material-ui/core/styles/index';
 import {styles} from './BormoFooter.css.js';
+import {NavLink} from "react-router-dom";
+import {ROUTES} from "../../routes";
 
-const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, ...rest}) => (
+const BormoFooter = ({classes, theme, onNextClick, onPreviousClick,  ...rest}) => (
   <AppBar position='fixed' color='primary' className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
 
@@ -40,9 +42,10 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, ...rest}) =>
         </Fab>
       </div>
       <div>
-        <IconButton color='inherit' className={classes.searchButton}>
+        <NavLink  className={classes.searchButton} to={ROUTES.SEARCH} title='Основные параметры программы'>
           <SearchIcon/>
-        </IconButton>
+        </NavLink>
+
       </div>
     </Toolbar>
   </AppBar>);

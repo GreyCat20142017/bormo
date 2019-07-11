@@ -13,9 +13,9 @@ import {styles} from './Control.css.js';
 
 import {
   isInactive, getTranslateLanguage, getOriginLanguage, getModeInitialState, getCurrentTranslate
-} from './pagesCommon';
+} from '../pagesCommon';
 
-import {WORDS_PER_LESSON, BORMO_STATUS} from '../constants';
+import {WORDS_PER_LESSON, BORMO_STATUS} from '../../constants';
 
 const ListPart = ({content, classes, currentIndex, startIndex, memorized, switchDisableOne, reverse}) => (
 

@@ -8,8 +8,10 @@ import Typography from '@material-ui/core/Typography/index';
 import IconButton from '@material-ui/core/IconButton/index';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
-import BormoToolbar from '../BormoToolbar';
+import BormoToolbar from './BormoToolbar';
 import {styles} from './BormoHeader.css.js';
+import {NavLink} from 'react-router-dom';
+import {ROUTES} from '../../routes';
 
 class BormoHeader extends React.Component {
   constructor(props) {
@@ -62,12 +64,14 @@ class BormoHeader extends React.Component {
             <MoreIcon/>
           </IconButton>
           <Menu
+            className={classes.menu}
             id='simple-menu'
             anchorEl={anchorEl}
             onClose={this.onMenuClose}
             open={Boolean(anchorEl)}>
-            {/* <NavLink to='/config' onClick={this.onConfigClick} title='Основные параметры программы'>Настройка</NavLink> */}
-            <MenuItem onClick={this.onConfigClick} title='Основные параметры программы'>Настройка</MenuItem>
+            <MenuItem>
+            <NavLink  className={classes.navItem} to={ROUTES.CONFIG} onClick={this.onConfigClick} title='Основные параметры программы'>Настройка</NavLink>
+            </MenuItem>
             <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
           </Menu>
       </div>

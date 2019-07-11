@@ -12,6 +12,7 @@ export const getInitialState = (currentTheme) => (
   {
     isModalOpen: false,
     isConfigOpen: false,
+    isSearchOpen: false,
     currentTheme: currentTheme,
     currentMode: null,
     currentCourse: null,
@@ -27,7 +28,7 @@ export const getInitialState = (currentTheme) => (
       countErrorAtPrompt: true,
       checkedModes: {},
       useAPIData: true,
-      apiURL: DATA_SOURCES.PHP_LOCAL
+      apiURL: DATA_SOURCES.PHP_LOCAL.COURSES
     },
     soundMuted: false,
     voiceConfig: {

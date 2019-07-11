@@ -37,6 +37,9 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
+  },
+  searchButton: {
+    color: 'white'
   }
 });
 

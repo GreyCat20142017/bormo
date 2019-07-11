@@ -12,108 +12,39 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import ToolbarLink from './ToolbarLink';
-import {SERVER_ROOT} from "../constants";
-
-
-const styles = theme => ({
-  menuList: {
-    display: 'flex'
-  },
-
-  asideText: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    }
-  },
-  text: {
-    marginLeft: '7px',
-    [theme.breakpoints.down('lg')]: {
-      display: 'none'
-    },
-    [theme.breakpoints.down('md')]: {
-      display: 'flex'
-    }
-  },
-  menuLink: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
-    textDecoration: 'none',
-    margin: theme.spacing.unit,
-    padding: theme.spacing.unit,
-    transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.light,
-      color: theme.palette.primary.dark
-    },
-    '&:focus': {
-      boxShadow: `0 0 0 1px ${theme.palette.primary.light} inset`,
-      backgroundColor: theme.palette.primary.light
-    },
-    '&:active': {
-      backgroundImage: 'linear-gradient(to bottom, ' +
-        theme.palette.primary.light + ' 0%, ' +
-        theme.palette.primary.main + ' 50%, ' +
-        theme.palette.primary.light + ' 100%)',
-      boxShadow: '0 3px 5px 2px ' + theme.palette.primary.dark,
-      color: theme.palette.primary.contrastText,
-    }
-  },
-
-  mobileOn: {
-    display: 'none',
-    [theme.breakpoints.down('sm')]: {
-      display: 'flex'
-    }
-  },
-
-  mobileOff: {
-    display: 'flex',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-
-  burgerOpened: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-  }
-});
-
+import ToolbarLink from '../ToolbarLink';
+import {ROUTES} from '../../routes';
+import  {styles} from './BormoToolbar.css';
 
 const SwitchableContent = ({classes, burgerEl, onBurgerClick, onBurgerClose}) => (
   <Fragment>
 
-    <ToolbarLink to={SERVER_ROOT + 'bormotun'} className={classes.menuLink} title='Бормотание' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.BORMO} className={classes.menuLink} title='Бормотание' onClick={onBurgerClose}>
       <HeadsetIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Бормотание</span>
     </ToolbarLink>
 
-    <ToolbarLink to={SERVER_ROOT + 'control'} className={classes.menuLink} title='Контроль' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.CONTROL} className={classes.menuLink} title='Контроль' onClick={onBurgerClose}>
       <DoneIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Контроль</span>
     </ToolbarLink>
 
-    <ToolbarLink to={SERVER_ROOT + 'reversecontrol'} className={classes.menuLink} title='Контроль наоборот' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.REVERSE} className={classes.menuLink} title='Контроль наоборот' onClick={onBurgerClose}>
       <DoneAllIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Контроль наоборот</span>
     </ToolbarLink>
 
-    <ToolbarLink to={SERVER_ROOT + 'spelling'} className={classes.menuLink} title='Правописание' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.SPELLING} className={classes.menuLink} title='Правописание' onClick={onBurgerClose}>
       <PACIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Правописание</span>
     </ToolbarLink>
 
-    <ToolbarLink to={SERVER_ROOT + 'check'} className={classes.menuLink} title='Проверка' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.CHECK} className={classes.menuLink} title='Проверка' onClick={onBurgerClose}>
       <ListAltIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Проверка</span>
     </ToolbarLink>
   </Fragment>
 );
-
 
 const BurgerContent = (props) => (
   <Fragment>
@@ -135,7 +66,7 @@ const BurgerContent = (props) => (
 const BormoToolbar = ({classes, theme, burgerEl, onBurgerClick, onBurgerClose}) => {
   const props = {classes, theme, burgerEl, onBurgerClick, onBurgerClose};
   return (<nav className={classes.menuList}>
-    <ToolbarLink exact to={SERVER_ROOT} className={classes.menuLink} title='Главная'>
+    <ToolbarLink exact to={ROUTES.MAIN} className={classes.menuLink} title='Главная'>
       <HomeIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Главная</span>
     </ToolbarLink>
@@ -148,6 +79,5 @@ const BormoToolbar = ({classes, theme, burgerEl, onBurgerClick, onBurgerClose}) 
 
   </nav>)
 };
-
 
 export default withStyles(styles)(BormoToolbar);

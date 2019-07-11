@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
 import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
-import {SERVER_ROOT} from "../constants";
+import {ROUTES} from '../../routes';
 
 import {styles} from './NotFound.css.js';
 
@@ -24,7 +24,7 @@ class NotFound extends React.Component {
     const needRedirect = this.state.needRedirect;
     if (needRedirect) {
       return (
-        <Route render={() => (<Redirect to={SERVER_ROOT}/>)}/>
+        <Route render={() => (<Redirect to={ROUTES.MAIN}/>)}/>
       )
     }
     return (
