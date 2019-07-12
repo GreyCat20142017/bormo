@@ -11,7 +11,9 @@ export const COURSES_PATH = 'data/courses.json'
 
 export const PAGE_LIMIT = 9;
 
-//Изменять только одновременно с константой в bormob
+export const ROW_LIMIT = 5;
+
+//Изменять только одновременно с константой в bormob и bormophp !!!
 export const WORDS_PER_LESSON = 20;
 
 export const BORMO_STATUS = {
@@ -46,3 +48,9 @@ export const DATA_SOURCES = {
 };
 
 export const STATUS_OK = 200;
+
+
+export const TRANSLATE_SOURCES = {
+  SKYENG: 'SkyEng',
+  DB: 'Database'
+};
