@@ -9,6 +9,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 
+import bormoWrapper from '../../hoc/bormoWrapper';
 import {styles} from './Control.css.js';
 
 import {
@@ -23,11 +24,12 @@ const ListPart = ({content, classes, currentIndex, startIndex, memorized, switch
     {content.slice(startIndex, startIndex + Math.floor(WORDS_PER_LESSON / 2)).map((item, ind) =>
       <li className={classes.cardItem} key={ind + startIndex}>
         <Paper
-          className={classNames(classes.card, isInactive(ind + startIndex, memorized) ? classes.colorized : null)}>
+          className={classNames(classes.card, isInactive(ind + startIndex, memorized) ? classes.colorized : null)}
+         >
 
           <Typography className={classes.title} variant='h6'
                       color='secondary'
-                      onClick={() => switchDisableOne(ind + startIndex)}>
+                      onClick={() => switchDisableOne(ind + startIndex)} title={item[getOriginLanguage(reverse)]}>
             {item[getOriginLanguage(reverse)]}
           </Typography>
 
@@ -108,7 +110,7 @@ class Control extends Component {
           </Badge>
 
           <Paper className={classNames(classes.paper, classes.currentPaper, classes.currentWord)}>
-            <Typography component='p' variant='h6' color='inherit' align='center'>
+            <Typography className={classes.currentWordContent} component='p' variant='h6' color='inherit' align='center'>
               {okCount === content.length ?
                 'Урок "' + currentCourse + ' № ' + currentLesson + '" пройден. Число ошибок: ' + errorCount :
                 currentTranslate}
@@ -149,4 +151,4 @@ class Control extends Component {
   }
 }
 
-export default withStyles(styles)(Control);
+export default withStyles(styles)(bormoWrapper(Control));

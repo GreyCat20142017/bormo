@@ -321,22 +321,23 @@ class App extends React.Component {
                   <Route exact path={ROUTES.MAIN} component={Main}/>
                   <Route path={ROUTES.BORMO} render={() =>
                     <Bormo content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                           currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}/>
+                           currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
+                           onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
                   }/>
                   <Route path={ROUTES.CONTROL} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                             reverse={false}/>
+                             reverse={false}  onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
                   }/>
                   <Route path={ROUTES.REVERSE} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                             reverse={true}/>
+                             reverse={true}  onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
                   }/>
                   <Route path={ROUTES.SPELLING} render={() =>
                     <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                               currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                              reverse={true}/>
+                              reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
                   }/>
                   <Route path={ROUTES.SEARCH} render={() =>
                     <Search bormoSpeaker={this.bormoSpeaker} isSearchOpen={isSearchOpen}

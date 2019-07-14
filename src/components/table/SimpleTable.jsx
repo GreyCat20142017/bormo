@@ -18,9 +18,6 @@ import SimpleTableActions from './SimpeTableActions';
 
 import {TRANSLATE_SOURCES, ROW_LIMIT} from '../../constants';
 import TextField from "@material-ui/core/TextField";
-import FormGroup from "@material-ui/core/FormGroup";
-import MoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import Toolbar from "@material-ui/core/Toolbar";
 
 const styles = theme => ({
   root: {

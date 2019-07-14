@@ -28,7 +28,7 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick,  ...rest}) =
       <BormoThemeSelect {...rest} className={classes.mobileOff}/>
 
       <div className={classes.fabButtons}>
-        <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок' className={classes.fabButton}
+        <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок (Alt+P) - Previous' className={classes.fabButton}
              size='small' onClick={onPreviousClick}>
           <ArrowBackIcon/>
         </Fab>
@@ -36,7 +36,7 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick,  ...rest}) =
              size='small'>
           <HelpOutlineIcon/>
         </Fab>
-        <Fab color='secondary' aria-label='Следующий урок' title='Cледующий урок' className={classes.fabButton}
+        <Fab color='secondary' aria-label='Следующий урок' title='Cледующий урок (ALt+N) - Next' className={classes.fabButton}
              size='small' onClick={onNextClick}>
           <ArrowForwardIcon/>
         </Fab>

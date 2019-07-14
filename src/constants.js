@@ -54,3 +54,9 @@ export const TRANSLATE_SOURCES = {
   SKYENG: 'SkyEng',
   DB: 'Database'
 };
+
+
+export const TOOLBAR_TYPES = {
+  SPELLING_STARTED: 'spellingStarted',
+  SPELLING_STOPPED: 'spellingStopped'
+};

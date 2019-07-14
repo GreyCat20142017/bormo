@@ -11,7 +11,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import SimpleTable from '../../components/table/SimpleTable';
 
-import {DATA_SOURCES, SKYENG_URL, TRANSLATE_SOURCES} from '../../constants';
+import {DATA_SOURCES, KEY_CODES, SKYENG_URL, TRANSLATE_SOURCES} from '../../constants';
 
 
 const mapSkyEngData = (data) => {
@@ -61,9 +61,20 @@ class Search extends Component {
     });
   }
 
+  onKeyPress = (evt) => {
+    if (evt.keyCode === KEY_CODES.ENTER) {
+      evt.preventDefault();
+      this.onSearchClick();
+    }
+  }
+
   onWordChange = (evt) => {
     const value = evt.target.value;
-    this.setState({searchText: value});
+    if ((evt.keyCode === KEY_CODES.ENTER) ) {
+      this.onSearchClick();
+    } else {
+      this.setState({searchText: value});
+    }
   }
 
   onOptionChange = name => event => {
@@ -86,6 +97,7 @@ class Search extends Component {
               value={searchText}
               fullWidth
               margin='normal'
+              onKeyDown={this.onKeyPress}
               onChange={this.onWordChange}
             />
             <FormControlLabel

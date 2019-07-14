@@ -1,16 +1,18 @@
-import React, {Component} from 'react';
-import Badge from "@material-ui/core/Badge";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import React, {Component, Fragment} from 'react';
+import Badge from '@material-ui/core/Badge';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 
 import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 
-import {BORMO_STATUS, LANGUAGES} from "../../constants";
-import {getSpellInitialState} from "../pagesCommon";
+import {BORMO_STATUS, LANGUAGES, TOOLBAR_TYPES} from '../../constants';
+import {getSpellInitialState} from '../pagesCommon';
+import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
+import bormoWrapper from '../../hoc/bormoWrapper';
 
 import {styles} from './Spelling.css.js';
 
@@ -33,7 +35,6 @@ class Control extends Component {
   }
 
   onTranslateValidate = (evt) => {
-
     evt.preventDefault();
     const {currentIndex, content, maxIndex, translate, errorCount, okCount} = this.state;
     if (content[currentIndex][LANGUAGES.EN].trim() === translate.trim()) {
@@ -59,10 +60,35 @@ class Control extends Component {
     }
   }
 
+  onKeyPress = (evt) => {
+    const charCode = String.fromCharCode(evt.which).toLowerCase();
+    if (evt.altKey && (charCode === 's')) {
+      evt.preventDefault();
+      this.onSkip();
+    } else if (evt.altKey && (charCode === 'h')) {
+      evt.preventDefault();
+      this.onHint();
+    }
+  }
+
+  onSkip = () => {
+    const [first, ...rest] = this.state.content;
+    this.setState({content: [...rest, first]});
+  }
+
+  onHint = () => {
+    const {content, currentIndex, errorCount} = this.state;
+    this.setState({translate: content[currentIndex].english, wasError: true, errorCount: errorCount + 1});
+  }
+
+  onRestart = () => {
+    this.setState(getSpellInitialState(this.props));
+  }
+
 
   render() {
     const {classes, currentLesson, currentCourse, contentMissingMessage} = this.props;
-    const {content, currentIndex, maxIndex, errorCount, okCount, translate} = this.state;
+    const {content, currentIndex, maxIndex, errorCount, okCount, translate, timerStatus} = this.state;
     const currentTranslate = currentIndex <= maxIndex ? content[currentIndex][LANGUAGES.RU] : '';
 
     if (content.length > 0) {
@@ -71,7 +97,7 @@ class Control extends Component {
 
         <div className={classes.wrapper}>
 
-          <Badge className={classes.badge} color="primary" badgeContent={currentLesson}
+          <Badge className={classes.badge} color='primary' badgeContent={currentLesson}
                  title={'Курс: ' + currentCourse + ', урок: ' + currentLesson}>
             {currentCourse}
           </Badge>
@@ -97,23 +123,34 @@ class Control extends Component {
         </Paper>
 
         <form className={classes.form} onSubmit={this.onTranslateValidate}>
-          <TextField
-            required
-            id='translate'
-            label={translate !== currentTranslate && translate !== '' ? 'Ошибка' : 'Перевод:'}
-            value={translate}
-            fullWidth
-            margin='normal'
-            onChange={this.onTranslateChange}
-          />
+          {(timerStatus === BORMO_STATUS.STARTED) ?
+            <Fragment>
+              <TextField
+                required
+                autoFocus={true}
+                id='translate'
+                label={translate !== currentTranslate && translate !== '' ? 'Ошибка' : 'Перевод:'}
+                value={translate}
+                fullWidth
+                margin='normal'
+                onChange={this.onTranslateChange}
+                onKeyDown={this.onKeyPress}
+              />
+              <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STARTED} className={classes.toolbar} onSkip={this.onSkip} onHint={this.onHint}/>
+            </Fragment>
+            :
+            <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STOPPED} className={classes.toolbar} onRestart={this.onRestart}/>
+          }
+
         </form>
 
-      </React.Fragment>)
+
+      </React.Fragment>);
 
     } else {
-      return (<div className="message"> {contentMissingMessage} </div>);
+      return (<div className='message'> {contentMissingMessage} </div>);
     }
   }
 }
 
-export default withStyles(styles)(Control);
+export default withStyles(styles)(bormoWrapper(Control));

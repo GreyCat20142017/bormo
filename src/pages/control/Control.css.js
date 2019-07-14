@@ -23,21 +23,28 @@ const styles = theme => ({
     minWidth: '100%',
     margin: '4px',
     textAlign: 'center',
+    cursor: 'pointer',
     [theme.breakpoints.down('sm')]: {
       margin: '4px',
-      minWidth: '90%'
+      width: '90%'
     }
   },
   card: {
     padding: theme.spacing.unit,
     [theme.breakpoints.down('sm')]: {
       padding: '2px',
-      marginTop: '0'
+      marginTop: '0',
+      height: '22px',
+      width: '100%'
     }
   },
   title: {
+    cursor: 'pointer',
     [theme.breakpoints.down('sm')]: {
-      fontSize: 14
+      fontSize: 14,
+      overflow: 'hidden',
+      maxWidth: '100%',
+      maxHeight: '22px'
     }
   },
   paper: {
@@ -52,10 +59,20 @@ const styles = theme => ({
   currentWord: {
     width: '80%',
     margin: '20px auto',
+    [theme.breakpoints.down('sm')]: {
+      marginTop: '10px',
+      order: '3',
+      height: '22px'
+    }
+  },
+  currentWordContent: {
     fontWeight: 'bold',
     [theme.breakpoints.down('sm')]: {
-      margin: '0 auto',
-      width: '60%',
+      fontWeight: 'normal',
+      fontSize: 14,
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     }
   },
   currentPaper: {
@@ -68,7 +85,10 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center',
-    padding: '0 2%'
+    padding: '0 2%',
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap'
+    }
   },
 
   badge: {

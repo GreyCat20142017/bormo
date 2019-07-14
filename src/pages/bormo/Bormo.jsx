@@ -16,6 +16,8 @@ import {styles} from './Bormo.css.js';
 import {isInactive, getActiveAmount, getInitialMemorized} from '../pagesCommon';
 import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES} from '../../constants';
 
+import bormoWrapper from '../../hoc/bormoWrapper';
+
 const TIMER_INTERVAL = 3000;
 
 const getBormoInitialState = (props) => ({
@@ -64,10 +66,11 @@ class Bormo extends Component {
   ticks() {
     this.setState((state) => {
       const {currentIndex, memorized} = state;
+      const current = memorized.filter((item) => (!item.inactive && item.index === currentIndex));
       const before = memorized.filter((item) => (!item.inactive && item.index < currentIndex));
       const after = memorized.filter((item) => (!item.inactive && item.index > currentIndex));
-      const active = [...after, ...before];
-      if (active.length === 0) {
+      const active = ((before.length === 0) && (after.length === 0)) ? [...current] : [...after, ...before];
+      if ((active.length === 0) && (current.length === 0)) {
         return ({
           currentIndex: 0, timerStatus: BORMO_STATUS.STOPPED
         });
@@ -182,10 +185,10 @@ class Bormo extends Component {
                     <StopIcon/>
                   </IconButton>
                   {timerStatus === BORMO_STATUS.STARTED ?
-                  <IconButton aria-label='Отметить' className={classes.margin} onClick={this.switchDisableCurrent}
-                              data-done="true" title="Отметить слово как изученное">
-                    <DoneIcon/>
-                  </IconButton>
+                    <IconButton aria-label='Отметить' className={classes.margin} onClick={this.switchDisableCurrent}
+                                data-done="true" title="Отметить слово как изученное">
+                      <DoneIcon/>
+                    </IconButton>
                     : null
                   }
                 </div>
@@ -216,4 +219,4 @@ class Bormo extends Component {
   }
 }
 
-export default withStyles(styles)(Bormo);
+export default withStyles(styles)(bormoWrapper(Bormo));
