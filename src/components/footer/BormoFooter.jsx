@@ -32,7 +32,7 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick,  ...rest}) =
              size='small' onClick={onPreviousClick}>
           <ArrowBackIcon/>
         </Fab>
-        <Fab color='primary' aria-label='Справка' title='Справка' className={classes.fabButton}
+        <Fab color='primary' aria-label='Справка' title='Подробная справка.  Коротко -  Следующий режим: (Alt+X) - neXt, Рестарт: (Alt+R) - Restart' className={classes.fabButton}
              size='small'>
           <HelpOutlineIcon/>
         </Fab>
@@ -42,7 +42,7 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick,  ...rest}) =
         </Fab>
       </div>
       <div>
-        <NavLink  className={classes.searchButton} to={ROUTES.SEARCH} title='Основные параметры программы'>
+        <NavLink  className={classes.searchButton} to={ROUTES.SEARCH} title='Поиск слова в базе и в данных, полученных через API SkyEng'>
           <SearchIcon/>
         </NavLink>
 

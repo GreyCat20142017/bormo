@@ -62,7 +62,7 @@ const styles = theme => ({
   burgerOpened: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
-  }
+  },
 });
 
 export {styles};

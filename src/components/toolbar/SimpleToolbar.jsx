@@ -2,6 +2,7 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import WrapTextIcon from '@material-ui/icons/WrapText';
+import RotateRightIcon from '@material-ui/icons/RotateRight';
 import InsertCommentIcon from '@material-ui/icons/InsertComment';
 
 import {TOOLBAR_TYPES} from '../../constants.js'
@@ -31,7 +32,7 @@ const SpellingStarted = (props) => (
 const SpellingStopped = (props) => (
   <Paper className={props.classes.toolbar}>
     <IconButton aria-label='Пропустить' onClick={props.onRestart} title='Повторить сначала (Alt+R) - Repeat'>
-      <WrapTextIcon/>
+      <RotateRightIcon/>
     </IconButton>
   </Paper>
 );

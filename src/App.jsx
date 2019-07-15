@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Switch, withRouter} from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,7 +9,7 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import Typography from '@material-ui/core/Typography';
 import AppIcon from '@material-ui/icons/Apps';
 import OffIcon from '@material-ui/icons/HighlightOff';
@@ -37,7 +37,7 @@ import SpeakerVoice from './SpeakerVoice';
 import {styles} from './App.css.js';
 import {getArrayFromObject, getInitialState} from './functions';
 import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON} from './constants';
-import {ROUTES} from './routes';
+import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER} from './routes';
 
 import {about} from './about';
 
@@ -53,7 +53,7 @@ class App extends React.Component {
 
   static defaultProps = {
     themes: getArrayFromObject(MainTheme)
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -74,14 +74,36 @@ class App extends React.Component {
         })
       });
     }
-  }
+  };
 
   componentDidMount() {
     this.getCoursesData();
     if (this.bormoSpeaker.supportSound) {
       this.bormoSpeaker.getVoiceList(this.initCurrentSpeaker);
     }
+    document.addEventListener('keyup', this.onAppKeyPress);
   }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.onAppKeyPress);
+  }
+
+  onAppKeyPress = (evt) => {
+    const charCode = String.fromCharCode(evt.which).toLowerCase();
+    if (evt.altKey) {
+      if (HOTKEY_REDIRECTS.hasOwnProperty(charCode)) {
+        evt.preventDefault();
+        this.props.history.push(HOTKEY_REDIRECTS[charCode]);
+      }
+      if (charCode === 'x' || charCode === 'ч') {
+        const index = ROUTES_ORDER.indexOf(this.props.location.pathname);
+        if (index !== -1) {
+          const nextIndex = index < (ROUTES_ORDER.length - 1) ? index + 1 : 0;
+          this.props.history.push(ROUTES_ORDER[nextIndex]);
+        }
+      }
+    }
+  };
 
   getCoursesData = async () => {
     let {apiURL, useAPIData} = this.state.config;
@@ -104,7 +126,7 @@ class App extends React.Component {
       courses: result
     });
 
-  }
+  };
 
   getLessonData = async (lesson) => {
     let {apiURL, useAPIData} = this.state.config;
@@ -133,35 +155,35 @@ class App extends React.Component {
       content: result,
       currentLesson: lesson
     });
-  }
+  };
 
   openModal = () => {
     this.setState({isModalOpen: true});
-  }
+  };
 
   closeModal = () => {
     this.setState({isModalOpen: false});
-  }
+  };
 
   openConfig = () => {
     this.setState({isConfigOpen: true});
-  }
+  };
 
   closeConfig = () => {
     this.setState({isConfigOpen: false});
-  }
+  };
 
   openSearch = () => {
     this.setState({isSearchOpen: true});
-  }
+  };
 
   closeSearch = () => {
     this.setState({isSearchOpen: false});
-  }
+  };
 
   onConfigChange = () => {
 
-  }
+  };
 
   onCourseChange = (course, ind) => {
     const {currentCourse, courses} = this.state;
@@ -183,7 +205,7 @@ class App extends React.Component {
         });
       }
     }
-  }
+  };
 
   onLessonChange = (lesson, hidePanel = false) => {
     if (hidePanel) {
@@ -192,29 +214,36 @@ class App extends React.Component {
     if (lesson !== this.state.currentLesson) {
       this.getLessonData(lesson);
     }
-  }
+  };
 
   onThemeSelect = (themeKey) => {
     this.setState({currentTheme: MainTheme[themeKey]});
-  }
+  };
 
   onDrawerToggle = () => {
     this.setState(state => ({mobileOpen: !state.mobileOpen}));
-  }
+  };
 
   onPreviousClick = () => {
     const {currentLesson} = this.state;
     if (currentLesson > 1) {
       this.onLessonChange(currentLesson - 1);
     }
-  }
+  };
 
   onNextClick = () => {
     const {lastLesson, currentLesson} = this.state;
     if (currentLesson < lastLesson) {
       this.onLessonChange(currentLesson + 1);
     }
-  }
+  };
+
+  onRestartClick = () => {
+    const {lastLesson, currentLesson} = this.state;
+    if (currentLesson <= lastLesson) {
+      this.onLessonChange(currentLesson);
+    }
+  };
 
   render() {
     const {classes, themes} = this.props;
@@ -327,17 +356,18 @@ class App extends React.Component {
                   <Route path={ROUTES.CONTROL} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                             reverse={false}  onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
+                             reverse={false} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
                   }/>
                   <Route path={ROUTES.REVERSE} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                             reverse={true}  onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
+                             reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
                   }/>
                   <Route path={ROUTES.SPELLING} render={() =>
                     <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                               currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                              reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
+                              reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                              onRestartClick={this.onRestartClick}/>
                   }/>
                   <Route path={ROUTES.SEARCH} render={() =>
                     <Search bormoSpeaker={this.bormoSpeaker} isSearchOpen={isSearchOpen}
@@ -364,7 +394,7 @@ class App extends React.Component {
             <Paper className={classes.paperFooter}>
               <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
                            onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                           onSearchClick={this.onSearchClick}/>
+                           onSearchClick={this.onSearchClick} onRestartClick={this.onRestartClick}/>
             </Paper>
 
           </div>
@@ -381,4 +411,4 @@ class App extends React.Component {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(App);
+export default withStyles(styles, {withTheme: true})(withRouter(App));

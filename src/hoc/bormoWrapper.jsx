@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 function bormoWrapper(Component) {
   class BormoWrapper extends Component {
 
@@ -7,12 +8,20 @@ function bormoWrapper(Component) {
       const charCode = String.fromCharCode(evt.which).toLowerCase();
       if (evt.altKey) {
         switch (charCode) {
-          case 'p': {
+          case 'p':
+          case 'з': {
             evt.preventDefault();
             this.props.onPreviousClick();
             break;
           }
-          case 'n': {
+          case 'n':
+          case 'т': {
+            evt.preventDefault();
+            this.props.onNextClick();
+            break;
+          }
+          case 'r':
+          case 'к': {
             evt.preventDefault();
             this.props.onNextClick();
             break;
@@ -23,11 +32,11 @@ function bormoWrapper(Component) {
     };
 
     componentDidMount() {
-      document.addEventListener('keydown', this.onGlobalKeyPress);
+      document.addEventListener('keyup', this.onGlobalKeyPress);
     }
 
     componentWillUnmount() {
-      document.removeEventListener('keydown', this.onGlobalKeyPress);
+      document.removeEventListener('keyup', this.onGlobalKeyPress);
     }
 
     render() {

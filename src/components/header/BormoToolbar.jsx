@@ -19,27 +19,27 @@ import  {styles} from './BormoToolbar.css';
 const SwitchableContent = ({classes, burgerEl, onBurgerClick, onBurgerClose}) => (
   <Fragment>
 
-    <ToolbarLink to={ROUTES.BORMO} className={classes.menuLink} title='Бормотание' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.BORMO} className={classes.menuLink} title='Бормотание (Alt-M) - Mumble' onClick={onBurgerClose}>
       <HeadsetIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Бормотание</span>
     </ToolbarLink>
 
-    <ToolbarLink to={ROUTES.CONTROL} className={classes.menuLink} title='Контроль' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.CONTROL} className={classes.menuLink} title='Контроль (Alt-C) - Control' onClick={onBurgerClose}>
       <DoneIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Контроль</span>
     </ToolbarLink>
 
-    <ToolbarLink to={ROUTES.REVERSE} className={classes.menuLink} title='Контроль наоборот' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.REVERSE} className={classes.menuLink} title='Контроль наоборот (Alt-I) - Inverse control' onClick={onBurgerClose}>
       <DoneAllIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Контроль наоборот</span>
     </ToolbarLink>
 
-    <ToolbarLink to={ROUTES.SPELLING} className={classes.menuLink} title='Правописание' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.SPELLING} className={classes.menuLink} title='Правописание (Alt-O) - Orthography' onClick={onBurgerClose}>
       <PACIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Правописание</span>
     </ToolbarLink>
 
-    <ToolbarLink to={ROUTES.CHECK} className={classes.menuLink} title='Проверка' onClick={onBurgerClose}>
+    <ToolbarLink to={ROUTES.CHECK} className={classes.menuLink} title='Проверка (Alt-V) - Validation' onClick={onBurgerClose}>
       <ListAltIcon className={classes.icon} fontSize='small' color='inherit'/>
       <span className={classes.text}>Проверка</span>
     </ToolbarLink>

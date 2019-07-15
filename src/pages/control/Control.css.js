@@ -67,6 +67,7 @@ const styles = theme => ({
   },
   currentWordContent: {
     fontWeight: 'bold',
+    cursor: 'pointer',
     [theme.breakpoints.down('sm')]: {
       fontWeight: 'normal',
       fontSize: 14,

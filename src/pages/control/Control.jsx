@@ -110,7 +110,8 @@ class Control extends Component {
           </Badge>
 
           <Paper className={classNames(classes.paper, classes.currentPaper, classes.currentWord)}>
-            <Typography className={classes.currentWordContent} component='p' variant='h6' color='inherit' align='center'>
+            <Typography className={classes.currentWordContent} component='p' variant='h6' color='inherit' align='center'
+              title={okCount === content.length ? 'Alt+N-ext, Alt+P-revious, Alt+R-estart': currentTranslate}>
               {okCount === content.length ?
                 'Урок "' + currentCourse + ' № ' + currentLesson + '" пройден. Число ошибок: ' + errorCount :
                 currentTranslate}

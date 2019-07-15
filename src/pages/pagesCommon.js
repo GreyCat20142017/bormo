@@ -71,7 +71,6 @@ export const getSpellInitialState = ({content, reverse}) => {
     okCount: 0,
     translate: '',
     wasError: false
-
   });
 }
 

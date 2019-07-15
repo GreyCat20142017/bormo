@@ -29,14 +29,23 @@ class Control extends Component {
     this.setState((getSpellInitialState(nextProps)));
   }
 
+  componentDidMount() {
+    document.addEventListener('keydown', this.onKeyPress);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+    document.removeEventListener('keydown', this.onKeyPress);
+  }
+
   onTranslateChange = (evt) => {
     const value = evt.target.value;
     this.setState({translate: value});
-  }
+  };
 
   onTranslateValidate = (evt) => {
-    evt.preventDefault();
     const {currentIndex, content, maxIndex, translate, errorCount, okCount} = this.state;
+    evt.preventDefault();
     if (content[currentIndex][LANGUAGES.EN].trim() === translate.trim()) {
       this.bormoSpeaker.speak(translate);
       if (currentIndex === maxIndex) {
@@ -58,32 +67,43 @@ class Control extends Component {
     } else {
       this.setState({wasError: true, errorCount: errorCount + 1});
     }
-  }
+  };
 
   onKeyPress = (evt) => {
     const charCode = String.fromCharCode(evt.which).toLowerCase();
-    if (evt.altKey && (charCode === 's')) {
-      evt.preventDefault();
-      this.onSkip();
-    } else if (evt.altKey && (charCode === 'h')) {
-      evt.preventDefault();
-      this.onHint();
+    if (evt.altKey) {
+      switch (charCode) {
+        case 's':
+        case 'ы': {
+          evt.preventDefault();
+          this.onSkip();
+          break;
+        }
+        case 'h':
+        case 'р': {
+          evt.preventDefault();
+          this.onHint();
+          break;
+        }
+        default:
+      }
     }
-  }
+  };
 
   onSkip = () => {
-    const [first, ...rest] = this.state.content;
-    this.setState({content: [...rest, first]});
-  }
+    const {currentIndex, content} = this.state;
+    const newContent = [...content.filter((item, ind) => ind !== currentIndex), content[currentIndex]];
+    this.setState({content: newContent});
+  };
 
   onHint = () => {
     const {content, currentIndex, errorCount} = this.state;
     this.setState({translate: content[currentIndex].english, wasError: true, errorCount: errorCount + 1});
-  }
+  };
 
   onRestart = () => {
     this.setState(getSpellInitialState(this.props));
-  }
+  };
 
 
   render() {
@@ -134,12 +154,13 @@ class Control extends Component {
                 fullWidth
                 margin='normal'
                 onChange={this.onTranslateChange}
-                onKeyDown={this.onKeyPress}
               />
-              <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STARTED} className={classes.toolbar} onSkip={this.onSkip} onHint={this.onHint}/>
+              <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STARTED} className={classes.toolbar} onSkip={this.onSkip}
+                             onHint={this.onHint}/>
             </Fragment>
             :
-            <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STOPPED} className={classes.toolbar} onRestart={this.onRestart}/>
+            <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STOPPED} className={classes.toolbar}
+                           onRestart={this.onRestart}/>
           }
 
         </form>
