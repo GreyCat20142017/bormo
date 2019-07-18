@@ -15,10 +15,10 @@ import BormoThemeSelect from '../BormoThemeSelect';
 
 import {withStyles} from '@material-ui/core/styles/index';
 import {styles} from './BormoFooter.css.js';
-import {NavLink} from "react-router-dom";
-import {ROUTES} from "../../routes";
+import {NavLink} from 'react-router-dom';
+import {ROUTES} from '../../routes';
 
-const BormoFooter = ({classes, theme, onNextClick, onPreviousClick,  ...rest}) => (
+const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, ...rest}) => (
   <AppBar position='fixed' color='primary' className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
 
@@ -28,27 +28,31 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick,  ...rest}) =
       <BormoThemeSelect {...rest} className={classes.mobileOff}/>
 
       <div className={classes.fabButtons}>
-        <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок (Alt+P) - Previous' className={classes.fabButton}
+        <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок (Alt+P) - Previous'
+             className={classes.fabButton}
              size='small' onClick={onPreviousClick}>
           <ArrowBackIcon/>
         </Fab>
-        <Fab color='primary' aria-label='Справка' title='Подробная справка.  Коротко -  Следующий режим: (Alt+X) - neXt, Рестарт: (Alt+R) - Restart' className={classes.fabButton}
+        <Fab color='primary' aria-label='Справка'
+             title='Подробная справка.  Коротко -  Следующий режим: (Alt+X) - neXt, Рестарт: (Alt+R) - Restart'
+             className={classes.fabButton}
              size='small'>
           <HelpOutlineIcon/>
         </Fab>
-        <Fab color='secondary' aria-label='Следующий урок' title='Cледующий урок (ALt+N) - Next' className={classes.fabButton}
+        <Fab color='secondary' aria-label='Следующий урок' title='Cледующий урок (ALt+N) - Next'
+             className={classes.fabButton}
              size='small' onClick={onNextClick}>
           <ArrowForwardIcon/>
         </Fab>
       </div>
       <div>
-        <NavLink  className={classes.searchButton} to={ROUTES.SEARCH} title='Поиск слова в базе и в данных, полученных через API SkyEng'>
+        <NavLink className={classes.searchButton} to={ROUTES.SEARCH}
+                 title='Поиск слова в базе и в данных, полученных через API SkyEng'>
           <SearchIcon/>
         </NavLink>
-
       </div>
     </Toolbar>
-  </AppBar>);
-
+  </AppBar>
+);
 
 export default withStyles(styles)(BormoFooter);

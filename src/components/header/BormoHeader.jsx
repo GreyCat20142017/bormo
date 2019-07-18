@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import {withStyles} from '@material-ui/core/styles/index';
 
@@ -10,10 +10,10 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 
 import BormoToolbar from './BormoToolbar';
 import {styles} from './BormoHeader.css.js';
-import {NavLink} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {ROUTES} from '../../routes';
 
-class BormoHeader extends React.Component {
+class BormoHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -46,8 +46,7 @@ class BormoHeader extends React.Component {
   onModalClick = () => {
     this.setState({anchorEl: null});
     this.props.openModal();
-  }
-
+  };
 
   render() {
 
@@ -56,28 +55,33 @@ class BormoHeader extends React.Component {
     return (
       <div className={classes.bar}>
 
-          <Typography variant='h5' color='inherit' className={classes.switchable}>
-            Бормо<span className={classes.switchablePart}>тунчик</span>
-          </Typography>
-          <BormoToolbar burgerEl={burgerEl} onBurgerClick={this.onBurgerClick} onBurgerClose={this.onBurgerClose}/>
-          <IconButton color='inherit' onClick={this.onAnchorClick}>
-            <MoreIcon/>
-          </IconButton>
-          <Menu
-            className={classes.menu}
-            id='simple-menu'
-            anchorEl={anchorEl}
-            onClose={this.onMenuClose}
-            open={Boolean(anchorEl)}>
-            <MenuItem>
-            <NavLink  className={classes.navItem} to={ROUTES.CONFIG} onClick={this.onConfigClick} title='Основные параметры программы'>Настройка</NavLink>
-            </MenuItem>
-            <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
-          </Menu>
+        <Typography variant='h5' color='inherit' className={classes.switchable}>
+          Бормо<span className={classes.switchablePart}>тунчик</span>
+        </Typography>
+        <BormoToolbar burgerEl={burgerEl} onBurgerClick={this.onBurgerClick} onBurgerClose={this.onBurgerClose}/>
+        <IconButton color='inherit' onClick={this.onAnchorClick}>
+          <MoreIcon/>
+        </IconButton>
+        <Menu
+          className={classes.menu}
+          id='simple-menu'
+          anchorEl={anchorEl}
+          onClose={this.onMenuClose}
+          open={Boolean(anchorEl)}>
+          <MenuItem>
+            <Link className={classes.navItem} to={ROUTES.CONFIG} onClick={this.onConfigClick}
+                  title='Основные параметры программы'>Настройка</Link>
+          </MenuItem>
+          <MenuItem>
+            <Link className={classes.navItem} to={ROUTES.PHRASES} onClick={this.onMenuClose}
+                  title='Дополнительный режим Фразы'>Фразы</Link>
+          </MenuItem>
+          <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
+        </Menu>
       </div>
 
 
-    )
+    );
   }
 }
 

@@ -34,3 +34,5 @@ npm-debug.*
 Thumbs.db
 
 public/bormo/
+
+*.sql

@@ -1,7 +1,6 @@
 import {DATA_SOURCES} from './constants';
 
-
-export const getArrayFromObject = (obj) => Object.keys(obj).map(key => obj[key]);
+export const getValueArrayFromObject = (obj) => Object.keys(obj).map(key => obj[key]);
 
 export const getRound = (number, precision) => {
   precision = precision || 0;
@@ -42,3 +41,16 @@ export const getInitialState = (currentTheme) => (
      mobileOpen: false
   }
 );
+
+export const isValidIndex = (index, testedArray) => (((index >= 0 ) && (index < testedArray.length)));
+
+export const shuffleArray = function (entities) {
+  const sortableEntities = entities.slice();
+  for (let i = sortableEntities.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let temporaryValue = sortableEntities[i];
+    sortableEntities[i] = sortableEntities[j];
+    sortableEntities[j] = temporaryValue;
+  }
+  return sortableEntities;
+};

@@ -10,7 +10,7 @@ import BormoLessons from './BormoLessons';
 
 const styles = theme => ({});
 
-const Courses = ({courses, currentCourse, onCourseChange, classes}) => (
+const Courses = ({courses, currentCourse, onCourseChange}) => (
   <List dense={true}>
     {courses.map((item, index) => (
       <BormoCourse key={item.name + ' ' + item.index} title={item.name} item={item} ind={index}
@@ -19,37 +19,24 @@ const Courses = ({courses, currentCourse, onCourseChange, classes}) => (
   </List>
 );
 
-class BormoAside extends React.Component {
-  static Courses = Courses;
+const BormoAside = ({classes, courses, currentCourse, lastLesson, onCourseChange, lessons, currentLesson, onLessonChange}) => (
+  <div>
+    <Divider/>
+    <div className={classes.toolbar}/>
+    <div className={classes.asideWrapperCourse}>
+      <Courses key={'courses'} courses={courses} currentCourse={currentCourse} classes={classes}
+               onCourseChange={onCourseChange}/>
+    </div>
+    <Divider/>
+    <div className={classes.asideWrapperLesson}>
+      <BormoLessons
+        key={'lessons'}
+        lessons={lessons}
+        currentLesson={currentLesson}
+        lastLesson={lastLesson}
+        onLessonChange={onLessonChange}/>
+    </div>
+  </div>
+);
 
-  render () {
-    const {
-      classes,
-      courses, currentCourse, lastLesson, onCourseChange,
-      lessons, currentLesson, onLessonChange
-    } = this.props;
-
-
-    return (
-      <div>
-        <Divider/>
-        <div className={classes.toolbar}/>
-        <div className={classes.asideWrapperCourse}>
-          <Courses key={'courses'} courses={courses} currentCourse={currentCourse} classes={classes}
-                   onCourseChange={onCourseChange}/>
-        </div>
-        <Divider/>
-        <div className={classes.asideWrapperLesson}>
-          <BormoLessons
-            key={'lessons'}
-            lessons={lessons}
-            currentLesson={currentLesson}
-            lastLesson={lastLesson}
-            onLessonChange={onLessonChange}/>
-        </div>
-      </div>
-    )
-  }
-}
-
-export default withStyles(styles, {withTheme: true})(BormoAside);
+export default withStyles(styles)(BormoAside);

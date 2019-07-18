@@ -9,26 +9,7 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import ReceiptIcon from '@material-ui/icons/Receipt';
-
-
-const styles = theme => ({
-  asideText: {
-    color: 'rgba(0, 0, 0, 0.26)',
-    fontWeight: '700',
-    textTransform: 'uppercase'
-  },
-  asideTextActive: {
-    color: theme.palette.primary.main,
-    fontWeight: '700',
-    textTransform: 'uppercase'
-  },
-  asideItem: {
-    flexShrink: '1'
-  },
-  asideIcon: {
-    marginRight: '2px'
-  }
-});
+import {styles} from './BormoCourse.css';
 
 const CourseIcon = ({name, color, fontSize}) => {
   switch (name) {

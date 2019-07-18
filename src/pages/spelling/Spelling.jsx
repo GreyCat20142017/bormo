@@ -14,7 +14,7 @@ import {getSpellInitialState} from '../pagesCommon';
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
 import bormoWrapper from '../../hoc/bormoWrapper';
 
-import {styles} from './Spelling.css.js';
+import {styles} from './Spelling.css';
 
 
 class Control extends Component {

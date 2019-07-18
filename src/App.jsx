@@ -20,7 +20,7 @@ import axios from 'axios';
 import BormoFooter from './components/footer/BormoFooter';
 import BormoHeader from './components/header/BormoHeader';
 import BormoAside from './components/aside/BormoAside';
-import BormoModal from './components/BormoModal';
+import BormoModal from './components/modal/BormoModal';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import Main from './pages/main/Main';
@@ -29,13 +29,14 @@ import Control from './pages/control/Control';
 import Spelling from './pages/spelling/Spelling';
 import BormoConfig from './pages/config/BormoConfig';
 import Search from './pages/search/Search';
+import Phrases from './pages/phrases/Phrases';
 
 import NotFound from './pages/notfound/NotFound';
 import MainTheme from './MainTheme';
 
 import SpeakerVoice from './SpeakerVoice';
 import {styles} from './App.css.js';
-import {getArrayFromObject, getInitialState} from './functions';
+import {getValueArrayFromObject, getInitialState} from './functions';
 import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON} from './constants';
 import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER} from './routes';
 
@@ -52,7 +53,7 @@ class App extends React.Component {
   static Loader = Loader;
 
   static defaultProps = {
-    themes: getArrayFromObject(MainTheme)
+    themes: getValueArrayFromObject(MainTheme)
   };
 
   constructor(props) {
@@ -173,16 +174,17 @@ class App extends React.Component {
     this.setState({isConfigOpen: false});
   };
 
-  openSearch = () => {
-    this.setState({isSearchOpen: true});
-  };
-
   closeSearch = () => {
     this.setState({isSearchOpen: false});
   };
 
-  onConfigChange = () => {
 
+  closeSearch = () => {
+    this.setState({isPhrasesOpen: false});
+  };
+
+  onConfigChange = () => {
+    this.setState({isConfigOpen: false});
   };
 
   onCourseChange = (course, ind) => {
@@ -372,6 +374,9 @@ class App extends React.Component {
                   <Route path={ROUTES.SEARCH} render={() =>
                     <Search bormoSpeaker={this.bormoSpeaker} isSearchOpen={isSearchOpen}
                             closeSearch={this.closeSearch}/>
+                  }/>
+                  <Route path={ROUTES.PHRASES} render={() =>
+                    <Phrases bormoSpeaker={this.bormoSpeaker} closePhrases={this.closePhrases}/>
                   }/>
                   <Route path={ROUTES.CONFIG} render={() =>
                     <BormoConfig

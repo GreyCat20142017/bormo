@@ -58,8 +58,6 @@ class Control extends Component {
     if (timerStatus === BORMO_STATUS.STARTED &&
       content[index][getTranslateLanguage(reverse)] === content[randomOrder[currentIndex]][getTranslateLanguage(reverse)]) {
 
-      // this.bormoSpeaker.speak(content[randomOrder[currentIndex]][LANGUAGES.EN]);
-
       const newMemorized = [...memorized.slice(0, index), {
         index: index,
         inactive: !memorized[index].inactive

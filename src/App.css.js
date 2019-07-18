@@ -34,7 +34,6 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
     minHeight: '80vh',
     [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing.unit * 3,
       minHeight: '90vh'
     }
   },

@@ -19,25 +19,7 @@ import SimpleTableActions from './SimpeTableActions';
 import {TRANSLATE_SOURCES, ROW_LIMIT} from '../../constants';
 import TextField from "@material-ui/core/TextField";
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflow: 'auto',
-  },
-  table: {
-    width: '100%',
-    maxHeight: '300px',
-    overflow: 'auto'
-  },
-  joinedPanel: {
-    paddingLeft: theme.spacing.unit * 4,
-    paddingRight: theme.spacing.unit * 4,
-    border: '1px solid rgb(211,211,211)',
-    display: 'flex'
-  }
-});
-
+import  {styles} from './SimpleTable.css';
 
 class SimpleTable extends Component {
   constructor(props) {
@@ -48,7 +30,7 @@ class SimpleTable extends Component {
       selected: [],
       joinnedTranslate: '',
       editMode: false
-    }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -71,18 +53,17 @@ class SimpleTable extends Component {
 
   onSwitchEditMode = () => {
     this.setState({editMode: !this.state.editMode});
-  }
+  };
 
   onTranslateChange = (evt) => {
     const value = evt.target.value;
     this.setState({joinedTranslate: value});
-  }
+  };
 
   render() {
     const {classes, data, currentTranslateSource} = this.props;
     const {page, rowsPerPage, joinedTranslate, selected, editMode} = this.state;
     const showWord = (currentTranslateSource === TRANSLATE_SOURCES.DB);
-
 
     return (
       <Paper className={classes.root}>
@@ -126,10 +107,12 @@ class SimpleTable extends Component {
 
         {selected.length > 0 ?
           <div className={classes.joinedPanel}>
-            <IconButton color='inherit' fontSize='small' disabled={true} title={'Сохранить в БД (пользовательские уроки, раздел OWN)'}>
+            <IconButton color='inherit' fontSize='small' disabled={true}
+                        title={'Сохранить в БД (пользовательские уроки, раздел OWN)'}>
               <AddIcon/>
             </IconButton>
-            <IconButton color='inherit' fontSize='small' title={'Переключить режим изменения подготовленного перевода'} onClick={this.onSwitchEditMode}>
+            <IconButton color='inherit' fontSize='small' title={'Переключить режим изменения подготовленного перевода'}
+                        onClick={this.onSwitchEditMode}>
               <CreateIcon/>
             </IconButton>
             <TextField
@@ -145,7 +128,7 @@ class SimpleTable extends Component {
           : null
         }
       </Paper>
-    )
+    );
   }
 }
 
