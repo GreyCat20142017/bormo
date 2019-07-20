@@ -10,7 +10,6 @@ export const DATA_PATH = 'data/bormo.json'
 export const COURSES_PATH = 'data/courses.json'
 
 export const PAGE_LIMIT = 9;
-
 export const ROW_LIMIT = 5;
 
 //Изменять только одновременно с константой в bormob и bormophp !!!
@@ -58,5 +57,6 @@ export const TRANSLATE_SOURCES = {
 
 export const TOOLBAR_TYPES = {
   SPELLING_STARTED: 'spellingStarted',
-  SPELLING_STOPPED: 'spellingStopped'
+  SPELLING_STOPPED: 'spellingStopped',
+  PHRASES: 'phrases'
 };

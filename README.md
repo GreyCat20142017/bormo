@@ -6,6 +6,10 @@
 
 В режиме search доступен поиск с использованием [API Skyeng](https://dictionary.skyeng.ru/doc/api/external).
 
+Идея для режима phrases основана на начальных уроках  [курса](https://www.youtube.com/channel/UC_J8gecUO4gsesLXbXfjnNg), порекомендованного в одном из чатиков.
+
+#
+
 Интерфейс с использованием [Material-UI](https://material-ui.com/) (версия 3.7).
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -255,6 +255,8 @@ class App extends React.Component {
       config, voiceConfig, soundMuted, lastLesson
     } = this.state;
 
+    const isNotBormo = (this.props.location.pathname === ROUTES.PHRASES);
+
     const contentMissingMessage = content.length === 0 ?
       <React.Fragment>
         <Typography variant='body2' component='p'>Необходимо выбрать курс и урок...</Typography>
@@ -267,7 +269,8 @@ class App extends React.Component {
 
     const drawer = (
       <ErrorBoundary>
-        <BormoAside
+        {isNotBormo ? <p>Phrases Aside will be here</p> :
+          <BormoAside
           currentMode={currentMode}
           currentCourse={currentCourse}
           currentLesson={currentLesson}
@@ -277,6 +280,7 @@ class App extends React.Component {
           onCourseChange={this.onCourseChange}
           lastLesson={lastLesson}
         />
+        }
       </ErrorBoundary>
     );
 
@@ -396,12 +400,13 @@ class App extends React.Component {
               }
             </main>
 
-            <Paper className={classes.paperFooter}>
-              <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
-                           onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                           onSearchClick={this.onSearchClick} onRestartClick={this.onRestartClick}/>
-            </Paper>
-
+            {isNotBormo ? null :
+              <Paper className={classes.paperFooter}>
+                <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
+                             onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                             onSearchClick={this.onSearchClick} onRestartClick={this.onRestartClick}/>
+              </Paper>
+            }
           </div>
 
           <BormoModal
