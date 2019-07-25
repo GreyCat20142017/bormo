@@ -16,7 +16,8 @@ const styles = (theme) => ({
   },
   navItem: {
     color: 'rgba(0, 0, 0, 0.87)',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    outline: 'none'
   },
   menuItem : {
     padding: '16px',

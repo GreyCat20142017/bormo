@@ -1,5 +1,5 @@
 import React from 'react';
-
+import ContentMissingMessage from '../components/ContentMissingMessage';
 
 function bormoWrapper(Component) {
   class BormoWrapper extends Component {
@@ -23,7 +23,7 @@ function bormoWrapper(Component) {
           case 'r':
           case 'к': {
             evt.preventDefault();
-            this.props.onNextClick();
+            this.props.onRestartClick();
             break;
           }
           default:
@@ -40,7 +40,7 @@ function bormoWrapper(Component) {
     }
 
     render() {
-      return <Component {...this.props}/>;
+      return  this.props.content.length === 0 ? <ContentMissingMessage/> : <Component {...this.props}/>;
     }
   };
   BormoWrapper.displayName = `BormoWrapper (${Component.displayName || Component.name || 'Component'})`;

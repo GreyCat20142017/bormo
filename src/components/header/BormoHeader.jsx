@@ -68,19 +68,15 @@ class BormoHeader extends Component {
           anchorEl={anchorEl}
           onClose={this.onMenuClose}
           open={Boolean(anchorEl)}>
-          <MenuItem>
-            <Link className={classes.navItem} to={ROUTES.CONFIG} onClick={this.onConfigClick}
-                  title='Основные параметры программы'>Настройка</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link className={classes.navItem} to={ROUTES.PHRASES} onClick={this.onMenuClose}
-                  title='Дополнительный режим Фразы'>Фразы</Link>
-          </MenuItem>
+          <Link className={classes.navItem} to={ROUTES.CONFIG} onClick={this.onConfigClick}>
+            <MenuItem title='Основные параметры программы'>Настройка</MenuItem>
+          </Link>
+          <Link className={classes.navItem} to={ROUTES.PHRASES} onClick={this.onMenuClose}>
+            <MenuItem title='Дополнительный режим Фразы'>Фразы</MenuItem>
+          </Link>
           <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
         </Menu>
       </div>
-
-
     );
   }
 }

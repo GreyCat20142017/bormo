@@ -17,7 +17,7 @@ export const getRound = (number, precision) => {
   return Math.round(number * Math.pow(10, precision)) / Math.pow(10, precision);
 };
 
-export const getInitialState = (currentTheme) => (
+export const getInitialState = (currentTheme, isNotBormo) => (
   {
     isModalOpen: false,
     isConfigOpen: false,
@@ -29,8 +29,6 @@ export const getInitialState = (currentTheme) => (
     courses: [],
     lessons: [],
     content: [],
-    sections: [],
-    data: [],
     isLoading: true,
     config: {
       instantStart: false,
@@ -49,7 +47,8 @@ export const getInitialState = (currentTheme) => (
       rate: 1,  //0.1 - 10 step 0.1
       pitch: 1 //0 - 2 step 0.1
     },
-    mobileOpen: false
+    mobileOpen: false,
+    isNotBormo: isNotBormo
   }
 );
 

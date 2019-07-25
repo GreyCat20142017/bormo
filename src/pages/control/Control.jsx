@@ -90,7 +90,7 @@ class Control extends Component {
   }
 
   render() {
-    const {classes, currentLesson, currentCourse, contentMissingMessage, reverse} = this.props;
+    const {classes, currentLesson, currentCourse, reverse} = this.props;
     const {content, currentIndex, maxIndex, memorized, randomOrder, errorCount, okCount, wasError} = this.state;
     const currentTranslate = getCurrentTranslate(currentIndex, maxIndex, randomOrder, reverse, content);
 
@@ -145,7 +145,7 @@ class Control extends Component {
       </React.Fragment>)
 
     } else {
-      return contentMissingMessage;
+      return null;
     }
   }
 }

@@ -10,9 +10,9 @@ import {withStyles} from '@material-ui/core/styles';
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
 import {TOOLBAR_TYPES} from '../../constants';
 import {isValidIndex, getSortedWords} from '../../functions';
+import ContentMissingMessage from '../../components/ContentMissingMessage';
 
 import {styles} from './Phrases.css.js';
-
 
 const getChangedAmount = (wordsContent, wordsAmount, result, operand) => {
   const words = result.split(' ');
@@ -146,6 +146,7 @@ class Phrases extends Component {
 
       const nextIndex = isValidIndex(currentIndex + 1, data) ? currentIndex + 1 : 0;
       const newAmount = keyboardMode ? getChangedAmount(wordsContent, wordsAmount, result, -1) : wordsAmount;
+      this.bormoSpeaker.speak(data[currentIndex].english);
       this.setState({
         currentIndex: nextIndex,
         result: '',
@@ -178,7 +179,6 @@ class Phrases extends Component {
   };
 
   onRestart = () => {
-    //todo  Это временно. data заменить на...
     this.setState(getPhrasesInitialState(this.props));
   };
 
@@ -198,6 +198,7 @@ class Phrases extends Component {
     const {classes} = this.props;
     const isFinished = (okCount === data.length);
 
+    if (data.length > 0) {
     return (
       <Fragment>
         <ul className={classes.wrapper}>
@@ -219,6 +220,8 @@ class Phrases extends Component {
               </li>
             ))}
         </ul>
+
+
 
         <Paper className={classes.paper}>
           <Typography variant='h5' className={classes.typo}>
@@ -253,8 +256,12 @@ class Phrases extends Component {
         <SimpleToolbar toolbar={TOOLBAR_TYPES.PHRASES} className={classes.toolbar}
                        onRestart={this.onRestart} onSwitchMouseKeyboard={this.onSwitchMouseKeyboard}
                        onCheckCorrectness={this.onCheckCorrectness} onCancel={this.onCancel}/>
+
       </Fragment>
-    );
+    )
+    } else {
+      return <ContentMissingMessage/>
+    }
   }
 }
 

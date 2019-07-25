@@ -49,13 +49,16 @@ import {
 import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER} from './routes';
 
 import {about} from './about';
-import PhrasesAside from './components/aside/PhrasesAside';
 
 const Loader = ({classes}) => (
   <Paper className={classes.paperLoader}>
     <Typography variant='caption' color='primary'>Загрузка...</Typography>
   </Paper>
 );
+
+const getCourseParams = (isNotBormo) => (isNotBormo ?
+  [API_BRANCHES.PHRASES, PHRASES_PATH, true] :
+  [API_BRANCHES.COURSES, COURSES_PATH, false]);
 
 class App extends React.Component {
 
@@ -67,7 +70,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = getInitialState(MainTheme.neutral);
+    this.state = getInitialState(MainTheme.neutral, (this.props.location.pathname === ROUTES.PHRASES));
     this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
   }
 
@@ -86,13 +89,21 @@ class App extends React.Component {
     }
   };
 
+  refineAsideContent = (location, force = false) => {
+    const isNotBormo = (location.pathname === ROUTES.PHRASES);
+    const needUpdate = (isNotBormo !== this.state.isNotBormo);
+    const params = getCourseParams(isNotBormo);
+    if (force || needUpdate) {
+     this.setState(()=> ({isNotBormo: isNotBormo}));
+     this.getCoursesData(...params);
+    }
+  }
+
   componentDidMount() {
-    const isNotBormo = (this.props.location.pathname === ROUTES.PHRASES);
-    const params = isNotBormo ?
-      [API_BRANCHES.PHRASES, PHRASES_PATH, true] :
-      [API_BRANCHES.COURSES, COURSES_PATH, false];
-    //todo Косяк от внедрения чуждого бормотунчику режима! Найти и обезвредить.
-    this.getCoursesData(...params);
+    this.refineAsideContent(this.props.location.pathname, true);
+    this.unlisten = this.props.history.listen((location, action) => {
+      this.refineAsideContent(location);
+    });
     if (this.bormoSpeaker.supportSound) {
       this.bormoSpeaker.getVoiceList(this.initCurrentSpeaker);
     }
@@ -101,6 +112,7 @@ class App extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('keyup', this.onAppKeyPress);
+    this.unlisten();
   }
 
   onAppKeyPress = (evt) => {
@@ -139,11 +151,14 @@ class App extends React.Component {
         res = await axios.get(jsonPath);
         result = res ? res.data : [];
       }
-
     }
     this.setState({
       isLoading: false,
-      courses: result
+      courses: result,
+      isNotBormo: isNotBormo,
+      currentCourse: 0,
+      currentLesson: 0,
+      content: []
     });
 
   };
@@ -158,7 +173,6 @@ class App extends React.Component {
       try {
         res = await axios.get(apiURL[apiBranch], {params: params});
         result = res && (res.status === STATUS_OK) ? res.data.content : [];
-        console.log(result);
       } catch (err) {
         useAPIData = false;
       }
@@ -222,14 +236,14 @@ class App extends React.Component {
           currentCourse: course,
           lastLesson: newLast,
           lessons: courseLessons,
-          currentLesson: null,
+          currentLesson: 0,
           content: []
         });
       }
     }
   };
 
-  onLessonChange = (lesson, hidePanel = false) => {
+  onLessonChange = (lesson, hidePanel = false, force = false) => {
     const isNotBormo = (this.props.location.pathname === ROUTES.PHRASES);
     const params = isNotBormo ?
       [lesson, API_BRANCHES.PHRASES, PHRASES_PER_LESSON, PHRASES_PATH, true] :
@@ -237,7 +251,7 @@ class App extends React.Component {
     if (hidePanel) {
       this.setState(state => ({mobileOpen: false}));
     }
-    if (lesson !== this.state.currentLesson) {
+    if (force || lesson !== this.state.currentLesson) {
       this.getLessonData(...params);
     }
   };
@@ -267,7 +281,7 @@ class App extends React.Component {
   onRestartClick = () => {
     const {lastLesson, currentLesson} = this.state;
     if (currentLesson <= lastLesson) {
-      this.onLessonChange(currentLesson);
+      this.onLessonChange(currentLesson, true,true);
     }
   };
 
@@ -276,31 +290,11 @@ class App extends React.Component {
     const {
       currentMode, currentCourse, currentLesson, lessons, courses, content,
       currentTheme, isLoading, isConfigOpen, isModalOpen, isSearchOpen,
-      config, voiceConfig, soundMuted, lastLesson
+      config, voiceConfig, soundMuted, lastLesson, isNotBormo
     } = this.state;
-
-    const isNotBormo = (this.props.location.pathname === ROUTES.PHRASES);
-
-    const contentMissingMessage = (!Array.isArray(content) || (content.length === 0)) ?
-      <React.Fragment>
-        <Typography variant='body2' component='p'>Необходимо выбрать курс и урок...</Typography>
-        <Hidden smUp implementation='css'>
-          <Typography variant='caption' component='p'>Для открытия панели выбора используется этот пункт
-            меню:</Typography>
-          <AppIcon/>
-        </Hidden>
-      </React.Fragment> : null;
 
     const drawer = (
       <ErrorBoundary>
-        {isNotBormo ?
-          <PhrasesAside
-            title={'Режим Phrases'}
-            currentLesson={currentLesson}
-            currentCourse={'no server'}
-            lessons={lessons}
-            onLessonChange={this.onLessonChange}
-            lastLesson={lastLesson}/> :
           <BormoAside
             currentMode={currentMode}
             currentCourse={currentCourse}
@@ -311,7 +305,6 @@ class App extends React.Component {
             onCourseChange={this.onCourseChange}
             lastLesson={lastLesson}
           />
-        }
       </ErrorBoundary>
     );
 
@@ -387,22 +380,25 @@ class App extends React.Component {
                   <Route exact path={ROUTES.MAIN} component={Main}/>
                   <Route path={ROUTES.BORMO} render={() =>
                     <Bormo content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                           currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                           onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
+                           currentCourse={currentCourse}
+                           onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                           onRestartClick={this.onRestartClick}/>
                   }/>
                   <Route path={ROUTES.CONTROL} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                             currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                             reverse={false} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
+                             currentCourse={currentCourse}
+                             reverse={false} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                             onRestartClick={this.onRestartClick}/>
                   }/>
                   <Route path={ROUTES.REVERSE} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                             currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
-                             reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}/>
+                             currentCourse={currentCourse}
+                             reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                             onRestartClick={this.onRestartClick}/>
                   }/>
                   <Route path={ROUTES.SPELLING} render={() =>
                     <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                              currentCourse={currentCourse} contentMissingMessage={contentMissingMessage}
+                              currentCourse={currentCourse}
                               reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
                               onRestartClick={this.onRestartClick}/>
                   }/>

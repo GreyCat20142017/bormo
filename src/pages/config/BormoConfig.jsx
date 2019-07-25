@@ -6,11 +6,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-
-import classNames from 'classnames';
 
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
@@ -88,7 +85,7 @@ class BormoConfig extends React.Component {
     const {isConfigOpen, classes, onThemeSelect, currentTheme, themes} = this.props;
     const {
       instantStart, instantNextMode, countErrorAtPrompt,
-      onlyEnglish, pitch, volume, soundMuted, useAPIData, apiURL, currentVoice
+      onlyEnglish, pitch, volume, soundMuted, useAPIData, currentVoice
     } = this.state;
 
     if (isConfigOpen) {
@@ -152,15 +149,7 @@ class BormoConfig extends React.Component {
                   }
                   label='использовать данные с удаленного сервера'
                 />
-                <TextField
-                  id="outlined-dense"
-                  label="адрес (например, http://localhost:3338/)"
-                  className={classNames(classes.textField, classes.dense)}
-                  margin="dense"
-                  value={apiURL}
-                  onChange={this.onInputChange('apiURL')}
-                  variant="outlined"
-                />
+                <Typography variant='body2'>Здесь будет выпадающий список</Typography>
 
               </FormGroup>
               <Button size='small' variant='contained' color='secondary' onClick={this.checkAPI}
