@@ -17,7 +17,7 @@ const styles = theme => ({
 class BormoLesson extends React.Component {
 
   onLessonClick = () => {
-    if (SWITCHABLE_ROUTES.indexOf(this.props.location.pathname) !== -1) {
+    if ((this.props.location.pathname !== ROUTES.PHRASES) && (SWITCHABLE_ROUTES.indexOf(this.props.location.pathname) !== -1)) {
       this.props.history.push(ROUTES.BORMO);
     }
     this.props.onLessonChange(this.props.item, true);

@@ -29,6 +29,7 @@ export const getInitialState = (currentTheme) => (
     courses: [],
     lessons: [],
     content: [],
+    sections: [],
     data: [],
     isLoading: true,
     config: {
@@ -37,7 +38,7 @@ export const getInitialState = (currentTheme) => (
       countErrorAtPrompt: true,
       checkedModes: {},
       useAPIData: true,
-      apiURL: DATA_SOURCES.PHP_LOCAL.COURSES
+      apiURL: DATA_SOURCES.PHP_LOCAL
     },
     soundMuted: false,
     voiceConfig: {

@@ -22,7 +22,6 @@ const Courses = ({courses, currentCourse, onCourseChange}) => (
 const BormoAside = ({classes, courses, currentCourse, lastLesson, onCourseChange, lessons, currentLesson, onLessonChange}) => (
   <div>
     <Divider/>
-    <div className={classes.toolbar}/>
     <div className={classes.asideWrapperCourse}>
       <Courses key={'courses'} courses={courses} currentCourse={currentCourse} classes={classes}
                onCourseChange={onCourseChange}/>

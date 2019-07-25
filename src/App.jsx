@@ -37,10 +37,19 @@ import MainTheme from './MainTheme';
 import SpeakerVoice from './SpeakerVoice';
 import {styles} from './App.css.js';
 import {getValueArrayFromObject, getInitialState} from './functions';
-import {COURSES_PATH, DATA_PATH, WORDS_PER_LESSON} from './constants';
+import {
+  COURSES_PATH,
+  BORMO_PATH,
+  WORDS_PER_LESSON,
+  PHRASES_PER_LESSON,
+  PHRASES_PATH,
+  API_BRANCHES,
+  STATUS_OK
+} from './constants';
 import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER} from './routes';
 
 import {about} from './about';
+import PhrasesAside from './components/aside/PhrasesAside';
 
 const Loader = ({classes}) => (
   <Paper className={classes.paperLoader}>
@@ -78,7 +87,12 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    this.getCoursesData();
+    const isNotBormo = (this.props.location.pathname === ROUTES.PHRASES);
+    const params = isNotBormo ?
+      [API_BRANCHES.PHRASES, PHRASES_PATH, true] :
+      [API_BRANCHES.COURSES, COURSES_PATH, false];
+    //todo Косяк от внедрения чуждого бормотунчику режима! Найти и обезвредить.
+    this.getCoursesData(...params);
     if (this.bormoSpeaker.supportSound) {
       this.bormoSpeaker.getVoiceList(this.initCurrentSpeaker);
     }
@@ -106,21 +120,26 @@ class App extends React.Component {
     }
   };
 
-  getCoursesData = async () => {
+  getCoursesData = async (apiBranch, jsonPath, isNotBormo) => {
     let {apiURL, useAPIData} = this.state.config;
     let result = [];
     let res = [];
     if (useAPIData) {
       try {
-        res = await axios.get(`${apiURL}`);
-        result = res && (res.status === 200) ? res.data.info : [];
+        res = await axios.get(apiURL[apiBranch]);
+        result = res && (res.status === STATUS_OK ? res.data.info : []);
       } catch (err) {
         useAPIData = false;
       }
     }
     if (!useAPIData) {
-      res = await axios.get(COURSES_PATH);
-      result = res ? res.data : [];
+      if (isNotBormo) {
+        result = [{name: 'no server', lastlesson: 3}];
+      } else {
+        res = await axios.get(jsonPath);
+        result = res ? res.data : [];
+      }
+
     }
     this.setState({
       isLoading: false,
@@ -129,25 +148,26 @@ class App extends React.Component {
 
   };
 
-  getLessonData = async (lesson) => {
+  getLessonData = async (lesson, apiBranch, unitsPerLesson, jsonPath, isNotBormo) => {
     let {apiURL, useAPIData} = this.state.config;
     const {currentCourse} = this.state;
+    const params = isNotBormo ? {lesson: lesson} : {course: currentCourse, lesson: lesson};
     let result = [];
     let res = [];
     if (useAPIData) {
       try {
-        res = await axios.get(`${apiURL}`,
-          {params: {course: currentCourse, lesson: lesson}});
-        result = res && (res.status === 200) ? res.data.content : [];
+        res = await axios.get(apiURL[apiBranch], {params: params});
+        result = res && (res.status === STATUS_OK) ? res.data.content : [];
+        console.log(result);
       } catch (err) {
         useAPIData = false;
       }
     }
     if (!useAPIData) {
-      res = await axios.get(DATA_PATH);
+      res = await axios.get(jsonPath);
       result = res.data.filter(el => el.course === currentCourse).filter((el, ind) => {
-        const startInd = (parseInt(lesson, 10) - 1) * WORDS_PER_LESSON || 0;
-        return (ind >= startInd && ind < (startInd + WORDS_PER_LESSON));
+        const startInd = (parseInt(lesson, 10) - 1) * unitsPerLesson || 0;
+        return (ind >= startInd && ind < (startInd + unitsPerLesson));
       });
     }
 
@@ -210,11 +230,15 @@ class App extends React.Component {
   };
 
   onLessonChange = (lesson, hidePanel = false) => {
+    const isNotBormo = (this.props.location.pathname === ROUTES.PHRASES);
+    const params = isNotBormo ?
+      [lesson, API_BRANCHES.PHRASES, PHRASES_PER_LESSON, PHRASES_PATH, true] :
+      [lesson, API_BRANCHES.COURSES, WORDS_PER_LESSON, BORMO_PATH, false];
     if (hidePanel) {
       this.setState(state => ({mobileOpen: false}));
     }
     if (lesson !== this.state.currentLesson) {
-      this.getLessonData(lesson);
+      this.getLessonData(...params);
     }
   };
 
@@ -257,7 +281,7 @@ class App extends React.Component {
 
     const isNotBormo = (this.props.location.pathname === ROUTES.PHRASES);
 
-    const contentMissingMessage = content.length === 0 ?
+    const contentMissingMessage = (!Array.isArray(content) || (content.length === 0)) ?
       <React.Fragment>
         <Typography variant='body2' component='p'>Необходимо выбрать курс и урок...</Typography>
         <Hidden smUp implementation='css'>
@@ -269,17 +293,24 @@ class App extends React.Component {
 
     const drawer = (
       <ErrorBoundary>
-        {isNotBormo ? <p>Phrases Aside will be here</p> :
+        {isNotBormo ?
+          <PhrasesAside
+            title={'Режим Phrases'}
+            currentLesson={currentLesson}
+            currentCourse={'no server'}
+            lessons={lessons}
+            onLessonChange={this.onLessonChange}
+            lastLesson={lastLesson}/> :
           <BormoAside
-          currentMode={currentMode}
-          currentCourse={currentCourse}
-          currentLesson={currentLesson}
-          lessons={lessons}
-          courses={courses}
-          onLessonChange={this.onLessonChange}
-          onCourseChange={this.onCourseChange}
-          lastLesson={lastLesson}
-        />
+            currentMode={currentMode}
+            currentCourse={currentCourse}
+            currentLesson={currentLesson}
+            lessons={lessons}
+            courses={courses}
+            onLessonChange={this.onLessonChange}
+            onCourseChange={this.onCourseChange}
+            lastLesson={lastLesson}
+          />
         }
       </ErrorBoundary>
     );
@@ -380,7 +411,8 @@ class App extends React.Component {
                             closeSearch={this.closeSearch}/>
                   }/>
                   <Route path={ROUTES.PHRASES} render={() =>
-                    <Phrases bormoSpeaker={this.bormoSpeaker} closePhrases={this.closePhrases}/>
+                    <Phrases content={content} bormoSpeaker={this.bormoSpeaker} closePhrases={this.closePhrases}
+                             currentSection={currentLesson}/>
                   }/>
                   <Route path={ROUTES.CONFIG} render={() =>
                     <BormoConfig

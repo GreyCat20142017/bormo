@@ -1,4 +1,17 @@
 export default [
+
+  {
+    id: 10,
+    section_id: 0,
+    english: 'I understand you',
+    russian: 'Я понимаю тебя'
+  },
+  {
+    id: 10,
+    section_id: 0,
+    english: 'I want more practice',
+    russian: 'Я хочу больше практики'
+  },
   {
     id: 10,
     section_id: 1,
@@ -38,7 +51,7 @@ export default [
   {
     id: 15,
     section_id: 1,
-    english: 'It look so interesting',
+    english: 'It looks so interesting',
     russian: 'Это выглядит так интересно'
   },
 
@@ -81,7 +94,13 @@ export default [
   {
     id: 7,
     section_id: 3,
-    english: 'He missed you',
+    english: 'He misses you',
+    russian: 'Он скучает по тебе'
+  },
+  {
+    id: 7,
+    section_id: 2,
+    english: 'He misses you',
     russian: 'Он скучает по тебе'
   }
 ];

@@ -6,20 +6,22 @@ export const voiceParams = {
 
 export const PREFFERABLE_VOICE = 'Google UK English';
 
-export const DATA_PATH = 'data/bormo.json'
-export const COURSES_PATH = 'data/courses.json'
+export const BORMO_PATH = 'data/bormo.json';
+export const COURSES_PATH = 'data/courses.json';
+export const PHRASES_PATH = 'data/phrases.json';
 
 export const PAGE_LIMIT = 9;
 export const ROW_LIMIT = 5;
 
-//Изменять только одновременно с константой в bormob и bormophp !!!
+//WORDS_PER_LESSON и PHRASES_PER_LESSON Изменять только одновременно с константами в bormob и bormophp !!!
 export const WORDS_PER_LESSON = 20;
+export const PHRASES_PER_LESSON = 7;
 
 export const BORMO_STATUS = {
   STARTED: 'started',
   PAUSED: 'paused',
   STOPPED: 'stopped'
-}
+};
 
 export const VOICE_TEST_PHRASE = 'This is a voice test';
 
@@ -40,23 +42,43 @@ export const LANGUAGES = {EN: 'english', RU: 'russian'};
 export const SKYENG_URL = `https://dictionary.skyeng.ru/api/public/v1/words/search`;
 
 export const DATA_SOURCES = {
-  PHP_LOCAL: {COURSES: 'http://bormophp.local:8080/courses.php', SEARCH: 'http://bormophp.local:8080/search.php'},
-  NODE_LOCAL: {COURSES: 'http://localhost:3377/courses', SEARCH: 'http://localhost:3377/search'},
-  PHP_HOSING: {COURSES: 'Источник данных недоступен', SEARCH: 'Источник данных недоступен'},
-  NODE_HOSTING: {COURSES: 'Источник данных недоступен', SEARCH: 'Источник данных недоступен'}
+  PHP_LOCAL: {
+    COURSES: 'http://bormophp.local:8080/courses.php',
+    SEARCH: 'http://bormophp.local:8080/search.php',
+    PHRASES: 'http://bormophp.local:8080/phrases.php'
+  },
+  NODE_LOCAL: {
+    COURSES: 'http://localhost:3377/courses',
+    SEARCH: 'http://localhost:3377/search',
+    PHRASES: 'http://localhost:3377/phrases'
+  },
+  PHP_HOSTING: {
+    COURSES: 'Источник данных недоступен',
+    SEARCH: 'Источник данных недоступен',
+    PHRASES: 'Источник данных недоступен'
+  },
+  NODE_HOSTING: {
+    COURSES: 'Источник данных недоступен',
+    SEARCH: 'Источник данных недоступен',
+    PHRASES: 'Источник данных недоступен'
+  }
 };
 
 export const STATUS_OK = 200;
-
 
 export const TRANSLATE_SOURCES = {
   SKYENG: 'SkyEng',
   DB: 'Database'
 };
 
-
 export const TOOLBAR_TYPES = {
   SPELLING_STARTED: 'spellingStarted',
   SPELLING_STOPPED: 'spellingStopped',
   PHRASES: 'phrases'
 };
+
+export const API_BRANCHES = {
+  COURSES: 'COURSES',
+  PHRASES: 'PHRASES',
+  SEARCH: 'SEARCH'
+}

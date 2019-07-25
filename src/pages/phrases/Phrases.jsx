@@ -1,17 +1,29 @@
 import React, {Component, Fragment} from 'react';
 
 import Button from '@material-ui/core/Button';
+import Badge from '@material-ui/core/Badge';
 import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
 
-import {isValidIndex, getSortedWords} from '../../functions';
-import {styles} from './Phrases.css.js';
-import data from './phrases';
-import Badge from '@material-ui/core/Badge';
-import {TOOLBAR_TYPES, KEY_CODES} from '../../constants';
-import TextField from '@material-ui/core/TextField';
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
+import {TOOLBAR_TYPES} from '../../constants';
+import {isValidIndex, getSortedWords} from '../../functions';
+
+import {styles} from './Phrases.css.js';
+
+
+const getChangedAmount = (wordsContent, wordsAmount, result, operand) => {
+  const words = result.split(' ');
+  words.forEach((word, ind) => {
+    let index = wordsContent.indexOf(word.trim());
+    if (index !== -1) {
+      wordsAmount[index] = wordsAmount[index] + operand;
+    }
+  });
+  return wordsAmount;
+};
 
 const dataTransform = (data) => {
   const wordsPresence = {};
@@ -25,20 +37,20 @@ const dataTransform = (data) => {
 };
 
 const getTranslatedPhrase = (dataArray, currentIndex) => (
-  Array.isArray(data) ? dataArray[currentIndex].russian : 'Ошибка: не удалось получить данные');
+  Array.isArray(dataArray) ? dataArray[currentIndex].russian : 'Ошибка: не удалось получить данные');
 
 const getObjectValuesByKeyArray = (sourceObject, keysArray) => (
   keysArray.map(key => sourceObject.hasOwnProperty(key) ? sourceObject[key] : 0)
 );
 
-const getPhrasesInitialState = (data) => {
-  const wordsObject = dataTransform(data.filter((item) => item.section_id === 1));
+const getPhrasesInitialState = ({content, currentSection }) => {
+  const wordsObject = dataTransform(content);
   const shuffledWords = getSortedWords(Object.keys(wordsObject));
   return ({
     wordsContent: shuffledWords,
     wordsAmount: getObjectValuesByKeyArray(wordsObject, shuffledWords),
     currentIndex: 0,
-    data: data,
+    data: content,
     result: '',
     errorCount: 0,
     okCount: 0,
@@ -49,14 +61,14 @@ const getPhrasesInitialState = (data) => {
 
 class Phrases extends Component {
 
-  constructor(props) {
+   constructor(props) {
     super(props);
-    this.state = getPhrasesInitialState(data);
+    this.state = getPhrasesInitialState(props);
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(getPhrasesInitialState(data));
+    this.setState(getPhrasesInitialState(nextProps));
   }
 
   componentDidMount() {
@@ -105,10 +117,6 @@ class Phrases extends Component {
         default:
       }
     }
-    if (evt.keyCode === KEY_CODES.ENTER) {
-      evt.preventDefault();
-      this.onCheckCorrectness();
-    }
   };
 
   onWordClick = (index) => {
@@ -129,16 +137,32 @@ class Phrases extends Component {
       result: data[currentIndex].english,
       errorCount: errorCount + 1
     });
-  }
+  };
 
-  onCheckCorrectness = () => {
-    const {currentIndex, data, result, okCount, errorCount} = this.state;
-      if (data[currentIndex].english.toLowerCase().trim() === result.toLowerCase().trim()) {
-        const nextIndex = isValidIndex(currentIndex + 1, data) ? currentIndex + 1 : 0;
-        this.setState({currentIndex: nextIndex, result: '', okCount: okCount + 1, wasError: false});
-      } else {
-        this.setState({errorCount: errorCount + 1, wasError: true});
-      }
+  onCheckCorrectness = (evt) => {
+    const {currentIndex, data, result, okCount, errorCount, keyboardMode, wordsAmount, wordsContent} = this.state;
+    evt.preventDefault();
+    if (data[currentIndex].english.toLowerCase().trim() === result.toLowerCase().trim()) {
+
+      const nextIndex = isValidIndex(currentIndex + 1, data) ? currentIndex + 1 : 0;
+      const newAmount = keyboardMode ? getChangedAmount(wordsContent, wordsAmount, result, -1) : wordsAmount;
+      this.setState({
+        currentIndex: nextIndex,
+        result: '',
+        okCount: okCount + 1,
+        wasError: false,
+        wordsAmount: newAmount
+      });
+
+    } else {
+      const newAmount = keyboardMode ? wordsAmount : getChangedAmount(wordsContent, wordsAmount, result, +1);
+      this.setState({
+        errorCount: errorCount + 1,
+        wasError: true,
+        result: keyboardMode ? result : '',
+        wordsAmount: newAmount
+      });
+    }
   };
 
   onCancel = () => {
@@ -155,15 +179,14 @@ class Phrases extends Component {
 
   onRestart = () => {
     //todo  Это временно. data заменить на...
-    this.setState(getPhrasesInitialState(data));
-  }
+    this.setState(getPhrasesInitialState(this.props));
+  };
 
   onSwitchMouseKeyboard = () => {
-    if (this.state.keyboardMode) {
-    //todo Пересчитать WordsAmount
-    }
-    this.setState({keyboardMode: !this.state.keyboardMode});
-  }
+    const {result, keyboardMode, wordsAmount, wordsContent} = this.state;
+    const newAmount = !keyboardMode ? getChangedAmount(wordsContent, wordsAmount, result, +1) : wordsAmount;
+    this.setState({keyboardMode: !this.state.keyboardMode, result: '', wordsAmount: newAmount});
+  };
 
   onTranslateChange = (evt) => {
     const value = evt.target.value;
@@ -171,15 +194,16 @@ class Phrases extends Component {
   };
 
   render() {
-    const {wordsContent, wordsAmount, currentIndex, data, result, keyboardMode} = this.state;
+    const {wordsContent, wordsAmount, currentIndex, data, result, keyboardMode, wasError, okCount, errorCount} = this.state;
     const {classes} = this.props;
+    const isFinished = (okCount === data.length);
+
     return (
       <Fragment>
         <ul className={classes.wrapper}>
           {wordsContent.map((item, ind) =>
             (
               <li key={ind}>
-
                 <Fragment>
                   {keyboardMode ? null :
                     <Badge className={classes.badge} color='secondary' badgeContent={wordsAmount[ind]}>
@@ -192,13 +216,16 @@ class Phrases extends Component {
                     {item}
                   </Button>
                 </Fragment>
-
               </li>
             ))}
         </ul>
+
         <Paper className={classes.paper}>
           <Typography variant='h5' className={classes.typo}>
-            {getTranslatedPhrase(data, currentIndex)}
+            {isFinished ?
+              `Статистика. Всего фраз: ${okCount} , число ошибок: ${errorCount}` :
+              getTranslatedPhrase(data, currentIndex)
+            }
           </Typography>
         </Paper>
 
@@ -209,7 +236,7 @@ class Phrases extends Component {
                 required
                 autoFocus={true}
                 id='result'
-                label={'Перевод:'}
+                label={wasError ? 'Нужно исправить ошибку:' : 'Перевод:'}
                 value={result}
                 fullWidth
                 margin='normal'
