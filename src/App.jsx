@@ -30,6 +30,7 @@ import Spelling from './pages/spelling/Spelling';
 import BormoConfig from './pages/config/BormoConfig';
 import Search from './pages/search/Search';
 import Phrases from './pages/phrases/Phrases';
+import SkyengSearch from './pages/sky/SkyengSearch';
 
 import NotFound from './pages/notfound/NotFound';
 import MainTheme from './MainTheme';
@@ -46,7 +47,7 @@ import {
   API_BRANCHES,
   STATUS_OK
 } from './constants';
-import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER} from './routes';
+import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER, SWITCHABLE_ROUTES} from './routes';
 
 import {about} from './about';
 
@@ -208,15 +209,6 @@ class App extends React.Component {
     this.setState({isConfigOpen: false});
   };
 
-  closeSearch = () => {
-    this.setState({isSearchOpen: false});
-  };
-
-
-  closeSearch = () => {
-    this.setState({isPhrasesOpen: false});
-  };
-
   onConfigChange = () => {
     this.setState({isConfigOpen: false});
   };
@@ -286,12 +278,10 @@ class App extends React.Component {
   };
 
   render() {
-    const {classes, themes} = this.props;
-    const {
-      currentMode, currentCourse, currentLesson, lessons, courses, content,
-      currentTheme, isLoading, isConfigOpen, isModalOpen, isSearchOpen,
-      config, voiceConfig, soundMuted, lastLesson, isNotBormo
-    } = this.state;
+    const {classes, themes, location} = this.props;
+    const { currentMode, currentCourse, currentLesson, lessons, courses, content, currentTheme,
+      isLoading, isConfigOpen, isModalOpen,  config, voiceConfig, soundMuted, lastLesson, isNotBormo } = this.state;
+    const hideFooter = SWITCHABLE_ROUTES.filter(item => item !== ROUTES.MAIN).indexOf(location.pathname) !== -1;
 
     const drawer = (
       <ErrorBoundary>
@@ -402,9 +392,9 @@ class App extends React.Component {
                               reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
                               onRestartClick={this.onRestartClick}/>
                   }/>
-                  <Route path={ROUTES.SEARCH} render={() =>
-                    <Search bormoSpeaker={this.bormoSpeaker} isSearchOpen={isSearchOpen}
-                            closeSearch={this.closeSearch}/>
+                  <Route path={ROUTES.SEARCH} render={() =>  <Search bormoSpeaker={this.bormoSpeaker} /> }
+                  />
+                  <Route path={ROUTES.SKYENG} render={() =>  <SkyengSearch/>
                   }/>
                   <Route path={ROUTES.PHRASES} render={() =>
                     <Phrases content={content} bormoSpeaker={this.bormoSpeaker} closePhrases={this.closePhrases}
@@ -428,7 +418,7 @@ class App extends React.Component {
               }
             </main>
 
-            {isNotBormo ? null :
+            {hideFooter || isNotBormo ? null :
               <Paper className={classes.paperFooter}>
                 <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
                              onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}

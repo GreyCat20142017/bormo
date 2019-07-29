@@ -5,7 +5,6 @@ import AppIcon from '@material-ui/icons/Apps';
 
 import {withStyles} from '@material-ui/core/styles'
 
-
 const styles = theme => ({
   wrapper: {
     textAlign: 'center',

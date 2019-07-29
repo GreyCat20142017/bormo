@@ -16,7 +16,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import SimpleTableActions from './SimpeTableActions';
 
-import {TRANSLATE_SOURCES, ROW_LIMIT} from '../../constants';
+import {TRANSLATE_SOURCES, ROW_LIMIT} from '../../../constants';
 import TextField from "@material-ui/core/TextField";
 
 import  {styles} from './SimpleTable.css';

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 
-import {withStyles} from '@material-ui/core/styles/index';
+import {withStyles} from '@material-ui/core/styles';
 
-import Menu from '@material-ui/core/Menu/index';
-import MenuItem from '@material-ui/core/MenuItem/index';
-import Typography from '@material-ui/core/Typography/index';
-import IconButton from '@material-ui/core/IconButton/index';
+import Menu from '@material-ui/core/Menu';
+import Divider from '@material-ui/core/Divider';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
 import BormoToolbar from './BormoToolbar';
@@ -71,10 +72,14 @@ class BormoHeader extends Component {
           <Link className={classes.navItem} to={ROUTES.CONFIG} onClick={this.onConfigClick}>
             <MenuItem title='Основные параметры программы'>Настройка</MenuItem>
           </Link>
+          <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
+          <Divider/>
           <Link className={classes.navItem} to={ROUTES.PHRASES} onClick={this.onMenuClose}>
             <MenuItem title='Дополнительный режим Фразы'>Фразы</MenuItem>
           </Link>
-          <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
+          <Link className={classes.navItem} to={ROUTES.SKYENG} onClick={this.onMenuClose}>
+            <MenuItem title='Поиск в Skyeng с полными результатами'>Поиск Skyeng</MenuItem>
+          </Link>
         </Menu>
       </div>
     );

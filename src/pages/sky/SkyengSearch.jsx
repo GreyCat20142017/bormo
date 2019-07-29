@@ -1,8 +1,9 @@
 import React from 'react';
+
 import SearchForm from '../../components/searchform/SearchForm';
 
-const Search = () => (
-  <SearchForm onlySkyEng={false}/>
+const SkyengSearch = () => (
+  <SearchForm onlySkyEng={true}/>
 );
 
-export default Search;
+export default SkyengSearch;

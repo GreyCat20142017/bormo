@@ -12,9 +12,7 @@ import classNames from 'classnames';
 import bormoWrapper from '../../hoc/bormoWrapper';
 import {styles} from './Control.css.js';
 
-import {
-  isInactive, getTranslateLanguage, getOriginLanguage, getModeInitialState, getCurrentTranslate
-} from '../pagesCommon';
+import {isInactive, getTranslateLanguage, getOriginLanguage, getModeInitialState, getCurrentTranslate} from '../pagesCommon';
 
 import {WORDS_PER_LESSON, BORMO_STATUS} from '../../constants';
 

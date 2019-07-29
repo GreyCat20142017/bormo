@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {withStyles} from '@material-ui/core/styles/index';
+import {withStyles} from '@material-ui/core/styles';
 
-import ListItem from '@material-ui/core/ListItem/index';
-import ListItemIcon from '@material-ui/core/ListItemIcon/index';
-import ListItemText from '@material-ui/core/ListItemText/index';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/Inbox';
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';

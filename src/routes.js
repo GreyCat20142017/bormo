@@ -9,14 +9,17 @@ const ROUTES = {
   CHECK: SERVER_ROOT + 'check',
   CONFIG: SERVER_ROOT + 'config',
   SEARCH: SERVER_ROOT + 'search',
-  PHRASES: SERVER_ROOT + 'phrases'
+  PHRASES: SERVER_ROOT + 'phrases',
+  SKYENG: SERVER_ROOT + 'skyeng'
 };
 
 const SWITCHABLE_ROUTES = [
   ROUTES.MAIN,
   ROUTES.SEARCH,
-  ROUTES.PHRASES
+  ROUTES.PHRASES,
+  ROUTES.SKYENG
 ];
+
 const ROUTES_ORDER = [
   ROUTES.BORMO,
   ROUTES.CONTROL,
@@ -37,7 +40,6 @@ const HOTKEY_REDIRECTS = {
   'v': ROUTES.CHECK,
   'м': ROUTES.CHECK
 };
-
 
 export {
   ROUTES,

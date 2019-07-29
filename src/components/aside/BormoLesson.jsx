@@ -1,8 +1,8 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles/index';
+import {withStyles} from '@material-ui/core/styles';
 
-import Fab from '@material-ui/core/Fab/index';
+import Fab from '@material-ui/core/Fab';
 import {ROUTES, SWITCHABLE_ROUTES} from '../../routes';
 
 const styles = theme => ({

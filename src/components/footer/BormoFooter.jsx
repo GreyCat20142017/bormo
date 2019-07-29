@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AppBar from '@material-ui/core/AppBar/index';
-import Toolbar from '@material-ui/core/Toolbar/index';
-import IconButton from '@material-ui/core/IconButton/index';
-import Fab from '@material-ui/core/Fab/index';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Fab from '@material-ui/core/Fab';
 
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -13,7 +13,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 
 import BormoThemeSelect from '../BormoThemeSelect';
 
-import {withStyles} from '@material-ui/core/styles/index';
+import {withStyles} from '@material-ui/core/styles';
 import {styles} from './BormoFooter.css.js';
 import {NavLink} from 'react-router-dom';
 import {ROUTES} from '../../routes';
