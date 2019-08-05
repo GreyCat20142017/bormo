@@ -29,7 +29,7 @@ const BrightTheme = createMuiTheme({
 const GreyTheme = createMuiTheme({
   palette: {
     primary: {main: blueGrey[500], light: blueGrey[300], dark: blueGrey[900], contrastText: black},
-    secondary: {main: grey[400], dark: grey[600], contrastText: black},
+    secondary: {main: grey[800], dark: grey[600], contrastText: black},
     error: {main: orange[900]},
   },
   typography: {

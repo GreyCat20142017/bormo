@@ -1,8 +1,10 @@
 import React from 'react';
+import {NavLink} from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import Hidden from '@material-ui/core/Hidden';
 import Fab from '@material-ui/core/Fab';
 
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
@@ -10,23 +12,21 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
-
-import BormoThemeSelect from '../BormoThemeSelect';
-
 import {withStyles} from '@material-ui/core/styles';
-import {styles} from './BormoFooter.css.js';
-import {NavLink} from 'react-router-dom';
-import {ROUTES} from '../../routes';
 
-const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, ...rest}) => (
+import {ROUTES} from '../../routes';
+import BormoThemeSelect from '../BormoThemeSelect';
+import DataSourceSelector from '../DataSourceSelector';
+import {styles} from './BormoFooter.css.js';
+
+const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectDataSource, ...rest}) => (
   <AppBar position='fixed' color='primary' className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
-
-      <IconButton color='inherit' className={classes.mobileOn}>
-        <MoreIcon/>
-      </IconButton>
-      <BormoThemeSelect {...rest} className={classes.mobileOff}/>
-
+      <DataSourceSelector onSelectDataSource={onSelectDataSource}/>
+      <IconButton className={classes.hidden} color='inherit'><MoreIcon/></IconButton>
+      <Hidden mdDown implementation='css'>
+        <BormoThemeSelect {...rest}/>
+      </Hidden>
       <div className={classes.fabButtons}>
         <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок (Alt+P) - Previous'
              className={classes.fabButton}

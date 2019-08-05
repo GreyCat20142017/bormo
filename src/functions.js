@@ -35,9 +35,10 @@ export const getInitialState = (currentTheme, isNotBormo) => (
       instantNextMode: true,
       countErrorAtPrompt: true,
       checkedModes: {},
-      useAPIData: true,
-      apiURL: DATA_SOURCES.PHP_LOCAL
     },
+    useAPIData: true,
+    APIkey: Object.keys(DATA_SOURCES)[0],
+    himera: Object.keys(DATA_SOURCES)[0],
     soundMuted: false,
     voiceConfig: {
       onlyEnglish: true,

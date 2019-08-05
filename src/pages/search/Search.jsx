@@ -1,8 +1,8 @@
 import React from 'react';
 import SearchForm from '../../components/searchform/SearchForm';
 
-const Search = () => (
-  <SearchForm onlySkyEng={false}/>
+const Search = ({APIkey}) => (
+  <SearchForm onlySkyEng={false} APIkey={APIkey}/>
 );
 
 export default Search;

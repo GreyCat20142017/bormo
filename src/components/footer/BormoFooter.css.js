@@ -27,16 +27,8 @@ const styles = theme => ({
     position: 'relative',
     margin: '0 2px'
   },
-  mobileOn: {
-    display: 'none',
-    [theme.breakpoints.down('sm')]: {
-      display: 'block'
-    }
-  },
-  mobileOff: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
+  hidden: {
+    display: 'none'
   },
   searchButton: {
     color: 'white'

@@ -22,10 +22,20 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 100,
+    '& ::before': {
+      borderBottom: '1px solid white'
+    }
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
   },
+  test: {
+     color: 'white',
+    '& *': {
+      color: 'white',
+      border: 'white',
+    }
+  }
 });
 
 class Bred extends React.Component {
@@ -47,7 +57,7 @@ class Bred extends React.Component {
     return (
       <form className={fromConfig ? classes.rootFromConfig : classes.root} autoComplete='off'>
         <FormControl className={classes.formControl}>
-          <Select
+          <Select className={classes.test}
             value={this.state.choice}
             onChange={this.onThemeChange}
             inputProps={{

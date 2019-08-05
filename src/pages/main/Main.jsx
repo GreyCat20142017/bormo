@@ -23,7 +23,7 @@ const Main = ({classes}) => (
 
       <CardContent>
         <Typography variant='h5'>
-          Бормотунчик - 2018
+          Бормотунчик - 2019
         </Typography>
         <Typography variant='caption'>
           <p>React, React Router, Material-UI</p>

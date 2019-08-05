@@ -17,12 +17,6 @@ import OffIcon from '@material-ui/icons/HighlightOff';
 import {withStyles} from '@material-ui/core/styles';
 
 import axios from 'axios';
-import BormoFooter from './components/footer/BormoFooter';
-import BormoHeader from './components/header/BormoHeader';
-import BormoAside from './components/aside/BormoAside';
-import BormoModal from './components/modal/BormoModal';
-import ErrorBoundary from './components/ErrorBoundary';
-
 import Main from './pages/main/Main';
 import Bormo from './pages/bormo/Bormo';
 import Control from './pages/control/Control';
@@ -31,25 +25,28 @@ import BormoConfig from './pages/config/BormoConfig';
 import Search from './pages/search/Search';
 import Phrases from './pages/phrases/Phrases';
 import SkyengSearch from './pages/sky/SkyengSearch';
-
 import NotFound from './pages/notfound/NotFound';
-import MainTheme from './MainTheme';
+
+import BormoFooter from './components/footer/BormoFooter';
+import BormoHeader from './components/header/BormoHeader';
+import BormoAside from './components/aside/BormoAside';
+import BormoModal from './components/modal/BormoModal';
+import ErrorBoundary from './components/ErrorBoundary';
+import DataSourceSelector from './components/DataSourceSelector';
 
 import SpeakerVoice from './SpeakerVoice';
-import {styles} from './App.css.js';
+import MainTheme from './MainTheme';
+import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER, SWITCHABLE_ROUTES} from './routes';
+import {about} from './about';
+
 import {getValueArrayFromObject, getInitialState} from './functions';
 import {
-  COURSES_PATH,
-  BORMO_PATH,
-  WORDS_PER_LESSON,
-  PHRASES_PER_LESSON,
-  PHRASES_PATH,
-  API_BRANCHES,
-  STATUS_OK
+  COURSES_PATH, BORMO_PATH,
+  WORDS_PER_LESSON, PHRASES_PER_LESSON,
+  PHRASES_PATH, API_BRANCHES, STATUS_OK,
+  DATA_SOURCES, TEST_KEY
 } from './constants';
-import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER, SWITCHABLE_ROUTES} from './routes';
-
-import {about} from './about';
+import {styles} from './App.css.js';
 
 const Loader = ({classes}) => (
   <Paper className={classes.paperLoader}>
@@ -71,7 +68,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = getInitialState(MainTheme.neutral, (this.props.location.pathname === ROUTES.PHRASES));
+    this.state = Object.assign({}, getInitialState(MainTheme.neutral, (this.props.location.pathname === ROUTES.PHRASES)));
     this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
   }
 
@@ -95,10 +92,10 @@ class App extends React.Component {
     const needUpdate = (isNotBormo !== this.state.isNotBormo);
     const params = getCourseParams(isNotBormo);
     if (force || needUpdate) {
-     this.setState(()=> ({isNotBormo: isNotBormo}));
-     this.getCoursesData(...params);
+      this.setState(() => ({isNotBormo: isNotBormo}));
+      this.getCoursesData(...params);
     }
-  }
+  };
 
   componentDidMount() {
     this.refineAsideContent(this.props.location.pathname, true);
@@ -133,11 +130,14 @@ class App extends React.Component {
     }
   };
 
-  getCoursesData = async (apiBranch, jsonPath, isNotBormo) => {
-    let {apiURL, useAPIData} = this.state.config;
+  getCoursesData = async (apiBranch, jsonPath, isNotBormo, key = null, useAPI = null) => {
     let result = [];
     let res = [];
-    if (useAPIData) {
+    let APIkey = key ? key : this.state.APIkey;
+    let useAPIData = useAPI ? useAPI : this.state.useAPIData;
+    let apiURL = DATA_SOURCES[APIkey];
+    useAPIData = (APIkey === TEST_KEY) ? false : useAPIData;
+    if (useAPIData && apiURL) {
       try {
         res = await axios.get(apiURL[apiBranch]);
         result = res && (res.status === STATUS_OK ? res.data.info : []);
@@ -159,18 +159,22 @@ class App extends React.Component {
       isNotBormo: isNotBormo,
       currentCourse: 0,
       currentLesson: 0,
-      content: []
+      content: [],
+      useAPIData: useAPIData,
+      APIkey: APIkey
     });
 
   };
 
   getLessonData = async (lesson, apiBranch, unitsPerLesson, jsonPath, isNotBormo) => {
-    let {apiURL, useAPIData} = this.state.config;
+    let {APIkey, useAPIData} = this.state;
     const {currentCourse} = this.state;
     const params = isNotBormo ? {lesson: lesson} : {course: currentCourse, lesson: lesson};
+    let apiURL = DATA_SOURCES[APIkey];
     let result = [];
     let res = [];
-    if (useAPIData) {
+    useAPIData = (APIkey === TEST_KEY) ? false : useAPIData;
+    if (useAPIData && apiURL) {
       try {
         res = await axios.get(apiURL[apiBranch], {params: params});
         result = res && (res.status === STATUS_OK) ? res.data.content : [];
@@ -189,7 +193,8 @@ class App extends React.Component {
     this.setState({
       isLoading: false,
       content: result,
-      currentLesson: lesson
+      currentLesson: lesson,
+      useAPIData: useAPIData
     });
   };
 
@@ -273,28 +278,35 @@ class App extends React.Component {
   onRestartClick = () => {
     const {lastLesson, currentLesson} = this.state;
     if (currentLesson <= lastLesson) {
-      this.onLessonChange(currentLesson, true,true);
+      this.onLessonChange(currentLesson, true, true);
     }
+  };
+
+  onSelectDataSource  =  (sourceKey) =>  {
+     const params = getCourseParams(this.state.isNotBormo);
+     this.getCoursesData(...params, sourceKey, (sourceKey !== TEST_KEY));
   };
 
   render() {
     const {classes, themes, location} = this.props;
-    const { currentMode, currentCourse, currentLesson, lessons, courses, content, currentTheme,
-      isLoading, isConfigOpen, isModalOpen,  config, voiceConfig, soundMuted, lastLesson, isNotBormo } = this.state;
+    const {
+      currentMode, currentCourse, currentLesson, lessons, courses, content, currentTheme, APIkey,
+      isLoading, isConfigOpen, isModalOpen, config, voiceConfig, soundMuted, lastLesson, isNotBormo
+    } = this.state;
     const hideFooter = SWITCHABLE_ROUTES.filter(item => item !== ROUTES.MAIN).indexOf(location.pathname) !== -1;
 
     const drawer = (
       <ErrorBoundary>
-          <BormoAside
-            currentMode={currentMode}
-            currentCourse={currentCourse}
-            currentLesson={currentLesson}
-            lessons={lessons}
-            courses={courses}
-            onLessonChange={this.onLessonChange}
-            onCourseChange={this.onCourseChange}
-            lastLesson={lastLesson}
-          />
+        <BormoAside
+          currentMode={currentMode}
+          currentCourse={currentCourse}
+          currentLesson={currentLesson}
+          lessons={lessons}
+          courses={courses}
+          onLessonChange={this.onLessonChange}
+          onCourseChange={this.onCourseChange}
+          lastLesson={lastLesson}
+        />
       </ErrorBoundary>
     );
 
@@ -392,9 +404,9 @@ class App extends React.Component {
                               reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
                               onRestartClick={this.onRestartClick}/>
                   }/>
-                  <Route path={ROUTES.SEARCH} render={() =>  <Search bormoSpeaker={this.bormoSpeaker} /> }
+                  <Route path={ROUTES.SEARCH} render={() => <Search bormoSpeaker={this.bormoSpeaker} APIkey={APIkey}/>}
                   />
-                  <Route path={ROUTES.SKYENG} render={() =>  <SkyengSearch/>
+                  <Route path={ROUTES.SKYENG} render={() => <SkyengSearch/>
                   }/>
                   <Route path={ROUTES.PHRASES} render={() =>
                     <Phrases content={content} bormoSpeaker={this.bormoSpeaker} closePhrases={this.closePhrases}
@@ -418,11 +430,12 @@ class App extends React.Component {
               }
             </main>
 
-            {hideFooter || isNotBormo ? null :
+            {hideFooter || isNotBormo ? <DataSourceSelector onSelectDataSource={this.onSelectDataSource} fixed={true}/> :
               <Paper className={classes.paperFooter}>
                 <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
                              onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                             onSearchClick={this.onSearchClick} onRestartClick={this.onRestartClick}/>
+                             onSearchClick={this.onSearchClick} onRestartClick={this.onRestartClick}
+                             onSelectDataSource={this.onSelectDataSource}/>
               </Paper>
             }
           </div>
