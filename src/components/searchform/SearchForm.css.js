@@ -1,9 +1,10 @@
 const styles = theme => ({
   form: {
-    width: '80%',
+    width: '88%',
     margin: '20px auto',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
+      marginTop: '0'
     }
   },
   exact: {
@@ -34,6 +35,12 @@ const styles = theme => ({
   },
   simpleButton: {
     marginTop: theme.spacing.unit * 0.5,
+  },
+  formTitle: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 0,
+      fontSize: '1rem'
+    }
   }
 });
 

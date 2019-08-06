@@ -14,7 +14,11 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit * 4,
     border: '1px solid rgb(211,211,211)',
     display: 'flex'
-  }
+  },
+  head: {
+    backgroundColor: theme.palette.secondary.light,
+    color: theme.palette.secondary.contrastText
+  },
 });
 
 export {styles};

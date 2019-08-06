@@ -430,7 +430,8 @@ class App extends React.Component {
               }
             </main>
 
-            {hideFooter || isNotBormo ? <DataSourceSelector onSelectDataSource={this.onSelectDataSource} fixed={true}/> :
+            {hideFooter || isNotBormo ?
+              <DataSourceSelector onSelectDataSource={this.onSelectDataSource} fixed={true}/> :
               <Paper className={classes.paperFooter}>
                 <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
                              onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
@@ -441,7 +442,7 @@ class App extends React.Component {
           </div>
 
           <BormoModal
-            title={'Бормотунчик - 2018. '}
+            title={'Бормотунчик - 2019. '}
             text={about}
             isModalOpen={isModalOpen}
             closeModal={this.closeModal}/>

@@ -69,7 +69,7 @@ export const DATA_SOURCES = {
     COURSES: 'https://bormo.pugalk8s.beget.tech/courses.php',
     SEARCH: 'https://bormo.pugalk8s.beget.tech/search.php',
     PHRASES: 'https://bormo.pugalk8s.beget.tech/phrases.php',
-    disabled: true,
+    disabled: false,
     COMMENT:'PHP (Beget, https)'
   },
   NODE_HOSTING: {
@@ -107,4 +107,16 @@ export const API_BRANCHES = {
   COURSES: 'COURSES',
   PHRASES: 'PHRASES',
   SEARCH: 'SEARCH'
-}
+};
+
+export const EXCLUDED_COLUMNS = ['id', 'soundUrl', 'partOfSpeech'];
+
+export const NAMES_RU = {
+  id: 'ID',
+  text: 'слово',
+  partOfSpeech: 'часть речи',
+  translationText: 'перевод',
+  translationNote: 'примечание',
+  transcription: 'транскрипция',
+  soundUrl: 'звук'
+};

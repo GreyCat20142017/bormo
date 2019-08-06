@@ -8,7 +8,7 @@ import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/core';
 
-import SimpleTable from './table/SimpleTable';
+import SearchTable from './table/SearchTable';
 import SkyResults from './results/SkyResults';
 import {DATA_SOURCES, KEY_CODES, SKYENG_URL, TEST_KEY, TRANSLATE_SOURCES} from '../../constants';
 
@@ -34,7 +34,7 @@ const mapApiData = (data, translateSource, onlySkyeng = false) => ((translateSou
 
 const CurrentTable = ({onlySkyEng, ...rest}) => (onlySkyEng ?
     <SkyResults {...rest}/> :
-    <SimpleTable {...rest}/>
+    <SearchTable {...rest}/>
 );
 
 class SearchForm extends Component {
@@ -54,10 +54,10 @@ class SearchForm extends Component {
   onSearch = async () => {
     const {skyEng, searchText, exact} = this.state;
     const {onlySkyEng, APIkey} = this.props;
-    let translateSource = null;
-    let searchResult = null;
     const apiUrl = skyEng ? SKYENG_URL : DATA_SOURCES[APIkey]['SEARCH'];
     const apiParams = skyEng ? {search: searchText} : {word: searchText, exact: +exact};
+    let translateSource = null;
+    let searchResult = null;
 
     if (skyEng || APIkey !== TEST_KEY) {
       try {
@@ -101,7 +101,8 @@ class SearchForm extends Component {
       <Fragment>
 
         <form className={classes.form} onSubmit={this.onSearch}>
-          <Typography variant={'h5'}>{'Поиск ' + (onlySkyEng ? '(Skyeng)' : '')}</Typography>
+          <Typography className={classes.formTitle}
+                      variant={'h5'}>{'Поиск ' + (onlySkyEng ? '(Skyeng)' : '')}</Typography>
           <FormGroup>
             <TextField
               required

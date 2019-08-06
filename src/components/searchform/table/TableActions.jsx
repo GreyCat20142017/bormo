@@ -15,7 +15,7 @@ const actionsStyles = theme => ({
   },
 });
 
-class SimpleTableActions extends React.Component {
+class TableActions extends React.Component {
   handleFirstPageButtonClick = event => {
     this.props.onChangePage(event, 0);
   };
@@ -73,4 +73,4 @@ class SimpleTableActions extends React.Component {
   }
 }
 
-export default withStyles(actionsStyles, {withTheme: true})(SimpleTableActions);
+export default withStyles(actionsStyles, {withTheme: true})(TableActions);

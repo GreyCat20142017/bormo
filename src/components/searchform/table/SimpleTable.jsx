@@ -10,16 +10,13 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import IconButton from '@material-ui/core/IconButton';
-import CreateIcon from '@material-ui/icons/Create';
-import AddIcon from '@material-ui/icons/Add';
+import TableActions from './TableActions';
 
-import SimpleTableActions from './SimpeTableActions';
+import {NAMES_RU, ROW_LIMIT} from '../../../constants';
 
-import {TRANSLATE_SOURCES, ROW_LIMIT} from '../../../constants';
-import TextField from "@material-ui/core/TextField";
+import {styles} from './Table.css';
 
-import  {styles} from './SimpleTable.css';
+const getRussian = item => (NAMES_RU[item]? NAMES_RU[item] : item);
 
 class SimpleTable extends Component {
   constructor(props) {
@@ -47,90 +44,65 @@ class SimpleTable extends Component {
   onCheckboxClick = (id) => {
     const {selected} = this.state;
     const newSelected = this.isSelected(id) ? selected.filter(item => item !== id) : [...new Set([...this.state.selected, id])];
-    const translate = this.props.data.map(item => item.translate).filter((item, ind) => (this.isSelected(ind, newSelected))).join(', ');
-    this.setState({selected: newSelected, joinedTranslate: translate});
+    this.setState({selected: newSelected});
   };
 
-  onSwitchEditMode = () => {
-    this.setState({editMode: !this.state.editMode});
-  };
-
-  onTranslateChange = (evt) => {
-    const value = evt.target.value;
-    this.setState({joinedTranslate: value});
-  };
 
   render() {
-    const {classes, data, currentTranslateSource} = this.props;
-    const {page, rowsPerPage, joinedTranslate, selected, editMode} = this.state;
-    const showWord = (currentTranslateSource === TRANSLATE_SOURCES.DB);
+    const {classes,  tableData, tableStructure, showCheckbox} = this.props;
+    const {page, rowsPerPage} = this.state;
 
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
+
           <TableHead>
-            <TableRow>
-              <TableCell align='left'>Выбор</TableCell>
-              {showWord ? <TableCell align='left'>Слово</TableCell> : null}
-              <TableCell align='left'>Перевод</TableCell>
+            <TableRow className={classes.head}>
+              {showCheckbox ? <TableCell align='left' key={0}>Выбор</TableCell> : null}
+              {tableStructure.map((item, ind) => (
+                <TableCell align='left' key={ind}>{getRussian(item)}</TableCell>
+              ))}
             </TableRow>
           </TableHead>
-          <TableBody>
 
-            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, id) => (
+          <TableBody>
+            {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, id) => (
               <TableRow tabIndex={-1} key={id + page * rowsPerPage}>
-                <TableCell padding="checkbox">
-                  <Checkbox checked={this.isSelected(id + page * rowsPerPage)}
-                            onClick={() => this.onCheckboxClick(id + page * rowsPerPage)}/>
-                </TableCell>
-                {showWord ? <TableCell align='left'>{row.word}</TableCell> : null}
-                <TableCell align='left'>{row.translate}</TableCell>
+                {showCheckbox ?
+                  <TableCell padding="checkbox">
+                    <Checkbox checked={this.isSelected(id + page * rowsPerPage)}
+                              onClick={() => this.onCheckboxClick(id + page * rowsPerPage)}/>
+                  </TableCell>
+                  : null}
+                {tableStructure.map((item, ind) => (
+                  <TableCell padding='dense' align='left' key={ind + ' ' + item.id}>{row[item] ? row[item] : '-'}</TableCell>
+                ))}
               </TableRow>
             ))}
-
-
           </TableBody>
+
           <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[ROW_LIMIT]}
-                count={data.length}
+                count={tableData.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{native: true}}
                 onChangePage={this.onChangePage}
-                ActionsComponent={SimpleTableActions}
+                ActionsComponent={TableActions}
               />
             </TableRow>
           </TableFooter>
         </Table>
-
-        {selected.length > 0 ?
-          <div className={classes.joinedPanel}>
-            <IconButton color='inherit' fontSize='small' disabled={true}
-                        title={'Сохранить в БД (пользовательские уроки, раздел OWN)'}>
-              <AddIcon/>
-            </IconButton>
-            <IconButton color='inherit' fontSize='small' title={'Переключить режим изменения подготовленного перевода'}
-                        onClick={this.onSwitchEditMode}>
-              <CreateIcon/>
-            </IconButton>
-            <TextField
-              id='joined'
-              title={'Заготовка для добавления в БД'}
-              value={joinedTranslate}
-              fullWidth
-              margin='normal'
-              disabled={!editMode}
-              onChange={this.onTranslateChange}
-            />
-          </div>
-          : null
-        }
       </Paper>
     );
   }
+  static defaultProps = {
+    tableData: [],
+    tableStructure: [],
+    showCheckBox: false
+  };
 }
-
 
 export default withStyles(styles)(SimpleTable);

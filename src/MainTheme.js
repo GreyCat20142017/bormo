@@ -4,7 +4,7 @@ import {indigo, blueGrey, deepPurple, white, black, amber, orange, grey} from '@
 const NeutralTheme = createMuiTheme({
   palette: {
     primary: {main: indigo[500], light: indigo[300], dark: indigo[900], contrastText: white},
-    secondary: {main: blueGrey[200], dark: blueGrey[400], contrastText: black},
+    secondary: {main: blueGrey[100], dark: blueGrey[400], contrastText: black},
     error: {main: orange[900]},
   },
   typography: {
