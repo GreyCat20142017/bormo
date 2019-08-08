@@ -68,7 +68,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = Object.assign({}, getInitialState(MainTheme.neutral, (this.props.location.pathname === ROUTES.PHRASES)));
+    this.state = getInitialState(MainTheme.neutral, (this.props.location.pathname === ROUTES.PHRASES), (this.props.location.pathname === ROUTES.CONFIG));
     this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
   }
 
@@ -137,6 +137,7 @@ class App extends React.Component {
     let useAPIData = useAPI ? useAPI : this.state.useAPIData;
     let apiURL = DATA_SOURCES[APIkey];
     useAPIData = (APIkey === TEST_KEY) ? false : useAPIData;
+    this.setState(() => ({isLoading: true}));
     if (useAPIData && apiURL) {
       try {
         res = await axios.get(apiURL[apiBranch]);
@@ -174,6 +175,7 @@ class App extends React.Component {
     let result = [];
     let res = [];
     useAPIData = (APIkey === TEST_KEY) ? false : useAPIData;
+    this.setState(() => ({isLoading: true}));
     if (useAPIData && apiURL) {
       try {
         res = await axios.get(apiURL[apiBranch], {params: params});
@@ -212,10 +214,17 @@ class App extends React.Component {
 
   closeConfig = () => {
     this.setState({isConfigOpen: false});
+    this.props.history.push(ROUTES.MAIN);
   };
 
-  onConfigChange = () => {
-    this.setState({isConfigOpen: false});
+  onConfigChange = (changedConfig) => {
+    const {APIkey, useAPIData} = this.state;
+    this.setState(Object.assign({}, {...changedConfig, isConfigOpen: false}));
+    this.props.history.push(ROUTES.MAIN);
+    if (APIkey !== changedConfig.APIkey || useAPIData !== changedConfig.useAPIData) {
+      const params = getCourseParams(this.state.isNotBormo);
+      this.getCoursesData(...params, changedConfig.APIkey, (changedConfig.APIkey !== TEST_KEY));
+    }
   };
 
   onCourseChange = (course, ind) => {
@@ -282,16 +291,26 @@ class App extends React.Component {
     }
   };
 
-  onSelectDataSource  =  (sourceKey) =>  {
-     const params = getCourseParams(this.state.isNotBormo);
-     this.getCoursesData(...params, sourceKey, (sourceKey !== TEST_KEY));
+  moveOn = () => {
+    const ind = ROUTES_ORDER.indexOf(this.props.location.pathname);
+    if ((ind !== -1) && (ind < ROUTES_ORDER.length - 1)) {
+      this.props.history.push(ROUTES_ORDER[ind + 1]);
+    } else {
+      this.onNextClick();
+      this.props.history.push(ROUTES.BORMO);
+    }
+  };
+
+  onSelectDataSource = (sourceKey) => {
+    const params = getCourseParams(this.state.isNotBormo);
+    this.getCoursesData(...params, sourceKey, (sourceKey !== TEST_KEY));
   };
 
   render() {
     const {classes, themes, location} = this.props;
     const {
-      currentMode, currentCourse, currentLesson, lessons, courses, content, currentTheme, APIkey,
-      isLoading, isConfigOpen, isModalOpen, config, voiceConfig, soundMuted, lastLesson, isNotBormo
+      currentMode, currentCourse, currentLesson, lessons, courses, content, currentTheme, APIkey, useAPIData,
+      isLoading, isConfigOpen, isModalOpen, isNotBormo, config, voiceConfig, soundMuted, lastLesson
     } = this.state;
     const hideFooter = SWITCHABLE_ROUTES.filter(item => item !== ROUTES.MAIN).indexOf(location.pathname) !== -1;
 
@@ -382,27 +401,27 @@ class App extends React.Component {
                   <Route exact path={ROUTES.MAIN} component={Main}/>
                   <Route path={ROUTES.BORMO} render={() =>
                     <Bormo content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                           currentCourse={currentCourse}
+                           currentCourse={currentCourse} config={config}
                            onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                           onRestartClick={this.onRestartClick}/>
+                           onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
                   }/>
                   <Route path={ROUTES.CONTROL} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                             currentCourse={currentCourse}
+                             currentCourse={currentCourse} config={config}
                              reverse={false} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                             onRestartClick={this.onRestartClick}/>
+                             onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
                   }/>
                   <Route path={ROUTES.REVERSE} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                             currentCourse={currentCourse}
+                             currentCourse={currentCourse} config={config}
                              reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                             onRestartClick={this.onRestartClick}/>
+                             onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
                   }/>
                   <Route path={ROUTES.SPELLING} render={() =>
                     <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                              currentCourse={currentCourse}
+                              currentCourse={currentCourse} config={config}
                               reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                              onRestartClick={this.onRestartClick}/>
+                              onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
                   }/>
                   <Route path={ROUTES.SEARCH} render={() => <Search bormoSpeaker={this.bormoSpeaker} APIkey={APIkey}/>}
                   />
@@ -419,6 +438,8 @@ class App extends React.Component {
                       config={config}
                       voiceConfig={voiceConfig}
                       soundMuted={soundMuted}
+                      APIkey={APIkey}
+                      useAPIData={useAPIData}
                       bormoSpeaker={this.bormoSpeaker}
                       isConfigOpen={isConfigOpen}
                       closeConfig={this.closeConfig}

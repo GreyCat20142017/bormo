@@ -58,18 +58,19 @@ class SearchForm extends Component {
     const apiParams = skyEng ? {search: searchText} : {word: searchText, exact: +exact};
     let translateSource = null;
     let searchResult = null;
+    if (searchText.trim() !== '') {
+      if (skyEng || APIkey !== TEST_KEY) {
+        try {
+          let res = await axios.get(apiUrl, {params: apiParams});
+          translateSource = skyEng ? TRANSLATE_SOURCES.SKYENG : TRANSLATE_SOURCES.DB;
+          searchResult = mapApiData(res.data, translateSource, onlySkyEng);
+        } catch (err) {
+        }
 
-    if (skyEng || APIkey !== TEST_KEY) {
-      try {
-        let res = await axios.get(apiUrl, {params: apiParams});
-        translateSource = skyEng ? TRANSLATE_SOURCES.SKYENG : TRANSLATE_SOURCES.DB;
-        searchResult = mapApiData(res.data, translateSource, onlySkyEng);
-      } catch (err) {
+        this.setState({
+          searchResult: searchResult, currentTranslateSource: translateSource
+        });
       }
-
-      this.setState({
-        searchResult: searchResult, currentTranslateSource: translateSource
-      });
     }
   };
 

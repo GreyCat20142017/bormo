@@ -14,6 +14,12 @@ const styles = theme => ({
   },
   configPaper: {
     marginBottom: '32px'
+  },
+  flex: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing.unit
   }
 });
 export {styles};

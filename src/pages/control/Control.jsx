@@ -69,6 +69,9 @@ class Control extends Component {
           okCount: okCount + 1,
           wasError: false
         });
+        if (this.props.config.instantNextMode) {
+          this.props.moveOn();
+        }
       }
     } else {
       this.setState({errorCount: errorCount + 1, wasError: true});

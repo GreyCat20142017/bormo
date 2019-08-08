@@ -15,28 +15,35 @@ import ImportExportIcon from '@material-ui/icons/ImportExport';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import SimpleSlider from '../../components/SimpleSlider'
+import SimpleSlider from '../../components/SimpleSlider';
 import BormoThemeSelect from '../../components/BormoThemeSelect';
 import {voiceParams, VOICE_TEST_PHRASE} from '../../constants';
 import {getRound} from '../../functions';
 
 import {styles} from './BormoConfig.css.js';
+import DataSourceSelector from '../../components/DataSourceSelector';
+
+const getConfigState = (props, currentVoice) => ({
+  ...props.config, ...props.voiceConfig, soundMuted: props.soundMuted,
+  APIkey: props.APIkey, useAPIData: props.useAPIData, currentVoice: currentVoice
+});
+
 
 class BormoConfig extends React.Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.voices = window.speechSynthesis.getVoices().filter((item) => item.lang.slice(0, 2) === 'en');
     this.bormoSpeaker = this.props.bormoSpeaker;
     const currentVoice = this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : '';
-    this.state = {...props.config, ...props.voiceConfig, soundMuted: props.soundMuted, currentVoice: currentVoice};
+    this.state = getConfigState(props, currentVoice);
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.bormoSpeaker = nextProps.bormoSpeaker;
     this.voices = window.speechSynthesis.getVoices().filter((item) => item.lang.slice(0, 2) === 'en');
-    const currentVoice = this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : ''
-    this.setState({ ...nextProps.voiceConfig, currentVoice: currentVoice});
+    const currentVoice = this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : '';
+    this.setState(getConfigState(nextProps, currentVoice));
   }
 
   onOptionChange = name => event => {
@@ -71,22 +78,35 @@ class BormoConfig extends React.Component {
           volume: volume,
           pitch: pitch,
           rate: rate
-        })
+        });
         this.setState({currentVoice: currentVoice});
       }
     }
-  }
+  };
 
   checkAPI = () => {
 
   };
 
-  render () {
+  saveConfig = () => {
+    const {
+      instantStart, instantNextMode, countErrorAtPrompt,
+      useAPIData, APIkey, soundMuted
+    } = this.state;
+    const changedConfig = {config: {instantStart, instantNextMode, countErrorAtPrompt}, useAPIData, APIkey, soundMuted};
+    this.props.onConfigChange(Object.assign({}, changedConfig));
+  };
+
+  onSelectDataSource = (sourceKey) => {
+    this.setState({APIkey: sourceKey});
+  };
+
+  render() {
 
     const {isConfigOpen, classes, onThemeSelect, currentTheme, themes} = this.props;
     const {
       instantStart, instantNextMode, countErrorAtPrompt,
-      onlyEnglish, pitch, volume, soundMuted, useAPIData, currentVoice
+      onlyEnglish, pitch, volume, soundMuted, useAPIData, APIkey, currentVoice
     } = this.state;
 
     if (isConfigOpen) {
@@ -129,6 +149,7 @@ class BormoConfig extends React.Component {
                       onChange={this.onOptionChange('countErrorAtPrompt')}
                       value='countErrorAtPrompt'
                       color='primary'
+                      disabled={true}
                     />
                   }
                   label='увеличивать счетчик ошибок при запросе подсказки'
@@ -136,7 +157,7 @@ class BormoConfig extends React.Component {
               </FormGroup>
             </Paper>
 
-            <Typography variant='caption' className={classes.configGroup}>Адрес API</Typography>
+            <Typography variant='caption' className={classes.configGroup}>Источник данных</Typography>
             <Paper className={classes.configPaper}>
               <FormGroup className={classes.configGroup}>
                 <FormControlLabel
@@ -150,26 +171,28 @@ class BormoConfig extends React.Component {
                   }
                   label='использовать данные с удаленного сервера'
                 />
-                <Typography variant='body2'>Здесь будет выпадающий список</Typography>
-
+                <div className={classes.flex}>
+                  <DataSourceSelector onSelectDataSource={this.onSelectDataSource} current={APIkey}/>
+                  <Button size='small' variant='contained' color='secondary' onClick={this.checkAPI}
+                          className={classes.configButton}>
+                    Тест API
+                    <ImportExportIcon className={classes.rightIcon} fontSize='small'/>
+                  </Button>
+                </div>
               </FormGroup>
-              <Button size='small' variant='contained' color='secondary' onClick={this.checkAPI}
-                      className={classes.configButton}>
-                Тест API
-                <ImportExportIcon className={classes.rightIcon} fontSize='small'/>
-              </Button>
             </Paper>
 
             <Typography variant='caption' className={classes.configGroup}>Параметры звука</Typography>
             <Paper className={classes.configPaper}>
               <FormGroup className={classes.configGroup}>
-                <Typography variant="subtitle1">{this.bormoSpeaker.getVoiceSupport()}</Typography>
-                <FormControlLabel
-                  control={<Switch checked={onlyEnglish} onChange={this.onOptionChange('onlyEnglish')}
-                                   value='onlyEnglish' color='primary' disabled={true}/>}
-                  label='при доступности синтеза речи озвучивать только английский'
-                />
-
+                <div className={classes.flex}>
+                  <Typography variant="subtitle1">{this.bormoSpeaker.getVoiceSupport()}</Typography>
+                  <FormControlLabel
+                    control={<Switch checked={onlyEnglish} onChange={this.onOptionChange('onlyEnglish')}
+                                     value='onlyEnglish' color='primary' disabled={true}/>}
+                    label='озвучивать только английский'
+                  />
+                </div>
                 <FormControlLabel
                   control={<Switch checked={soundMuted} onChange={this.onOptionChange('soundMuted')} value='soundMuted'
                                    color='primary'/>}
@@ -211,15 +234,16 @@ class BormoConfig extends React.Component {
             </Paper>
 
 
-            <Button variant='contained' color='primary' onClick={this.props.closeConfig}
+            <Button variant='contained' color='primary' onClick={this.saveConfig}
                     className={classes.configButton}> Сохранить и закрыть </Button>
             <Button variant='contained' color='secondary' onClick={this.props.closeConfig}
                     className={classes.configButton}> Отмена </Button>
 
           </div>
-        </Dialog>)
+        </Dialog>
+      );
     } else {
-      return null
+      return null;
     }
   }
 }

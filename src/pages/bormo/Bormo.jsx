@@ -14,16 +14,15 @@ import classNames from 'classnames';
 
 import {styles} from './Bormo.css.js';
 import {isInactive, getActiveAmount, getInitialMemorized} from '../pagesCommon';
-import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES} from '../../constants';
+import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES, TIMER_INTERVAL} from '../../constants';
 
 import bormoWrapper from '../../hoc/bormoWrapper';
 
-const TIMER_INTERVAL = 3000;
 
 const getBormoInitialState = (props) => ({
   currentIndex: 0,
   maxIndex: props.content.length - 1,
-  timerStatus: BORMO_STATUS.STOPPED,
+  timerStatus: props.config.instantStart ? BORMO_STATUS.STARTED : BORMO_STATUS.STOPPED,
   memorized: getInitialMemorized(props.content.length)
 });
 
@@ -45,6 +44,7 @@ const ListPart = ({content, classes, currentIndex, startIndex, memorized, switch
   </ul>);
 
 
+
 class Bormo extends Component {
 
   constructor(props) {
@@ -61,7 +61,6 @@ class Bormo extends Component {
     this.setState(getBormoInitialState(nextProps));
     this.interval = null;
   }
-
 
   ticks() {
     this.setState((state) => {
@@ -84,8 +83,8 @@ class Bormo extends Component {
     });
   }
 
-  timerStart = () => {
-    if (this.state.timerStatus !== BORMO_STATUS.STARTED) {
+  timerStart = (forced = false) => {
+    if (forced || this.state.timerStatus !== BORMO_STATUS.STARTED) {
       const currentIndex = this.state.currentIndex;
       clearInterval(this.interval);
       this.interval = setInterval(this.ticks, TIMER_INTERVAL);
@@ -124,18 +123,28 @@ class Bormo extends Component {
         inactive: !memorized[index].inactive
       }, ...memorized.slice(index + 1)];
       this.setState({memorized: newMemorized});
+      if (this.props.config.instantNextMode && newMemorized.filter(item => !item.inactive).length === 0) {
+        this.props.moveOn();
+      }
     }
   }
 
   onKeyPress = (evt) => {
+    const charCode = String.fromCharCode(evt.which).toLowerCase();
     if ((evt.keyCode === KEY_CODES.ENTER || evt.keyCode === KEY_CODES.SPACE) &&
       !evt.target.hasAttribute('data-done')) {
       this.switchDisableCurrent();
+    }
+    if (evt.altKey && (charCode === 'r' || charCode === 'к')) {
+      this.timerStart();
     }
   }
 
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyPress);
+    if (this.props.config.instantStart) {
+      this.timerStart(true);
+    }
   }
 
   componentWillUnmount() {
@@ -175,7 +184,8 @@ class Bormo extends Component {
                 </Paper>
 
                 <div className={classes.controls}>
-                  <IconButton aria-label='Старт' className={classes.margin} onClick={this.timerStart} title="Старт">
+                  <IconButton aria-label='Старт' className={classes.margin} onClick={this.timerStart} title="Старт"
+                             autoFocus={true}>
                     <PlayArrowIcon/>
                   </IconButton>
                   <IconButton aria-label='Пауза' className={classes.margin} onClick={this.timerPause} title="Пауза">

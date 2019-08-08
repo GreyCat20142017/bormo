@@ -25,7 +25,7 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectData
       <DataSourceSelector onSelectDataSource={onSelectDataSource}/>
       <IconButton className={classes.hidden} color='inherit'><MoreIcon/></IconButton>
       <Hidden mdDown implementation='css'>
-        <BormoThemeSelect {...rest}/>
+        <BormoThemeSelect {...rest} light={true}/>
       </Hidden>
       <div className={classes.fabButtons}>
         <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок (Alt+P) - Previous'

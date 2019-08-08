@@ -17,10 +17,10 @@ export const getRound = (number, precision) => {
   return Math.round(number * Math.pow(10, precision)) / Math.pow(10, precision);
 };
 
-export const getInitialState = (currentTheme, isNotBormo) => (
+export const getInitialState = (currentTheme, isNotBormo, isConfigOpen = false) => (
   {
     isModalOpen: false,
-    isConfigOpen: false,
+    isConfigOpen: isConfigOpen,
     isSearchOpen: false,
     currentTheme: currentTheme,
     currentMode: null,
@@ -31,14 +31,12 @@ export const getInitialState = (currentTheme, isNotBormo) => (
     content: [],
     isLoading: true,
     config: {
-      instantStart: false,
+      instantStart: true,
       instantNextMode: true,
-      countErrorAtPrompt: true,
-      checkedModes: {},
+      countErrorAtPrompt: true
     },
     useAPIData: true,
     APIkey: Object.keys(DATA_SOURCES)[0],
-    himera: Object.keys(DATA_SOURCES)[0],
     soundMuted: false,
     voiceConfig: {
       onlyEnglish: true,

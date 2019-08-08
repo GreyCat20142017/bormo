@@ -29,13 +29,14 @@ const styles = theme => ({
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
   },
-  test: {
-     color: 'white',
+  light: {
+    color: 'white',
     '& *': {
       color: 'white',
       border: 'white',
     }
-  }
+  },
+  dark: {}
 });
 
 class Bred extends React.Component {
@@ -52,18 +53,18 @@ class Bred extends React.Component {
   };
 
   render() {
-    const {classes, themes, fromConfig = false} = this.props;
+    const {classes, themes, fromConfig = false, light = false} = this.props;
 
     return (
       <form className={fromConfig ? classes.rootFromConfig : classes.root} autoComplete='off'>
         <FormControl className={classes.formControl}>
-          <Select className={classes.test}
-            value={this.state.choice}
-            onChange={this.onThemeChange}
-            inputProps={{
-              name: 'choice'
-            }}
-            title='Выбор темы интерфейса'
+          <Select className={light ? classes.light : classes.dark}
+                  value={this.state.choice}
+                  onChange={this.onThemeChange}
+                  inputProps={{
+                    name: 'choice'
+                  }}
+                  title='Выбор темы интерфейса'
           >
             {themes.length === 0 ? null : themes.map(el =>
               <MenuItem className={classes.item} value={el.themeKey} key={el.themeKey}
@@ -72,7 +73,7 @@ class Bred extends React.Component {
           </Select>
         </FormControl>
       </form>
-    )
+    );
   }
 }
 

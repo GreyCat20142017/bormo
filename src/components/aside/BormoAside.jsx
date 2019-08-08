@@ -19,7 +19,10 @@ const Courses = ({courses, currentCourse, onCourseChange}) => (
   </List>
 );
 
-const BormoAside = ({classes, courses, currentCourse, lastLesson, onCourseChange, lessons, currentLesson, onLessonChange}) => (
+const BormoAside = ({
+                      classes, courses, currentCourse, lastLesson, lessons, currentLesson,
+                      onCourseChange, onLessonChange
+                    }) => (
   <div>
     <Divider/>
     <div className={classes.asideWrapperCourse}>
@@ -28,14 +31,14 @@ const BormoAside = ({classes, courses, currentCourse, lastLesson, onCourseChange
     </div>
     <Divider/>
     {currentCourse ?
-    <div className={classes.asideWrapperLesson}>
-      <BormoLessons
-        key={'lessons'}
-        lessons={lessons}
-        currentLesson={currentLesson}
-        lastLesson={lastLesson}
-        onLessonChange={onLessonChange}/>
-    </div>
+      <div className={classes.asideWrapperLesson}>
+        <BormoLessons
+          key={'lessons'}
+          lessons={lessons}
+          currentLesson={currentLesson}
+          lastLesson={lastLesson}
+          onLessonChange={onLessonChange}/>
+      </div>
       : null
     }
   </div>

@@ -75,8 +75,8 @@ class SpeakerVoice {
   }
 
   getVoiceSupport = () => {
-    return 'Ваш браузер ' + (this.supportSound ? '' : ' НЕ ') + ' поддерживает синтез речи' +
-      (this.supportEn ? '' : '. Синтез недоступен');
+    return 'Браузер ' + (this.supportSound ? '' : ' НЕ ') + ' поддерживает синтез речи' +
+      (this.supportEnglish ? '' : '. Синтез недоступен');
   }
 
 }

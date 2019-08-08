@@ -41,7 +41,7 @@ export const LANGUAGES = {EN: 'english', RU: 'russian'};
 
 export const SKYENG_URL = `https://dictionary.skyeng.ru/api/public/v1/words/search`;
 
-// export const DATA_BRANCHES = {COURSES, SEARCH, PHRASES};
+export const TIMER_INTERVAL = 3000;
 
 export const DATA_SOURCES = {
   PHP_LOCAL: {

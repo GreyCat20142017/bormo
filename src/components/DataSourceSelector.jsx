@@ -3,10 +3,12 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import SettingsIcon from '@material-ui/icons/Settings';
+import classNames from 'classnames';
 
 import {withStyles} from '@material-ui/core/styles';
 
 import {DATA_SOURCES} from '../constants';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   fixed: {
@@ -14,6 +16,10 @@ const styles = theme => ({
     bottom: '10px',
     right:  0,
   },
+  flex: {
+    display: 'flex',
+    alignItems: 'center'
+  }
 });
 
 class DataSourceSelector extends React.Component {
@@ -36,9 +42,10 @@ class DataSourceSelector extends React.Component {
 
   render() {
     const {anchorEl} = this.state;
-    const {fixed, classes} = this.props;
+    const {fixed, classes, current} = this.props;
     return (
-      <div  className={fixed ? classes.fixed : ''}>
+      <div  className={classNames(fixed ? classes.fixed : '', classes.flex)}>
+        <Typography variant='body2'>{current}</Typography>
         <Button
           aria-owns={anchorEl ? 'simple-menu' : undefined}
           aria-haspopup="true" color='secondary'
@@ -64,7 +71,8 @@ class DataSourceSelector extends React.Component {
   }
 
   static defaultProps = {
-    fixed: false
+    fixed: false,
+    current: ''
   };
 }
 

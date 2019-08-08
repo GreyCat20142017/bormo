@@ -38,6 +38,12 @@ class Control extends Component {
     document.removeEventListener('keydown', this.onKeyPress);
   }
 
+  componentWillUpdate(nextProps, nextState, nextContext) {
+    if (this.props.config.instantNextMode && nextState.okCount === nextState.content.length) {
+       this.props.moveOn();
+    }
+  }
+
   onTranslateChange = (evt) => {
     const value = evt.target.value;
     this.setState({translate: value});
