@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
+import {debounce} from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
+import Hidden from '@material-ui/core/Hidden';
+
 import IconButton from '@material-ui/core/IconButton';
 import PauseIcon from '@material-ui/icons/Pause';
 import StopIcon from '@material-ui/icons/Stop';
@@ -12,37 +15,96 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 
-import {styles} from './Bormo.css.js';
-import {isInactive, getActiveAmount, getInitialMemorized} from '../pagesCommon';
-import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES, TIMER_INTERVAL} from '../../constants';
-
 import bormoWrapper from '../../hoc/bormoWrapper';
+import {isInactive, getActiveAmount, getInitialMemorized} from '../pagesCommon';
+import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES, DEBOUNCE_INTERVAL} from '../../constants';
+import {styles} from './Bormo.css.js';
 
+const TIMER_INTERVAL = 3000;
 
 const getBormoInitialState = (props) => ({
   currentIndex: 0,
   maxIndex: props.content.length - 1,
-  timerStatus: props.config.instantStart ? BORMO_STATUS.STARTED : BORMO_STATUS.STOPPED,
+  timerStatus: BORMO_STATUS.STOPPED,
   memorized: getInitialMemorized(props.content.length)
 });
 
 const ListPart = ({content, classes, currentIndex, startIndex, memorized, switchDisableOne}) => (
-  <ul className={classes.cardList}>
-    {content.slice(startIndex, startIndex + Math.floor(WORDS_PER_LESSON / 2)).map((item, ind) =>
-      <li className={classes.cardItem} key={ind + startIndex}>
-        <Paper className={classNames(classes.card, isInactive(ind + startIndex, memorized) ? classes.colorized : null)}>
-          <Tooltip title={'Перевод: "' + item.russian + '"'} className={classes.tooltip}>
-            <Typography className={classes.title} variant='h6'
-                        color={(ind + startIndex) === currentIndex ? 'error' : 'secondary'}
-                        onClick={() => switchDisableOne(ind + startIndex)}>
-              {item.english}
-            </Typography>
-          </Tooltip>
-        </Paper>
-      </li>
-    )}
-  </ul>);
+  <Hidden mdDown>
+    <ul className={classNames(classes.part, classes.cardList)}>
+      {content.slice(startIndex, startIndex + Math.floor(WORDS_PER_LESSON / 2)).map((item, ind) =>
+        <li className={classes.cardItem} key={ind + startIndex}>
+          <Paper
+            className={classNames(classes.card, isInactive(ind + startIndex, memorized) ? classes.colorized : null)}>
+            <Tooltip title={'Перевод: "' + item.russian + '"'} className={classes.tooltip}>
+              <Typography className={classes.title} variant='h6'
+                          color={(ind + startIndex) === currentIndex ? 'error' : 'secondary'}
+                          onClick={() => switchDisableOne(ind + startIndex)}>
+                {item.english}
+              </Typography>
+            </Tooltip>
+          </Paper>
+        </li>
+      )}
+    </ul>
+  </Hidden>
+);
 
+const BasePart = ({
+                    classes, currentWord, currentTranslate, timerStatus,
+                    content, activeAmount, maxIndex, contentMissingMessage,
+                    currentCourse, currentLesson, currentIndex,
+                    onDebouncedSwitchCurrent, timerStart, timerPause, timerStop
+                  }) => (
+
+  <div className={classes.part}>
+    {content.length > 0 ?
+
+      <div className={classes.currentWord}>
+
+        <Paper className={classes.paper}>
+          <Typography component='p' variant='h5' color='inherit'>
+            {activeAmount === 0 ? 'Все слова этого урока отмечены как изученные...' : currentWord}
+          </Typography>
+        </Paper>
+        <Paper className={classes.paper}>
+          <Typography component='p' variant='h5' color='inherit'>
+            {activeAmount === 0 ? 'Можно выбрать другой урок или повторить этот.' : currentTranslate}
+          </Typography>
+        </Paper>
+
+        <div className={classes.controls}>
+          <IconButton aria-label='Старт' className={classes.margin} onClick={timerStart} title="Старт">
+            <PlayArrowIcon/>
+          </IconButton>
+          <IconButton aria-label='Пауза' className={classes.margin} onClick={timerPause} title="Пауза"
+                      >
+            <PauseIcon/>
+          </IconButton>
+          <IconButton aria-label='Стоп' className={classes.margin} onClick={timerStop} title="Стоп">
+            <StopIcon/>
+          </IconButton>
+          {timerStatus === BORMO_STATUS.STARTED ?
+            <IconButton aria-label='Отметить' className={classes.margin} onClick={onDebouncedSwitchCurrent}
+                        data-done="true" title="Отметить слово как изученное" autoFocus={true}>
+              <DoneIcon/>
+            </IconButton>
+            : null
+          }
+        </div>
+        <Typography component='p' variant='body2'>
+          {'' + currentCourse.toUpperCase() + ', урок ' + currentLesson + ' (' + (currentIndex + 1) + ' из ' + (maxIndex + 1) + ')'}
+        </Typography>
+
+        <Typography component='p' variant='caption'>
+          SPACE - отметить текущее слово как изученное
+        </Typography>
+
+      </div>
+      : contentMissingMessage
+    }
+  </div>
+);
 
 
 class Bormo extends Component {
@@ -51,6 +113,8 @@ class Bormo extends Component {
     super(props);
     this.state = getBormoInitialState(this.props);
     this.ticks = this.ticks.bind(this);
+    this.onDebouncedSwitch = debounce(this.onDebouncedSwitch.bind(this), DEBOUNCE_INTERVAL);
+    this.onDebouncedSwitchCurrent = debounce(this.onDebouncedSwitchCurrent.bind(this), DEBOUNCE_INTERVAL);
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
@@ -83,8 +147,8 @@ class Bormo extends Component {
     });
   }
 
-  timerStart = (forced = false) => {
-    if (forced || this.state.timerStatus !== BORMO_STATUS.STARTED) {
+  timerStart = () => {
+    if (this.state.timerStatus !== BORMO_STATUS.STARTED) {
       const currentIndex = this.state.currentIndex;
       clearInterval(this.interval);
       this.interval = setInterval(this.ticks, TIMER_INTERVAL);
@@ -97,23 +161,23 @@ class Bormo extends Component {
         memorized: getInitialMemorized(this.props.content.length)
       });
     }
-  }
+  };
 
   timerPause = () => {
     if (this.state.timerStatus === BORMO_STATUS.STARTED) {
       clearInterval(this.interval);
       this.setState({timerStatus: BORMO_STATUS.PAUSED});
     }
-  }
+  };
 
   timerStop = () => {
     clearInterval(this.interval);
     this.setState({currentIndex: 0, timerStatus: BORMO_STATUS.STOPPED});
-  }
+  };
 
   switchDisableCurrent = () => {
     this.switchDisableOne(this.state.currentIndex);
-  }
+  };
 
   switchDisableOne = (index) => {
     const {memorized, timerStatus} = this.state;
@@ -123,27 +187,28 @@ class Bormo extends Component {
         inactive: !memorized[index].inactive
       }, ...memorized.slice(index + 1)];
       this.setState({memorized: newMemorized});
-      if (this.props.config.instantNextMode && newMemorized.filter(item => !item.inactive).length === 0) {
-        this.props.moveOn();
-      }
     }
+  };
+
+  onDebouncedSwitch(index) {
+    this.switchDisableOne(index);
+  }
+
+  onDebouncedSwitchCurrent() {
+    this.switchDisableCurrent();
   }
 
   onKeyPress = (evt) => {
-    const charCode = String.fromCharCode(evt.which).toLowerCase();
-    if ((evt.keyCode === KEY_CODES.ENTER || evt.keyCode === KEY_CODES.SPACE) &&
-      !evt.target.hasAttribute('data-done')) {
-      this.switchDisableCurrent();
+    if ( evt.keyCode === KEY_CODES.SPACE) {
+      evt.preventDefault();
+      this.onDebouncedSwitchCurrent();
     }
-    if (evt.altKey && (charCode === 'r' || charCode === 'к')) {
-      this.timerStart();
-    }
-  }
+  };
 
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyPress);
     if (this.props.config.instantStart) {
-      this.timerStart(true);
+      this.timerStart();
     }
   }
 
@@ -153,8 +218,8 @@ class Bormo extends Component {
   }
 
   render() {
-    const {content, classes, currentLesson, currentCourse, contentMissingMessage} = this.props;
-    const {currentIndex, maxIndex, memorized, timerStatus} = this.state;
+    const {content, classes} = this.props;
+    const {currentIndex, maxIndex, memorized} = this.state;
     const currentWord = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].english : '';
     const currentTranslate = (currentIndex <= maxIndex && currentIndex >= 0) ? content[currentIndex].russian : '';
     const activeAmount = getActiveAmount(memorized);
@@ -162,65 +227,17 @@ class Bormo extends Component {
     return (
       <div className='bormo__wrapper'>
         <div className={classes.parts}>
-          <div className={classNames(classes.part, classes.partDesktopOnly)}>
-            <ListPart content={content} classes={classes} currentIndex={currentIndex} startIndex={0}
-                      memorized={memorized} switchDisableOne={this.switchDisableOne}/>
-          </div>
 
-          <div className={classes.part}>
-            {content.length > 0 ?
+          <ListPart content={content} classes={classes} currentIndex={currentIndex} startIndex={0}
+                    memorized={memorized} switchDisableOne={this.onDebouncedSwitch}/>
 
-              <div className={classes.currentWord}>
+          <BasePart currentWord={currentWord} currentTranslate={currentTranslate} activeAmount={activeAmount}
+                    {...this.props} {...this.state} onDebouncedSwitchCurrent={this.onDebouncedSwitchCurrent}
+                    timerStart={this.timerStart} timerPause={this.timerPause} timerStop={this.timerStop}/>
 
-                <Paper className={classes.paper}>
-                  <Typography component='p' variant='h5' color='inherit'>
-                    {activeAmount === 0 ? 'Все слова этого урока отмечены как изученные...' : currentWord}
-                  </Typography>
-                </Paper>
-                <Paper className={classes.paper}>
-                  <Typography component='p' variant='h5' color='inherit'>
-                    {activeAmount === 0 ? 'Можно выбрать другой урок или повторить этот.' : currentTranslate}
-                  </Typography>
-                </Paper>
-
-                <div className={classes.controls}>
-                  <IconButton aria-label='Старт' className={classes.margin} onClick={this.timerStart} title="Старт"
-                             autoFocus={true}>
-                    <PlayArrowIcon/>
-                  </IconButton>
-                  <IconButton aria-label='Пауза' className={classes.margin} onClick={this.timerPause} title="Пауза">
-                    <PauseIcon/>
-                  </IconButton>
-                  <IconButton aria-label='Стоп' className={classes.margin} onClick={this.timerStop} title="Стоп">
-                    <StopIcon/>
-                  </IconButton>
-                  {timerStatus === BORMO_STATUS.STARTED ?
-                    <IconButton aria-label='Отметить' className={classes.margin} onClick={this.switchDisableCurrent}
-                                data-done="true" title="Отметить слово как изученное">
-                      <DoneIcon/>
-                    </IconButton>
-                    : null
-                  }
-                </div>
-                <Typography component='p' variant='body2'>
-                  {'' + currentCourse.toUpperCase() + ', урок ' + currentLesson + ' (' + (currentIndex + 1) + ' из ' + (maxIndex + 1) + ')'}
-                </Typography>
-
-                <Typography component='p' variant='caption'>
-                  SPACE или ENTER - отметить текущее слово как изученное
-                </Typography>
-
-              </div>
-              : contentMissingMessage
-            }
-          </div>
-
-
-          <div className={classNames(classes.part, classes.partDesktopOnly)}>
-            <ListPart content={content} classes={classes} currentIndex={currentIndex}
-                      startIndex={Math.floor(WORDS_PER_LESSON / 2)} memorized={memorized}
-                      switchDisableOne={this.switchDisableOne}/>
-          </div>
+          <ListPart content={content} classes={classes} currentIndex={currentIndex}
+                    startIndex={Math.floor(WORDS_PER_LESSON / 2)} memorized={memorized}
+                    switchDisableOne={this.onDebouncedSwitch}/>
 
         </div>
 

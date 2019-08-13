@@ -26,6 +26,7 @@ export const BORMO_STATUS = {
 export const VOICE_TEST_PHRASE = 'This is a voice test';
 
 export const DRAWER_WIDTH = 260;
+export const DEBOUNCE_INTERVAL = 444;
 
 const url = window.location.origin;
 export const SERVER_ROOT = (url.match(/github\.io/gi)) ? '/bormo/' : '/';
@@ -69,7 +70,7 @@ export const DATA_SOURCES = {
     COURSES: 'https://bormo.pugalk8s.beget.tech/courses.php',
     SEARCH: 'https://bormo.pugalk8s.beget.tech/search.php',
     PHRASES: 'https://bormo.pugalk8s.beget.tech/phrases.php',
-    disabled: false,
+    disabled: true,
     COMMENT:'PHP (Beget, https)'
   },
   NODE_HOSTING: {

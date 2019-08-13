@@ -17,7 +17,10 @@ import OffIcon from '@material-ui/icons/HighlightOff';
 import {withStyles} from '@material-ui/core/styles';
 
 import axios from 'axios';
+import {debounce} from 'lodash';
+
 import Main from './pages/main/Main';
+
 import Bormo from './pages/bormo/Bormo';
 import Control from './pages/control/Control';
 import Spelling from './pages/spelling/Spelling';
@@ -26,27 +29,28 @@ import Search from './pages/search/Search';
 import Phrases from './pages/phrases/Phrases';
 import SkyengSearch from './pages/sky/SkyengSearch';
 import NotFound from './pages/notfound/NotFound';
-
 import BormoFooter from './components/footer/BormoFooter';
+
 import BormoHeader from './components/header/BormoHeader';
 import BormoAside from './components/aside/BormoAside';
 import BormoModal from './components/modal/BormoModal';
 import ErrorBoundary from './components/ErrorBoundary';
 import DataSourceSelector from './components/DataSourceSelector';
-
 import SpeakerVoice from './SpeakerVoice';
+
 import MainTheme from './MainTheme';
 import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER, SWITCHABLE_ROUTES} from './routes';
 import {about} from './about';
-
 import {getValueArrayFromObject, getInitialState} from './functions';
+
 import {
   COURSES_PATH, BORMO_PATH,
   WORDS_PER_LESSON, PHRASES_PER_LESSON,
   PHRASES_PATH, API_BRANCHES, STATUS_OK,
-  DATA_SOURCES, TEST_KEY
+  DATA_SOURCES, TEST_KEY, DEBOUNCE_INTERVAL
 } from './constants';
 import {styles} from './App.css.js';
+
 
 const Loader = ({classes}) => (
   <Paper className={classes.paperLoader}>
@@ -70,7 +74,8 @@ class App extends React.Component {
     super(props);
     this.state = getInitialState(MainTheme.neutral, (this.props.location.pathname === ROUTES.PHRASES), (this.props.location.pathname === ROUTES.CONFIG));
     this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
-  }
+    this.onDebouncedLessonChange = debounce(this.onDebouncedLessonChange.bind(this), DEBOUNCE_INTERVAL);
+    }
 
   initCurrentSpeaker = (voices) => {
     this.voiceList = voices;
@@ -262,6 +267,10 @@ class App extends React.Component {
     }
   };
 
+  onDebouncedLessonChange(lesson, hidePanel = false, force = false) {
+    this.onLessonChange(lesson, hidePanel, force);
+  }
+
   onThemeSelect = (themeKey) => {
     this.setState({currentTheme: MainTheme[themeKey]});
   };
@@ -322,7 +331,7 @@ class App extends React.Component {
           currentLesson={currentLesson}
           lessons={lessons}
           courses={courses}
-          onLessonChange={this.onLessonChange}
+          onLessonChange={this.onDebouncedLessonChange}
           onCourseChange={this.onCourseChange}
           lastLesson={lastLesson}
         />

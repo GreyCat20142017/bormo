@@ -1,8 +1,19 @@
 import React from 'react';
 import ContentMissingMessage from '../components/ContentMissingMessage';
+import {debounce} from 'lodash';
+import {DEBOUNCE_INTERVAL} from '../constants';
 
 function bormoWrapper(Component) {
   class BormoWrapper extends Component {
+
+    constructor(props) {
+      super(props);
+      this.onDebouncedClick = debounce(this.onDebouncedClick.bind(this), DEBOUNCE_INTERVAL);
+    }
+
+    onDebouncedClick(callbackName) {
+      this.props[callbackName]();
+    }
 
     onGlobalKeyPress = (evt) => {
       const charCode = String.fromCharCode(evt.which).toLowerCase();
@@ -11,19 +22,19 @@ function bormoWrapper(Component) {
           case 'p':
           case 'з': {
             evt.preventDefault();
-            this.props.onPreviousClick();
+            this.onDebouncedClick('onPreviousClick');
             break;
           }
           case 'n':
           case 'т': {
             evt.preventDefault();
-            this.props.onNextClick();
+            this.onDebouncedClick('onNextClick');
             break;
           }
           case 'r':
           case 'к': {
             evt.preventDefault();
-            this.props.onRestartClick();
+            this.onDebouncedClick('onRestartClick');
             break;
           }
           default:
@@ -40,7 +51,7 @@ function bormoWrapper(Component) {
     }
 
     render() {
-      return  this.props.content.length === 0 ? <ContentMissingMessage/> : <Component {...this.props}/>;
+      return this.props.content.length === 0 ? <ContentMissingMessage/> : <Component {...this.props}/>;
     }
   };
   BormoWrapper.displayName = `BormoWrapper (${Component.displayName || Component.name || 'Component'})`;

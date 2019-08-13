@@ -34,7 +34,7 @@ class SkyengData {
         transcription: item.meanings[0].transcription,
         soundUrl: item.meanings[0].soundUrl
       } : {})
-    )) : [];
+    )).filter(item => item.text.indexOf(this._basicInfo.text) !== -1) : [];
 
     this._ok = ok;
   }
