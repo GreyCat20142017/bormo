@@ -1,4 +1,4 @@
-import {BORMO_STATUS, LANGUAGES} from "../constants";
+import {BORMO_STATUS, CONTROL_MODES, LANGUAGES, FIELDS} from '../constants';
 
 export const shuffleArray = (entities) => {
   let sortableEntities = entities.slice();
@@ -22,6 +22,15 @@ export const shuffleObjectArray = (entities) => {
   return sortableEntities;
 };
 
+const getShuffledContent = (content, controlMode) => (shuffleArray(content).map(item => {
+  const origin = getOriginLanguage(controlMode);
+  item[FIELDS.ORIGIN_LANGUAGE] = origin;
+  item[FIELDS.ORIGIN] = item[origin];
+  item[FIELDS.TRANSLATE] = item[getTranslateLanguage(origin)];
+  return item;
+}));
+
+
 export const isInactive = (index, stateArray) => {
   return stateArray[index].inactive;
 };
@@ -41,27 +50,47 @@ export const getRandomOrder = (length) => {
   return shuffleArray("?".repeat(length).split("").map((item, ind) => (ind)))
 };
 
-export const getTranslateLanguage = (reverse) => (reverse ? LANGUAGES.EN : LANGUAGES.RU);
+const getLanguageVariant = (controlMode) => {
+  let rv = LANGUAGES.RU;
+  switch (controlMode) {
+    case CONTROL_MODES.CONTROL: {
+      rv = LANGUAGES.RU;
+      break;
+    }
+    case CONTROL_MODES.REVERSE: {
+      rv = LANGUAGES.EN;
+      break;
+    }
+    case CONTROL_MODES.MIXED:
+    default: {
+      rv = (Math.random() > 0.5) ? LANGUAGES.EN : LANGUAGES.RU;
+    }
+  }
+  return rv;
+};
 
-export const getOriginLanguage = (reverse) => (reverse ? LANGUAGES.RU : LANGUAGES.EN);
+export const getOriginLanguage = (controlMode) => (getLanguageVariant(controlMode));
+export const getTranslateLanguage = (originLanguage) => (originLanguage === LANGUAGES.EN ? LANGUAGES.RU : LANGUAGES.EN);
 
-export const getModeInitialState = ({content, reverse}) => {
+export const getModeInitialState = ({content, controlMode}) => {
   const randomOrder = getRandomOrder(content.length);
   const maxIndex = content.length - 1;
+  const shuffled =  getShuffledContent(content, controlMode);
+  console.log(shuffled);
   return ({
     currentIndex: 0,
     maxIndex: maxIndex,
     timerStatus: BORMO_STATUS.STARTED,
     memorized: getInitialMemorized(content.length),
     randomOrder: randomOrder,
-    content: shuffleArray(content),
+    content:shuffled,
     errorCount: 0,
     okCount: 0,
     wasError: false
   });
 }
 
-export const getSpellInitialState = ({content, reverse}) => {
+export const getSpellInitialState = ({content, controlMode}) => {
   return ({
     currentIndex: 0,
     maxIndex: content.length - 1,
@@ -74,7 +103,7 @@ export const getSpellInitialState = ({content, reverse}) => {
   });
 }
 
-export const getCurrentTranslate = (currentIndex, maxIndex, randomOrder, reverse, content) => (
+export const getCurrentInfo = (currentIndex, maxIndex, randomOrder, controlMode, content, fieldname) => (
   (currentIndex >= 0 && randomOrder[currentIndex] <= maxIndex && randomOrder[currentIndex] >= 0) ?
-    content[randomOrder[currentIndex]][getTranslateLanguage(reverse)] : ''
+    content[randomOrder[currentIndex]][fieldname] : ''
 );

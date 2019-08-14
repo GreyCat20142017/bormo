@@ -17,10 +17,8 @@ import classNames from 'classnames';
 
 import bormoWrapper from '../../hoc/bormoWrapper';
 import {isInactive, getActiveAmount, getInitialMemorized} from '../pagesCommon';
-import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES, DEBOUNCE_INTERVAL} from '../../constants';
+import {WORDS_PER_LESSON, BORMO_STATUS, KEY_CODES, TIMER_INTERVAL, DEBOUNCE_INTERVAL} from '../../constants';
 import {styles} from './Bormo.css.js';
-
-const TIMER_INTERVAL = 3000;
 
 const getBormoInitialState = (props) => ({
   currentIndex: 0,
@@ -78,7 +76,7 @@ const BasePart = ({
             <PlayArrowIcon/>
           </IconButton>
           <IconButton aria-label='Пауза' className={classes.margin} onClick={timerPause} title="Пауза"
-                      >
+          >
             <PauseIcon/>
           </IconButton>
           <IconButton aria-label='Стоп' className={classes.margin} onClick={timerStop} title="Стоп">
@@ -187,6 +185,9 @@ class Bormo extends Component {
         inactive: !memorized[index].inactive
       }, ...memorized.slice(index + 1)];
       this.setState({memorized: newMemorized});
+      if (this.props.config.instantNextMode && newMemorized.filter(item => !item.inactive).length === 0) {
+        this.props.moveOn();
+      }
     }
   };
 
@@ -199,7 +200,7 @@ class Bormo extends Component {
   }
 
   onKeyPress = (evt) => {
-    if ( evt.keyCode === KEY_CODES.SPACE) {
+    if (evt.keyCode === KEY_CODES.SPACE) {
       evt.preventDefault();
       this.onDebouncedSwitchCurrent();
     }

@@ -47,7 +47,7 @@ import {
   COURSES_PATH, BORMO_PATH,
   WORDS_PER_LESSON, PHRASES_PER_LESSON,
   PHRASES_PATH, API_BRANCHES, STATUS_OK,
-  DATA_SOURCES, TEST_KEY, DEBOUNCE_INTERVAL
+  DATA_SOURCES, TEST_KEY, DEBOUNCE_INTERVAL, CONTROL_MODES
 } from './constants';
 import {styles} from './App.css.js';
 
@@ -417,19 +417,25 @@ class App extends React.Component {
                   <Route path={ROUTES.CONTROL} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} config={config}
-                             reverse={false} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                             controlMode={CONTROL_MODES.CONTROL} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
                              onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
                   }/>
                   <Route path={ROUTES.REVERSE} render={() =>
                     <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                              currentCourse={currentCourse} config={config}
-                             reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                             controlMode={CONTROL_MODES.REVERSE} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
                              onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
                   }/>
                   <Route path={ROUTES.SPELLING} render={() =>
                     <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
                               currentCourse={currentCourse} config={config}
                               reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
+                              onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
+                  }/>
+                  <Route path={ROUTES.CHECK} render={() =>
+                    <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
+                              currentCourse={currentCourse} config={config}
+                              controlMode={CONTROL_MODES.MIXED} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
                               onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
                   }/>
                   <Route path={ROUTES.SEARCH} render={() => <Search bormoSpeaker={this.bormoSpeaker} APIkey={APIkey}/>}

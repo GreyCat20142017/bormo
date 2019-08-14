@@ -16,13 +16,11 @@ import {styles} from './Control.css.js';
 import {
   isInactive,
   getTranslateLanguage,
-  getOriginLanguage,
   getModeInitialState,
-  getCurrentTranslate
+  getCurrentInfo
 } from '../pagesCommon';
 
-import {WORDS_PER_LESSON, BORMO_STATUS, DEBOUNCE_INTERVAL} from '../../constants';
-
+import {WORDS_PER_LESSON, BORMO_STATUS, DEBOUNCE_INTERVAL, FIELDS, LANGUAGES} from '../../constants';
 
 const TopPart = ({classes, content, currentCourse, currentLesson, okCount, errorCount, currentTranslate}) => (
   <div className={classes.wrapper}>
@@ -54,21 +52,18 @@ const TopPart = ({classes, content, currentCourse, currentLesson, okCount, error
   </div>
 );
 
-const ListPart = ({content, classes, currentIndex, startIndex, memorized, switchDisableOne, reverse}) => (
+const ListPart = ({content, classes, currentIndex, startIndex, memorized, switchDisableOne, controlMode}) => (
   <div className={classNames(classes.part)}>
     <ul className={classes.cardList}>
       {content.slice(startIndex, startIndex + Math.floor(WORDS_PER_LESSON / 2)).map((item, ind) =>
         <li className={classes.cardItem} key={ind + startIndex}>
           <Paper
-            className={classNames(classes.card, isInactive(ind + startIndex, memorized) ? classes.colorized : null)}
-          >
-
+            className={classNames(classes.card, isInactive(ind + startIndex, memorized) ? classes.colorized : null)}>
             <Typography className={classes.title} variant='h6'
                         color='secondary'
-                        onClick={() => switchDisableOne(ind + startIndex)} title={item[getOriginLanguage(reverse)]}>
-              {item[getOriginLanguage(reverse)]}
+                        onClick={() => switchDisableOne(ind + startIndex)} title={item[FIELDS.ORIGIN]}>
+              {item[FIELDS.ORIGIN]}
             </Typography>
-
           </Paper>
         </li>
       )}
@@ -94,12 +89,12 @@ class Control extends Component {
   }
 
   switchDisableOne = (index) => {
-    const {reverse} = this.props;
+    const {controlMode} = this.props;
     const {content, memorized, timerStatus, currentIndex, maxIndex, randomOrder, errorCount, okCount} = this.state;
 
     if (timerStatus === BORMO_STATUS.STARTED &&
-      content[index][getTranslateLanguage(reverse)] === content[randomOrder[currentIndex]][getTranslateLanguage(reverse)]) {
-
+      content[index][getTranslateLanguage(controlMode)] === content[randomOrder[currentIndex]][getTranslateLanguage(controlMode)]) {
+      this.speakCurrent(currentIndex, maxIndex, randomOrder, controlMode, content);
       const newMemorized = [...memorized.slice(0, index), {
         index: index,
         inactive: !memorized[index].inactive
@@ -119,30 +114,26 @@ class Control extends Component {
       }
     } else {
       this.setState({errorCount: errorCount + 1, wasError: true});
+      this.speakError();
     }
   };
 
-  speakSomething = (currentIndex, maxIndex, randomOrder, reverse, content, wasError) => {
+  speakError = () => (this.bormoSpeaker.speak('Not right.'));
+
+  speakCurrent = (currentIndex, maxIndex, randomOrder, controlMode, content) => {
     const {timerStatus} = this.state;
     if (timerStatus === BORMO_STATUS.STARTED) {
-      if (reverse) {
-        this.bormoSpeaker.speak(getCurrentTranslate(currentIndex, maxIndex, randomOrder, reverse, content));
-      } else {
-        const text = wasError ? 'Not right.' : getCurrentTranslate(currentIndex - 1, maxIndex, randomOrder, true, content);
-        this.bormoSpeaker.speak(text);
-      }
+      let originLanguage = getCurrentInfo(currentIndex, maxIndex, randomOrder, controlMode, content, FIELDS.ORIGIN_LANGUAGE);
+      const text = getCurrentInfo(currentIndex, maxIndex, randomOrder, true, content,
+        originLanguage === LANGUAGES.RU ? FIELDS.TRANSLATE : FIELDS.ORIGIN);
+      this.bormoSpeaker.speak(text);
     }
   };
 
-  componentDidUpdate() {
-    const {currentIndex, maxIndex, randomOrder, reverse, content, wasError} = this.state;
-    this.speakSomething(currentIndex, maxIndex, randomOrder, reverse, content, wasError);
-  }
-
   render() {
-    const {classes, currentLesson, currentCourse, reverse} = this.props;
+    const {classes, currentLesson, currentCourse, controlMode} = this.props;
     const {content, currentIndex, maxIndex, memorized, randomOrder, errorCount, okCount} = this.state;
-    const currentTranslate = getCurrentTranslate(currentIndex, maxIndex, randomOrder, reverse, content);
+    const currentTranslate = getCurrentInfo(currentIndex, maxIndex, randomOrder, controlMode, content, FIELDS.TRANSLATE);
 
     return (content.length > 0) ?
       <React.Fragment>
@@ -152,11 +143,11 @@ class Control extends Component {
 
         <div className={classes.parts}>
           <ListPart content={content} classes={classes} currentIndex={currentIndex} startIndex={0}
-                    memorized={memorized} switchDisableOne={this.onDebouncedSwitch} reverse={reverse}/>
+                    memorized={memorized} switchDisableOne={this.onDebouncedSwitch} controlMode={controlMode}/>
 
           <ListPart content={content} classes={classes} currentIndex={currentIndex}
                     startIndex={Math.floor(WORDS_PER_LESSON / 2)} memorized={memorized}
-                    switchDisableOne={this.onDebouncedSwitch} reverse={reverse}/>
+                    switchDisableOne={this.onDebouncedSwitch} controlMode={controlMode}/>
         </div>
 
       </React.Fragment> :
