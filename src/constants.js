@@ -52,15 +52,22 @@ export const KEY_CODES = {
 
 export const LANGUAGES = {EN: 'english', RU: 'russian'};
 
+export const TIMER_INTERVAL = 3000;
+
 export const SKYENG_URL = `https://dictionary.skyeng.ru/api/public/v1/words/search`;
 
-export const TIMER_INTERVAL = 3000;
+export const TEST_STATUSES = {
+  UNKNOWN: '?',
+  TEST_DATA: 'Это тестовые данные',
+  ERROR: 'Невозможно получить данные'
+};
 
 export const DATA_SOURCES = {
   PHP_LOCAL: {
     COURSES: 'http://bormophp.local:8080/courses.php',
     SEARCH: 'http://bormophp.local:8080/search.php',
     PHRASES: 'http://bormophp.local:8080/phrases.php',
+    TEST: 'http://bormophp.local:8080/test.php',
     disabled: false,
     COMMENT:'PHP (loсalhost)'
   },
@@ -68,6 +75,7 @@ export const DATA_SOURCES = {
     COURSES: 'http://localhost:3377/courses',
     SEARCH: 'http://localhost:3377/search',
     PHRASES: 'http://localhost:3377/phrases',
+    TEST: 'http://localhost:3377/test',
     disabled: true,
     COMMENT:'Node (loсalhost)'
   },
@@ -75,6 +83,7 @@ export const DATA_SOURCES = {
     COURSES: 'http://bormo.pugalk8s.beget.tech/courses.php',
     SEARCH: 'http://bormo.pugalk8s.beget.tech/search.php',
     PHRASES: 'http://bormo.pugalk8s.beget.tech/phrases.php',
+    TEST: 'http://bormo.pugalk8s.beget.tech/test.php',
     disabled: false,
     COMMENT:'PHP (Beget, http)'
   },
@@ -82,6 +91,7 @@ export const DATA_SOURCES = {
     COURSES: 'https://bormo.pugalk8s.beget.tech/courses.php',
     SEARCH: 'https://bormo.pugalk8s.beget.tech/search.php',
     PHRASES: 'https://bormo.pugalk8s.beget.tech/phrases.php',
+    TEST: 'https://bormo.pugalk8s.beget.tech/test.php',
     disabled: true,
     COMMENT:'PHP (Beget, https)'
   },
@@ -119,7 +129,8 @@ export const TOOLBAR_TYPES = {
 export const API_BRANCHES = {
   COURSES: 'COURSES',
   PHRASES: 'PHRASES',
-  SEARCH: 'SEARCH'
+  SEARCH: 'SEARCH',
+  TEST: 'TEST'
 };
 
 export const EXCLUDED_COLUMNS = ['id', 'soundUrl', 'partOfSpeech'];

@@ -35,11 +35,11 @@ export const getInitialState = (currentTheme, isNotBormo, isConfigOpen = false) 
       instantNextMode: true,
       countErrorAtPrompt: true
     },
-    useAPIData: true,
+    // useAPIData: true,
     APIkey: Object.keys(DATA_SOURCES)[0],
     soundMuted: false,
+    onlyEnglish: true,
     voiceConfig: {
-      onlyEnglish: true,
       russian: '',
       english: '',
       volume: 1, //0 - 1 step 0.2

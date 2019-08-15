@@ -20,6 +20,18 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: theme.spacing.unit
+  },
+  text: {
+    textAlign: 'center',
+    paddingBottom: theme.spacing.unit,
+    paddingTop: 0
+  },
+  bar: {
+    padding: theme.spacing.unit,
+    textAlign: 'center'
+  },
+  buttons: {
+    margin: '0 auto'
   }
 });
 export {styles};

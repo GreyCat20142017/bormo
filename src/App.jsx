@@ -1,62 +1,42 @@
 import React from 'react';
-import {Route, Switch, withRouter} from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
-import Divider from '@material-ui/core/Divider';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import Toolbar from '@material-ui/core/Toolbar';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import Typography from '@material-ui/core/Typography';
-import AppIcon from '@material-ui/icons/Apps';
-import OffIcon from '@material-ui/icons/HighlightOff';
-
-import {withStyles} from '@material-ui/core/styles';
-
+import {withRouter} from 'react-router-dom';
 import axios from 'axios';
 import {debounce} from 'lodash';
 
-import Main from './pages/main/Main';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Paper from '@material-ui/core/Paper';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
-import Bormo from './pages/bormo/Bormo';
-import Control from './pages/control/Control';
-import Spelling from './pages/spelling/Spelling';
-import BormoConfig from './pages/config/BormoConfig';
-import Search from './pages/search/Search';
-import Phrases from './pages/phrases/Phrases';
-import SkyengSearch from './pages/sky/SkyengSearch';
-import NotFound from './pages/notfound/NotFound';
+import {withStyles} from '@material-ui/core/styles';
+
 import BormoFooter from './components/footer/BormoFooter';
-
-import BormoHeader from './components/header/BormoHeader';
-import BormoAside from './components/aside/BormoAside';
 import BormoModal from './components/modal/BormoModal';
-import ErrorBoundary from './components/ErrorBoundary';
 import DataSourceSelector from './components/DataSourceSelector';
+import Loader from './components/Loader';
 import SpeakerVoice from './SpeakerVoice';
-
 import MainTheme from './MainTheme';
-import {ROUTES, HOTKEY_REDIRECTS, ROUTES_ORDER, SWITCHABLE_ROUTES} from './routes';
+
 import {about} from './about';
-import {getValueArrayFromObject, getInitialState} from './functions';
+import {AppRoutes} from './appparts/AppRoutes';
+import {AppHeader} from './appparts/AppHeader';
+import {AppDrawer} from './appparts/AppDrawer';
 
+import {HOTKEY_REDIRECTS, ROUTES, ROUTES_ORDER, SWITCHABLE_ROUTES} from './routes';
+import {getInitialState, getValueArrayFromObject} from './functions';
 import {
-  COURSES_PATH, BORMO_PATH,
-  WORDS_PER_LESSON, PHRASES_PER_LESSON,
-  PHRASES_PATH, API_BRANCHES, STATUS_OK,
-  DATA_SOURCES, TEST_KEY, DEBOUNCE_INTERVAL, CONTROL_MODES
+  API_BRANCHES,
+  BORMO_PATH,
+  COURSES_PATH,
+  DATA_SOURCES,
+  DEBOUNCE_INTERVAL,
+  PHRASES_PATH,
+  PHRASES_PER_LESSON,
+  STATUS_OK,
+  TEST_KEY,
+  WORDS_PER_LESSON
 } from './constants';
-import {styles} from './App.css.js';
 
-
-const Loader = ({classes}) => (
-  <Paper className={classes.paperLoader}>
-    <Typography variant='caption' color='primary'>Загрузка...</Typography>
-  </Paper>
-);
+import {styles} from './App.css';
 
 const getCourseParams = (isNotBormo) => (isNotBormo ?
   [API_BRANCHES.PHRASES, PHRASES_PATH, true] :
@@ -75,7 +55,7 @@ class App extends React.Component {
     this.state = getInitialState(MainTheme.neutral, (this.props.location.pathname === ROUTES.PHRASES), (this.props.location.pathname === ROUTES.CONFIG));
     this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
     this.onDebouncedLessonChange = debounce(this.onDebouncedLessonChange.bind(this), DEBOUNCE_INTERVAL);
-    }
+  }
 
   initCurrentSpeaker = (voices) => {
     this.voiceList = voices;
@@ -135,13 +115,12 @@ class App extends React.Component {
     }
   };
 
-  getCoursesData = async (apiBranch, jsonPath, isNotBormo, key = null, useAPI = null) => {
+  getCoursesData = async (apiBranch, jsonPath, isNotBormo, key = null) => {
     let result = [];
     let res = [];
     let APIkey = key ? key : this.state.APIkey;
-    let useAPIData = useAPI ? useAPI : this.state.useAPIData;
+    let useAPIData = (APIkey !== TEST_KEY);
     let apiURL = DATA_SOURCES[APIkey];
-    useAPIData = (APIkey === TEST_KEY) ? false : useAPIData;
     this.setState(() => ({isLoading: true}));
     if (useAPIData && apiURL) {
       try {
@@ -153,7 +132,7 @@ class App extends React.Component {
     }
     if (!useAPIData) {
       if (isNotBormo) {
-        result = [{name: 'no server', lastlesson: 3}];
+        result = [{name: 'test', lastlesson: 3}];
       } else {
         res = await axios.get(jsonPath);
         result = res ? res.data : [];
@@ -166,20 +145,18 @@ class App extends React.Component {
       currentCourse: 0,
       currentLesson: 0,
       content: [],
-      useAPIData: useAPIData,
       APIkey: APIkey
     });
-
   };
 
   getLessonData = async (lesson, apiBranch, unitsPerLesson, jsonPath, isNotBormo) => {
-    let {APIkey, useAPIData} = this.state;
+    let {APIkey} = this.state;
     const {currentCourse} = this.state;
     const params = isNotBormo ? {lesson: lesson} : {course: currentCourse, lesson: lesson};
     let apiURL = DATA_SOURCES[APIkey];
     let result = [];
     let res = [];
-    useAPIData = (APIkey === TEST_KEY) ? false : useAPIData;
+    let useAPIData = (APIkey !== TEST_KEY);
     this.setState(() => ({isLoading: true}));
     if (useAPIData && apiURL) {
       try {
@@ -191,7 +168,7 @@ class App extends React.Component {
     }
     if (!useAPIData) {
       res = await axios.get(jsonPath);
-      result = res.data.filter(el => el.course === currentCourse).filter((el, ind) => {
+      result = res.data.filter((el, ind) => {
         const startInd = (parseInt(lesson, 10) - 1) * unitsPerLesson || 0;
         return (ind >= startInd && ind < (startInd + unitsPerLesson));
       });
@@ -200,8 +177,7 @@ class App extends React.Component {
     this.setState({
       isLoading: false,
       content: result,
-      currentLesson: lesson,
-      useAPIData: useAPIData
+      currentLesson: lesson
     });
   };
 
@@ -223,12 +199,12 @@ class App extends React.Component {
   };
 
   onConfigChange = (changedConfig) => {
-    const {APIkey, useAPIData} = this.state;
+    const {APIkey} = this.state;
     this.setState(Object.assign({}, {...changedConfig, isConfigOpen: false}));
     this.props.history.push(ROUTES.MAIN);
-    if (APIkey !== changedConfig.APIkey || useAPIData !== changedConfig.useAPIData) {
+    if (APIkey !== changedConfig.APIkey) {
       const params = getCourseParams(this.state.isNotBormo);
-      this.getCoursesData(...params, changedConfig.APIkey, (changedConfig.APIkey !== TEST_KEY));
+      this.getCoursesData(...params, changedConfig.APIkey);
     }
   };
 
@@ -312,31 +288,16 @@ class App extends React.Component {
 
   onSelectDataSource = (sourceKey) => {
     const params = getCourseParams(this.state.isNotBormo);
-    this.getCoursesData(...params, sourceKey, (sourceKey !== TEST_KEY));
+    this.getCoursesData(...params, sourceKey);
   };
 
   render() {
     const {classes, themes, location} = this.props;
     const {
-      currentMode, currentCourse, currentLesson, lessons, courses, content, currentTheme, APIkey, useAPIData,
-      isLoading, isConfigOpen, isModalOpen, isNotBormo, config, voiceConfig, soundMuted, lastLesson
+      currentMode, currentCourse, currentLesson, lessons, courses, currentTheme, mobileOpen,
+      isModalOpen, isNotBormo, config, lastLesson
     } = this.state;
     const hideFooter = SWITCHABLE_ROUTES.filter(item => item !== ROUTES.MAIN).indexOf(location.pathname) !== -1;
-
-    const drawer = (
-      <ErrorBoundary>
-        <BormoAside
-          currentMode={currentMode}
-          currentCourse={currentCourse}
-          currentLesson={currentLesson}
-          lessons={lessons}
-          courses={courses}
-          onLessonChange={this.onDebouncedLessonChange}
-          onCourseChange={this.onCourseChange}
-          lastLesson={lastLesson}
-        />
-      </ErrorBoundary>
-    );
 
     return (
       <React.Fragment>
@@ -344,127 +305,24 @@ class App extends React.Component {
         <MuiThemeProvider theme={currentTheme.themeObject}>
           <div className={classes.root}>
             <CssBaseline/>
-            <AppBar position='fixed' className={classes.appBar}>
-              <Toolbar>
-                <IconButton
-                  color='secondary'
-                  aria-label='Открыть панель'
-                  onClick={this.onDrawerToggle}
-                  className={classes.menuButton}
-                  title='Открыть панель выбора курса и уроков'
-                >
-                  <AppIcon/>
-                </IconButton>
 
-                <BormoHeader
-                  theme={currentTheme}
-                  openModal={this.openModal}
-                  closeModal={this.closeModal}
-                  openConfig={this.openConfig}
-                  closeConfig={this.closeConfig}
-                  onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}/>
+            <AppHeader classes={classes} currentTheme={currentTheme} themes={themes}
+                       onDrawerToggle={this.onDrawerToggle}
+                       openModal={this.openModal} closeModal={this.closeModal}
+                       openConfig={this.openConfig} closeConfig={this.closeConfig} onThemeSelect={this.onThemeSelect}/>
 
-              </Toolbar>
-            </AppBar>
+            <AppDrawer classes={classes} currentTheme={currentTheme} themes={themes} lastLesson={lastLesson}
+                       currentMode={currentMode} currentCourse={currentCourse} currentLesson={currentLesson}
+                       lessons={lessons} courses={courses} mobileOpen={mobileOpen}
+                       onDebouncedLessonChange={this.onDebouncedLessonChange} onCourseChange={this.onCourseChange}
+                       onDrawerToggle={this.onDrawerToggle} openModal={this.openModal} closeModal={this.closeModal}
+                       openConfig={this.openConfig} closeConfig={this.closeConfig} onThemeSelect={this.onThemeSelect}/>
 
-            <nav className={classes.drawer}>
-              <Hidden smUp implementation='css'>
-                <Drawer
-                  variant='temporary'
-                  anchor={'left'}
-                  open={this.state.mobileOpen}
-                  onClose={this.onDrawerToggle}
-                  classes={{paper: classes.drawerPaper}}
-                >
-                  <React.Fragment>
-                    <IconButton
-                      color='secondary'
-                      aria-label='Закрыть панель'
-                      onClick={this.onDrawerToggle}
-                      className={classes.menuButton}
-                      title='Закрыть панель выбора курса и уроков без выбора'
-                    >
-                      <OffIcon/>
-                    </IconButton>
-                    <Divider/>
-                    {drawer}
-                  </React.Fragment>
-                </Drawer>
-              </Hidden>
-              <Hidden xsDown implementation='css'>
-                <Drawer
-                  classes={{paper: classes.drawerPaper}}
-                  variant='permanent'
-                  open
-                >
-                  {drawer}
-                </Drawer>
-              </Hidden>
-            </nav>
-
-            <main className={classes.content}>
-              {isLoading ?
-                <Typography variant='caption'>Данные загружаются...</Typography> :
-
-                <Switch>
-                  <Route exact path={ROUTES.MAIN} component={Main}/>
-                  <Route path={ROUTES.BORMO} render={() =>
-                    <Bormo content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                           currentCourse={currentCourse} config={config}
-                           onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                           onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
-                  }/>
-                  <Route path={ROUTES.CONTROL} render={() =>
-                    <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                             currentCourse={currentCourse} config={config}
-                             controlMode={CONTROL_MODES.CONTROL} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                             onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
-                  }/>
-                  <Route path={ROUTES.REVERSE} render={() =>
-                    <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                             currentCourse={currentCourse} config={config}
-                             controlMode={CONTROL_MODES.REVERSE} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                             onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
-                  }/>
-                  <Route path={ROUTES.SPELLING} render={() =>
-                    <Spelling content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                              currentCourse={currentCourse} config={config}
-                              reverse={true} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                              onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
-                  }/>
-                  <Route path={ROUTES.CHECK} render={() =>
-                    <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
-                              currentCourse={currentCourse} config={config}
-                              controlMode={CONTROL_MODES.MIXED} onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                              onRestartClick={this.onRestartClick} moveOn={this.moveOn}/>
-                  }/>
-                  <Route path={ROUTES.SEARCH} render={() => <Search bormoSpeaker={this.bormoSpeaker} APIkey={APIkey}/>}
-                  />
-                  <Route path={ROUTES.SKYENG} render={() => <SkyengSearch/>
-                  }/>
-                  <Route path={ROUTES.PHRASES} render={() =>
-                    <Phrases content={content} bormoSpeaker={this.bormoSpeaker} closePhrases={this.closePhrases}
-                             currentSection={currentLesson}/>
-                  }/>
-                  <Route path={ROUTES.CONFIG} render={() =>
-                    <BormoConfig
-                      currentTheme={currentTheme}
-                      themes={themes}
-                      config={config}
-                      voiceConfig={voiceConfig}
-                      soundMuted={soundMuted}
-                      APIkey={APIkey}
-                      useAPIData={useAPIData}
-                      bormoSpeaker={this.bormoSpeaker}
-                      isConfigOpen={isConfigOpen}
-                      closeConfig={this.closeConfig}
-                      onConfigChange={this.onConfigChange}
-                      onThemeSelect={this.onThemeSelect}/>
-                  }/>
-                  <Route component={NotFound}/>
-                </Switch>
-              }
-            </main>
+            <AppRoutes {...this.props} {...this.state} bormoSpeaker={this.bormoSpeaker} config={config}
+                       onNextClick={this.onNextClick} onPreviousClick={this.onPreviousClick}
+                       onRestartClick={this.onRestartClick} moveOn={this.moveOn}
+                       closeConfig={this.closeConfig} onConfigChange={this.onConfigChange}
+                       onThemeSelect={this.onThemeSelect}/>
 
             {hideFooter || isNotBormo ?
               <DataSourceSelector onSelectDataSource={this.onSelectDataSource} fixed={true}/> :
@@ -478,7 +336,7 @@ class App extends React.Component {
           </div>
 
           <BormoModal
-            title={'Бормотунчик - 2019. '}
+            title={'Бормотунчик - 2019'}
             text={about}
             isModalOpen={isModalOpen}
             closeModal={this.closeModal}/>

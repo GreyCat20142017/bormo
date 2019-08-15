@@ -1,33 +1,34 @@
 import React from 'react';
+import axios from 'axios';
+
 import Dialog from '@material-ui/core/Dialog';
-import Button from '@material-ui/core/Button';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-
-import VolumeUpIcon from '@material-ui/icons/VolumeUp';
-import ImportExportIcon from '@material-ui/icons/ImportExport';
-
+import AppBar from '@material-ui/core/AppBar';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import SimpleSlider from '../../components/SimpleSlider';
-import BormoThemeSelect from '../../components/BormoThemeSelect';
-import {voiceParams, VOICE_TEST_PHRASE} from '../../constants';
-import {getRound} from '../../functions';
+import {DataConfig} from './configparts/DataConfig';
+import {CommonConfig} from './configparts/CommonConfig';
+import {SoundConfig} from './configparts/SoundConfig';
+import {ColorConfig} from './configparts/ColorConfig';
+import {ConfigButtons} from './configparts/ConfigButtons';
 
+import {
+  API_BRANCHES,
+  DATA_SOURCES,
+  STATUS_OK,
+  TEST_KEY,
+  TEST_STATUSES,
+  VOICE_TEST_PHRASE,
+  voiceParams
+} from '../../constants';
+import {getRound} from '../../functions';
 import {styles} from './BormoConfig.css.js';
-import DataSourceSelector from '../../components/DataSourceSelector';
 
 const getConfigState = (props, currentVoice) => ({
-  ...props.config, ...props.voiceConfig, soundMuted: props.soundMuted,
-  APIkey: props.APIkey, useAPIData: props.useAPIData, currentVoice: currentVoice
+  ...props.config, ...props.voiceConfig, soundMuted: props.soundMuted, onlyEnglish: props.onlyEnglish,
+  APIkey: props.APIkey, currentVoice: currentVoice, testStatus: TEST_STATUSES.UNKNOWN
 });
-
 
 class BormoConfig extends React.Component {
 
@@ -84,160 +85,78 @@ class BormoConfig extends React.Component {
     }
   };
 
-  checkAPI = () => {
+  onSelectDataSource = (sourceKey) => {
+    this.setState({APIkey: sourceKey, testStatus: TEST_STATUSES.UNKNOWN});
+  };
 
+  checkAPI = async () => {
+    let {APIkey} = this.state;
+    let apiURL = DATA_SOURCES[APIkey];
+    let result = [];
+    let res = [];
+    let useAPIData = (APIkey !== TEST_KEY);
+    this.setState(() => ({isLoading: true}));
+    if (useAPIData && apiURL) {
+      try {
+        res = await axios.get(apiURL[API_BRANCHES.TEST], {});
+        result = res && (res.status === STATUS_OK) ? res.data.content : [];
+      } catch (err) {
+        result = TEST_STATUSES.ERROR;
+      }
+    }
+    if (!useAPIData) {
+      result = TEST_STATUSES.TEST_DATA;
+    }
+    this.setState({testStatus: result});
   };
 
   saveConfig = () => {
     const {
       instantStart, instantNextMode, countErrorAtPrompt,
-      useAPIData, APIkey, soundMuted
+      APIkey, soundMuted
     } = this.state;
-    const changedConfig = {config: {instantStart, instantNextMode, countErrorAtPrompt}, useAPIData, APIkey, soundMuted};
+    const changedConfig = {config: {instantStart, instantNextMode, countErrorAtPrompt}, APIkey, soundMuted};
     this.props.onConfigChange(Object.assign({}, changedConfig));
-  };
-
-  onSelectDataSource = (sourceKey) => {
-    this.setState({APIkey: sourceKey});
   };
 
   render() {
 
-    const {isConfigOpen, classes, onThemeSelect, currentTheme, themes} = this.props;
+    const {isConfigOpen, classes, currentTheme, themes, onThemeSelect, closeConfig} = this.props;
     const {
-      instantStart, instantNextMode, countErrorAtPrompt,
-      onlyEnglish, pitch, volume, soundMuted, useAPIData, APIkey, currentVoice
+      instantStart, instantNextMode, countErrorAtPrompt, currentVoice,
+      onlyEnglish, pitch, volume, soundMuted, APIkey, testStatus
     } = this.state;
+
+    console.log(onlyEnglish? ' true' : 'false');
 
     if (isConfigOpen) {
       return (
         <Dialog
           fullScreen
-          open={isConfigOpen}
-        >
+          open={isConfigOpen}>
 
           <div className={classes.configWrapper}>
-            <Typography variant='h5' className={classes.configGroup}>Настройка приложения</Typography>
-            <Typography variant='caption' className={classes.configGroup}>Общие параметры</Typography>
-            <Paper className={classes.configPaper}>
-              <FormGroup className={classes.configGroup}>
-                <FormControlLabel
-                  control={
-                    <Switch checked={instantStart}
-                            onChange={this.onOptionChange('instantStart')}
-                            value='instantStart'
-                            color='primary'
-                    />
-                  }
-                  label='начинать выполнение выбранного режима без ожидания нажатия кнопки Старт'
-                />
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={instantNextMode}
-                      onChange={this.onOptionChange('instantNextMode')}
-                      value='instantNextMode'
-                      color='primary'
-                    />
-                  }
-                  label='начинать выполнение следующего режима после окончания текущего'
-                />
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={countErrorAtPrompt}
-                      onChange={this.onOptionChange('countErrorAtPrompt')}
-                      value='countErrorAtPrompt'
-                      color='primary'
-                      disabled={true}
-                    />
-                  }
-                  label='увеличивать счетчик ошибок при запросе подсказки'
-                />
-              </FormGroup>
-            </Paper>
+            <AppBar position="fixed" color="secondary" className={classes.bar}>
+              <Typography variant='h5' className={classes.configGroup}>Настройка приложения</Typography>
+            </AppBar>
 
-            <Typography variant='caption' className={classes.configGroup}>Источник данных</Typography>
-            <Paper className={classes.configPaper}>
-              <FormGroup className={classes.configGroup}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={useAPIData}
-                      onChange={this.onOptionChange('useAPIData')}
-                      value='useAPIData'
-                      color='primary'
-                    />
-                  }
-                  label='использовать данные с удаленного сервера'
-                />
-                <div className={classes.flex}>
-                  <DataSourceSelector onSelectDataSource={this.onSelectDataSource} current={APIkey}/>
-                  <Button size='small' variant='contained' color='secondary' onClick={this.checkAPI}
-                          className={classes.configButton}>
-                    Тест API
-                    <ImportExportIcon className={classes.rightIcon} fontSize='small'/>
-                  </Button>
-                </div>
-              </FormGroup>
-            </Paper>
+            <CommonConfig classes={classes} instantStart={instantStart} instantNextMode={instantNextMode}
+                          countErrorAtPrompt={countErrorAtPrompt} onOptionChange={this.onOptionChange}/>
 
-            <Typography variant='caption' className={classes.configGroup}>Параметры звука</Typography>
-            <Paper className={classes.configPaper}>
-              <FormGroup className={classes.configGroup}>
-                <div className={classes.flex}>
-                  <Typography variant="subtitle1">{this.bormoSpeaker.getVoiceSupport()}</Typography>
-                  <FormControlLabel
-                    control={<Switch checked={onlyEnglish} onChange={this.onOptionChange('onlyEnglish')}
-                                     value='onlyEnglish' color='primary' disabled={true}/>}
-                    label='озвучивать только английский'
-                  />
-                </div>
-                <FormControlLabel
-                  control={<Switch checked={soundMuted} onChange={this.onOptionChange('soundMuted')} value='soundMuted'
-                                   color='primary'/>}
-                  label='беззвучный режим'
-                />
-                <SimpleSlider name='volume' params={voiceParams.volume} value={volume}
-                              onSliderChange={this.onSliderChange}/>
-                <Typography variant='caption' className={classes.configGroup}>Чем больше значение параметра "Высота",
-                  тем выше звук: </Typography>
-                <SimpleSlider name='pitch' params={voiceParams.pitch} value={pitch}
-                              onSliderChange={this.onSliderChange}/>
+            <DataConfig classes={classes} APIkey={APIkey} testStatus={testStatus}
+                        checkAPI={this.checkAPI} onOptionChange={this.onOptionChange}
+                        onSelectDataSource={this.onSelectDataSource}/>
 
-              </FormGroup>
-              <Button size='small' variant='contained' color='secondary' onClick={this.checkVoice}
-                      className={classes.configButton}>
-                Тест звука
-                <VolumeUpIcon className={classes.rightIcon} fontSize='small'/>
-              </Button>
-              <Select
-                value={currentVoice}
-                onChange={this.onVoiceChange}
-                inputProps={{
-                  name: 'choice'
-                }}
-                title='Выбор синтезатора речи'
-              >
-                {this.voices.length === 0 ? null : this.voices.map(el =>
-                  <MenuItem className={classes.item} value={el.name} key={el.name}
-                            title={el.name}>{el.name}</MenuItem>
-                )}
-              </Select>
-            </Paper>
+            <SoundConfig classes={classes} onlyEnglish={onlyEnglish} soundMuted={soundMuted} volume={volume}
+                         voiceParams={voiceParams} pitch={pitch} currentVoice={currentVoice}
+                         onOptionChange={this.onOptionChange} onSliderChange={this.onSliderChange}
+                         onVoiceChange={this.onVoiceChange} checkVoice={this.checkVoice}
+                         bormoSpeaker={this.bormoSpeaker} voices={this.voices}/>
 
-            <Typography variant='caption' className={classes.configGroup}>Цветовая тема (параметр применяется при
-              выборе)</Typography>
-            <Paper className={classes.configPaper}>
-              <BormoThemeSelect onThemeSelect={onThemeSelect} currentTheme={currentTheme} themes={themes}
-                                fromConfig={true}/>
-            </Paper>
+            <ColorConfig classes={classes} currentTheme={currentTheme} themes={themes}
+                         onThemeSelect={onThemeSelect}/>
 
-
-            <Button variant='contained' color='primary' onClick={this.saveConfig}
-                    className={classes.configButton}> Сохранить и закрыть </Button>
-            <Button variant='contained' color='secondary' onClick={this.props.closeConfig}
-                    className={classes.configButton}> Отмена </Button>
+            <ConfigButtons classes={classes} saveConfig={this.saveConfig} closeConfig={closeConfig}/>
 
           </div>
         </Dialog>
