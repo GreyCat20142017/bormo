@@ -3,7 +3,7 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import AppIcon from '@material-ui/core/SvgIcon';
+import AppIcon from '@material-ui/icons/Apps';
 
 import BormoHeader from '../components/header/BormoHeader';
 

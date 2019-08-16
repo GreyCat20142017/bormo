@@ -41,9 +41,22 @@ const HOTKEY_REDIRECTS = {
   'м': ROUTES.CHECK
 };
 
+const ROUTES_TITLES = {
+  [ROUTES.MAIN]: 'Главная',
+  [ROUTES.SEARCH]: 'Поиск',
+  [ROUTES.PHRASES]: 'Фразы',
+  [ROUTES.SKYENG]: 'SkyEng',
+  [ROUTES.BORMO]: 'Бормо',
+  [ROUTES.CONTROL]: 'Контроль',
+  [ROUTES.REVERSE]: 'Контроль наоборот',
+  [ROUTES.SPELLING]: 'Правописание',
+  [ROUTES.CHECK]: 'Проверка'
+};
+
 export {
   ROUTES,
   SWITCHABLE_ROUTES,
   HOTKEY_REDIRECTS,
-  ROUTES_ORDER
+  ROUTES_ORDER,
+  ROUTES_TITLES
 };

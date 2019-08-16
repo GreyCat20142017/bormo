@@ -1,5 +1,3 @@
-// import {data as ddata} from '../components/searchform/sky';
-
 class SkyengData {
   constructor(skyData) {
     const data = skyData && Array.isArray(skyData) ? skyData : [];

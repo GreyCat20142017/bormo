@@ -30,13 +30,12 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
   },
   light: {
-    color: 'white',
+    color: theme.palette.secondary.main,
     '& *': {
-      color: 'white',
-      border: 'white',
+      color: theme.palette.secondary.main,
+      border: theme.palette.secondary.main
     }
-  },
-  dark: {}
+  }
 });
 
 class Bred extends React.Component {

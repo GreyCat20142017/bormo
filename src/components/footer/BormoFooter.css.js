@@ -18,9 +18,7 @@ const styles = theme => ({
     position: 'relative',
     zIndex: 1,
     top: -20,
-    left: 0,
-    right: 0,
-    margin: '0 auto',
+    marginLeft: 'auto',
     width: 'auto'
   },
   fabButton: {
@@ -31,7 +29,10 @@ const styles = theme => ({
     display: 'none'
   },
   searchButton: {
-    color: 'white'
+    color: theme.palette.secondary.main
+  },
+  status: {
+    marginLeft: theme.spacing.unit * 2
   }
 });
 

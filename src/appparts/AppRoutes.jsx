@@ -50,7 +50,7 @@ export const AppRoutes = ({
                     onRestartClick={onRestartClick} moveOn={moveOn}/>
         }/>
         <Route path={ROUTES.CHECK} render={() =>
-          <Control content={content} bormoSpeaker={this.bormoSpeaker} currentLesson={currentLesson}
+          <Control content={content} bormoSpeaker={bormoSpeaker} currentLesson={currentLesson}
                    currentCourse={currentCourse} config={config}
                    controlMode={CONTROL_MODES.MIXED} onPreviousClick={onPreviousClick}
                    onNextClick={onNextClick}
@@ -68,7 +68,7 @@ export const AppRoutes = ({
           <BormoConfig
             currentTheme={rest.currentTheme}
             themes={rest.themes}
-            config={rest.config}
+            config={config}
             voiceConfig={rest.voiceConfig}
             soundMuted={rest.soundMuted}
             onlyEnglish={rest.onlyEnglish}

@@ -123,11 +123,9 @@ class BormoConfig extends React.Component {
 
     const {isConfigOpen, classes, currentTheme, themes, onThemeSelect, closeConfig} = this.props;
     const {
-      instantStart, instantNextMode, countErrorAtPrompt, currentVoice,
-      onlyEnglish, pitch, volume, soundMuted, APIkey, testStatus
+      currentVoice, onlyEnglish, pitch, volume, soundMuted, APIkey, testStatus,
+      instantStart, instantNextMode, countErrorAtPrompt
     } = this.state;
-
-    console.log(onlyEnglish? ' true' : 'false');
 
     if (isConfigOpen) {
       return (
@@ -140,8 +138,9 @@ class BormoConfig extends React.Component {
               <Typography variant='h5' className={classes.configGroup}>Настройка приложения</Typography>
             </AppBar>
 
-            <CommonConfig classes={classes} instantStart={instantStart} instantNextMode={instantNextMode}
-                          countErrorAtPrompt={countErrorAtPrompt} onOptionChange={this.onOptionChange}/>
+            <CommonConfig classes={classes} onOptionChange={this.onOptionChange}
+                          instantStart={instantStart} instantNextMode={instantNextMode}
+                          countErrorAtPrompt={countErrorAtPrompt}/>
 
             <DataConfig classes={classes} APIkey={APIkey} testStatus={testStatus}
                         checkAPI={this.checkAPI} onOptionChange={this.onOptionChange}

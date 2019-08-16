@@ -72,23 +72,19 @@ const getLanguageVariant = (controlMode) => {
 export const getOriginLanguage = (controlMode) => (getLanguageVariant(controlMode));
 export const getTranslateLanguage = (originLanguage) => (originLanguage === LANGUAGES.EN ? LANGUAGES.RU : LANGUAGES.EN);
 
-export const getModeInitialState = ({content, controlMode}) => {
-  const randomOrder = getRandomOrder(content.length);
-  const maxIndex = content.length - 1;
-  const shuffled =  getShuffledContent(content, controlMode);
-  console.log(shuffled);
-  return ({
+export const getModeInitialState = ({content, controlMode}) => (
+  ({
     currentIndex: 0,
-    maxIndex: maxIndex,
+    maxIndex: content.length - 1,
     timerStatus: BORMO_STATUS.STARTED,
     memorized: getInitialMemorized(content.length),
-    randomOrder: randomOrder,
-    content:shuffled,
+    randomOrder: getRandomOrder(content.length),
+    content: getShuffledContent(content, controlMode),
     errorCount: 0,
     okCount: 0,
     wasError: false
-  });
-}
+  })
+);
 
 export const getSpellInitialState = ({content, controlMode}) => {
   return ({

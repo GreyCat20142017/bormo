@@ -3,15 +3,14 @@ import {NavLink} from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
+import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SearchIcon from '@material-ui/icons/Search';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import {withStyles} from '@material-ui/core/styles';
 
 import {ROUTES} from '../../routes';
@@ -22,11 +21,18 @@ import {styles} from './BormoFooter.css.js';
 const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectDataSource, ...rest}) => (
   <AppBar position='fixed' color='primary' className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
+      <NavLink className={classes.searchButton} to={ROUTES.SEARCH}
+               title='Поиск слова в базе и в данных, полученных через API SkyEng'>
+        <SearchIcon/>
+      </NavLink>
       <DataSourceSelector onSelectDataSource={onSelectDataSource}/>
-      <IconButton className={classes.hidden} color='inherit'><MoreIcon/></IconButton>
+
       <Hidden mdDown implementation='css'>
         <BormoThemeSelect {...rest} light={true}/>
       </Hidden>
+
+      <Typography className={classes.status} variant='caption' color='secondary'>{rest.statusText}</Typography>
+
       <div className={classes.fabButtons}>
         <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок (Alt+P) - Previous'
              className={classes.fabButton}
@@ -44,12 +50,6 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectData
              size='small' onClick={onNextClick}>
           <ArrowForwardIcon/>
         </Fab>
-      </div>
-      <div>
-        <NavLink className={classes.searchButton} to={ROUTES.SEARCH}
-                 title='Поиск слова в базе и в данных, полученных через API SkyEng'>
-          <SearchIcon/>
-        </NavLink>
       </div>
     </Toolbar>
   </AppBar>

@@ -22,7 +22,7 @@ import {AppHeader} from './appparts/AppHeader';
 import {AppDrawer} from './appparts/AppDrawer';
 
 import {HOTKEY_REDIRECTS, ROUTES, ROUTES_ORDER, SWITCHABLE_ROUTES} from './routes';
-import {getInitialState, getValueArrayFromObject} from './functions';
+import {getInitialState, getStatusText, getValueArrayFromObject} from './functions';
 import {
   API_BRANCHES,
   BORMO_PATH,
@@ -206,6 +206,7 @@ class App extends React.Component {
       const params = getCourseParams(this.state.isNotBormo);
       this.getCoursesData(...params, changedConfig.APIkey);
     }
+    this.bormoSpeaker.mute(changedConfig.soundMuted);
   };
 
   onCourseChange = (course, ind) => {
@@ -328,9 +329,11 @@ class App extends React.Component {
               <DataSourceSelector onSelectDataSource={this.onSelectDataSource} fixed={true}/> :
               <Paper className={classes.paperFooter}>
                 <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
+                             statusText={getStatusText(location.pathname, currentCourse, currentLesson)}
                              onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
                              onSearchClick={this.onSearchClick} onRestartClick={this.onRestartClick}
                              onSelectDataSource={this.onSelectDataSource}/>
+
               </Paper>
             }
           </div>

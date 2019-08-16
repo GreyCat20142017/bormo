@@ -1,4 +1,5 @@
 import {DATA_SOURCES} from './constants';
+import {ROUTES, ROUTES_TITLES} from './routes';
 
 const getStringCompareResult =  (left, right) => {
   if (left > right) {
@@ -35,7 +36,6 @@ export const getInitialState = (currentTheme, isNotBormo, isConfigOpen = false) 
       instantNextMode: true,
       countErrorAtPrompt: true
     },
-    // useAPIData: true,
     APIkey: Object.keys(DATA_SOURCES)[0],
     soundMuted: false,
     onlyEnglish: true,
@@ -66,3 +66,11 @@ export const shuffleArray = function (entities) {
 
 export const getSortedWords = (entities) =>
   (entities.slice().sort((firstItem, secondItem) => (getStringCompareResult( firstItem, secondItem))));
+
+
+export const getStatusText = (route, currentCourse, currentLesson) => {
+  const mode  = ROUTES_TITLES[route] || '';
+  const details = [ROUTES.SEARCH, ROUTES.SKYENG, ROUTES.CONFIG].indexOf(route) !== -1 ? '' :
+     ((currentCourse) ? ': ' + currentCourse.toString().toUpperCase() : '') + ((currentLesson) ?  '-' + currentLesson : '');
+  return mode + details;
+}

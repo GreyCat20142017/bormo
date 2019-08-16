@@ -3,8 +3,8 @@ import React from 'react';
 import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
-import OffIcon from '@material-ui/core/SvgIcon';
 import Divider from '@material-ui/core/Divider';
+import OffIcon from '@material-ui/icons/HighlightOff';
 
 import ErrorBoundary from '../components/ErrorBoundary';
 import BormoAside from '../components/aside/BormoAside';
