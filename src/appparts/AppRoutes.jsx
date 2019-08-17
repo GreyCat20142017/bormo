@@ -52,8 +52,7 @@ export const AppRoutes = ({
         <Route path={ROUTES.CHECK} render={() =>
           <Control content={content} bormoSpeaker={bormoSpeaker} currentLesson={currentLesson}
                    currentCourse={currentCourse} config={config}
-                   controlMode={CONTROL_MODES.MIXED} onPreviousClick={onPreviousClick}
-                   onNextClick={onNextClick}
+                   controlMode={CONTROL_MODES.MIXED} onPreviousClick={onPreviousClick} onNextClick={onNextClick}
                    onRestartClick={onRestartClick} moveOn={moveOn}/>
         }/>
         <Route path={ROUTES.SEARCH} render={() => <Search bormoSpeaker={bormoSpeaker} APIkey={rest.APIkey}/>}
@@ -61,8 +60,9 @@ export const AppRoutes = ({
         <Route path={ROUTES.SKYENG} render={() => <SkyengSearch/>
         }/>
         <Route path={ROUTES.PHRASES} render={() =>
-          <Phrases content={content} bormoSpeaker={bormoSpeaker} closePhrases={rest.closePhrases}
-                   currentSection={currentLesson}/>
+          <Phrases content={content} bormoSpeaker={bormoSpeaker} config={config} closePhrases={rest.closePhrases}
+                   currentSection={currentLesson} onPreviousClick={onPreviousClick} onNextClick={onNextClick}
+                   onRestartClick={onRestartClick} moveOn={moveOn}/>
         }/>
         <Route path={ROUTES.CONFIG} render={() =>
           <BormoConfig

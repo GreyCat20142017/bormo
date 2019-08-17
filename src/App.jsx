@@ -4,14 +4,10 @@ import axios from 'axios';
 import {debounce} from 'lodash';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Paper from '@material-ui/core/Paper';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 import {withStyles} from '@material-ui/core/styles';
-
-import BormoFooter from './components/footer/BormoFooter';
 import BormoModal from './components/modal/BormoModal';
-import DataSourceSelector from './components/DataSourceSelector';
 import Loader from './components/Loader';
 import SpeakerVoice from './SpeakerVoice';
 import MainTheme from './MainTheme';
@@ -21,8 +17,8 @@ import {AppRoutes} from './appparts/AppRoutes';
 import {AppHeader} from './appparts/AppHeader';
 import {AppDrawer} from './appparts/AppDrawer';
 
-import {HOTKEY_REDIRECTS, ROUTES, ROUTES_ORDER, SWITCHABLE_ROUTES} from './routes';
-import {getInitialState, getStatusText, getValueArrayFromObject} from './functions';
+import {HOTKEY_REDIRECTS, ROUTES, ROUTES_ORDER} from './routes';
+import {getInitialState, getValueArrayFromObject} from './functions';
 import {
   API_BRANCHES,
   BORMO_PATH,
@@ -37,8 +33,10 @@ import {
 } from './constants';
 
 import {styles} from './App.css';
+import {AppFooter} from './appparts/AppFooter';
 
-const getCourseParams = (isNotBormo) => (isNotBormo ?
+
+const getCourseParams = () => (window.location.pathname === ROUTES.PHRASES ?
   [API_BRANCHES.PHRASES, PHRASES_PATH, true] :
   [API_BRANCHES.COURSES, COURSES_PATH, false]);
 
@@ -52,7 +50,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = getInitialState(MainTheme.neutral, (this.props.location.pathname === ROUTES.PHRASES), (this.props.location.pathname === ROUTES.CONFIG));
+    this.state = getInitialState(MainTheme.neutral, (window.location.pathname === ROUTES.PHRASES), (window.location.pathname === ROUTES.CONFIG));
     this.bormoSpeaker = new SpeakerVoice(this.state.soundMuted, this.state.voiceConfig);
     this.onDebouncedLessonChange = debounce(this.onDebouncedLessonChange.bind(this), DEBOUNCE_INTERVAL);
   }
@@ -83,7 +81,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    this.refineAsideContent(this.props.location.pathname, true);
+    this.refineAsideContent(window.location.pathname, true);
     this.unlisten = this.props.history.listen((location, action) => {
       this.refineAsideContent(location);
     });
@@ -298,7 +296,6 @@ class App extends React.Component {
       currentMode, currentCourse, currentLesson, lessons, courses, currentTheme, mobileOpen,
       isModalOpen, isNotBormo, config, lastLesson
     } = this.state;
-    const hideFooter = SWITCHABLE_ROUTES.filter(item => item !== ROUTES.MAIN).indexOf(location.pathname) !== -1;
 
     return (
       <React.Fragment>
@@ -321,21 +318,15 @@ class App extends React.Component {
 
             <AppRoutes {...this.props} {...this.state} bormoSpeaker={this.bormoSpeaker} config={config}
                        onNextClick={this.onNextClick} onPreviousClick={this.onPreviousClick}
-                       onRestartClick={this.onRestartClick} moveOn={this.moveOn}
-                       closeConfig={this.closeConfig} onConfigChange={this.onConfigChange}
-                       onThemeSelect={this.onThemeSelect}/>
+                       onRestartClick={this.onRestartClick} onThemeSelect={this.onThemeSelect}
+                       closeConfig={this.closeConfig} onConfigChange={this.onConfigChange}/>
 
-            {hideFooter || isNotBormo ?
-              <DataSourceSelector onSelectDataSource={this.onSelectDataSource} fixed={true}/> :
-              <Paper className={classes.paperFooter}>
-                <BormoFooter onThemeSelect={this.onThemeSelect} currentTheme={currentTheme} themes={themes}
-                             statusText={getStatusText(location.pathname, currentCourse, currentLesson)}
-                             onPreviousClick={this.onPreviousClick} onNextClick={this.onNextClick}
-                             onSearchClick={this.onSearchClick} onRestartClick={this.onRestartClick}
-                             onSelectDataSource={this.onSelectDataSource}/>
+            <AppFooter classes={classes} isNotBormo={isNotBormo} currentRoute={location.pathname} themes={themes}
+                       currentTheme={currentTheme} currentCourse={currentCourse} currentLesson={currentLesson}
+                       onThemeSelect={this.onThemeSelect} onSelectDataSource={this.onSelectDataSource}
+                       onNextClick={this.onNextClick} onPreviousClick={this.onPreviousClick}
+                       onRestartClick={this.onRestartClick}/>
 
-              </Paper>
-            }
           </div>
 
           <BormoModal

@@ -74,14 +74,15 @@ class BormoHeader extends Component {
           </Link>
           <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
           <Divider/>
-          <Link className={classes.navItem} to={ROUTES.PHRASES} onClick={this.onMenuClose}>
-            <MenuItem title='Дополнительный режим Фразы'>Фразы</MenuItem>
-          </Link>
           <Link className={classes.navItem} to={ROUTES.SEARCH} onClick={this.onMenuClose}>
             <MenuItem title='Поиск c возможностью добавления данных'>Поиск (БД || Skyeng)</MenuItem>
           </Link>
           <Link className={classes.navItem} to={ROUTES.SKYENG} onClick={this.onMenuClose}>
             <MenuItem title='Поиск в Skyeng с полными результатами'>Поиск Skyeng</MenuItem>
+          </Link>
+          <Divider/>
+          <Link className={classes.navItem} to={ROUTES.PHRASES} onClick={this.onMenuClose}>
+            <MenuItem title='Дополнительный режим Фразы'>Фразы</MenuItem>
           </Link>
         </Menu>
       </div>

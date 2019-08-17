@@ -8,16 +8,17 @@ import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
 
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
-import {TOOLBAR_TYPES} from '../../constants';
+import {KEY_CODES, TOOLBAR_TYPES} from '../../constants';
 import {isValidIndex, getSortedWords} from '../../functions';
 import ContentMissingMessage from '../../components/ContentMissingMessage';
+import bormoWrapper from '../../hoc/bormoWrapper';
 
 import {styles} from './Phrases.css.js';
 
 const getChangedAmount = (wordsContent, wordsAmount, result, operand) => {
-  const words = result.split(' ');
+  const words = result.split(' ').map(item => item.toLowerCase());
   words.forEach((word, ind) => {
-    let index = wordsContent.indexOf(word.trim());
+    let index = wordsContent.indexOf(word.trim().toLowerCase());
     if (index !== -1) {
       wordsAmount[index] = wordsAmount[index] + operand;
     }
@@ -43,7 +44,7 @@ const getObjectValuesByKeyArray = (sourceObject, keysArray) => (
   keysArray.map(key => sourceObject.hasOwnProperty(key) ? sourceObject[key] : 0)
 );
 
-const getPhrasesInitialState = ({content, currentSection }) => {
+const getPhrasesInitialState = ({content, currentSection}) => {
   const wordsObject = dataTransform(content);
   const shuffledWords = getSortedWords(Object.keys(wordsObject));
   return ({
@@ -61,7 +62,7 @@ const getPhrasesInitialState = ({content, currentSection }) => {
 
 class Phrases extends Component {
 
-   constructor(props) {
+  constructor(props) {
     super(props);
     this.state = getPhrasesInitialState(props);
     this.bormoSpeaker = this.props.bormoSpeaker;
@@ -108,14 +109,10 @@ class Phrases extends Component {
           this.onSwitchMouseKeyboard();
           break;
         }
-        case 'r':
-        case 'к': {
-          evt.preventDefault();
-          this.onRestart();
-          break;
-        }
         default:
       }
+    } else if (evt.keyCode === KEY_CODES.ENTER && !this.state.keyboardMode) {
+      this.onCheckCorrectness(evt, true);
     }
   };
 
@@ -132,20 +129,25 @@ class Phrases extends Component {
   };
 
   onHint = () => {
-    const {currentIndex, data, errorCount} = this.state;
+    const {currentIndex, data, errorCount, result, keyboardMode, wordsAmount, wordsContent} = this.state;
+    if (!keyboardMode && result.trim() !== '') {
+      const newAmount = getChangedAmount(wordsContent, wordsAmount, result, +1);
+      this.setState(() => ({wordsAmount: newAmount}));
+    }
     this.setState({
       result: data[currentIndex].english,
       errorCount: errorCount + 1
     });
   };
 
-  onCheckCorrectness = (evt) => {
+  onCheckCorrectness = (evt, wasHint = false) => {
     const {currentIndex, data, result, okCount, errorCount, keyboardMode, wordsAmount, wordsContent} = this.state;
     evt.preventDefault();
+
     if (data[currentIndex].english.toLowerCase().trim() === result.toLowerCase().trim()) {
 
       const nextIndex = isValidIndex(currentIndex + 1, data) ? currentIndex + 1 : 0;
-      const newAmount = keyboardMode ? getChangedAmount(wordsContent, wordsAmount, result, -1) : wordsAmount;
+      const newAmount = (keyboardMode || wasHint) ? getChangedAmount(wordsContent, wordsAmount, result, -1) : wordsAmount;
       this.bormoSpeaker.speak(data[currentIndex].english);
       this.setState({
         currentIndex: nextIndex,
@@ -154,9 +156,12 @@ class Phrases extends Component {
         wasError: false,
         wordsAmount: newAmount
       });
-
+      console.log(okCount, newAmount, this.props.config.instantNextMode);
+      if (this.props.config.instantNextMode && (newAmount.filter(item => item !== 0).length === 0)) {
+        this.props.onNextClick();
+      }
     } else {
-      const newAmount = keyboardMode ? wordsAmount : getChangedAmount(wordsContent, wordsAmount, result, +1);
+      const newAmount = (keyboardMode || wasHint) ? wordsAmount : getChangedAmount(wordsContent, wordsAmount, result, +1);
       this.setState({
         errorCount: errorCount + 1,
         wasError: true,
@@ -199,71 +204,70 @@ class Phrases extends Component {
     const isFinished = (okCount === data.length);
 
     if (data.length > 0) {
-    return (
-      <Fragment>
-        <ul className={classes.wrapper}>
-          {wordsContent.map((item, ind) =>
-            (
-              <li key={ind}>
-                <Fragment>
-                  {keyboardMode ? null :
-                    <Badge className={classes.badge} color='secondary' badgeContent={wordsAmount[ind]}>
-                      <span></span>
-                    </Badge>
-                  }
-                  <Button key={ind} variant='contained' color='primary' className={classes.button}
-                          disabled={(!isValidIndex(ind, wordsAmount) || wordsAmount[ind] <= 0)}
-                          onClick={() => this.onWordClick(ind)}>
-                    {item}
-                  </Button>
-                </Fragment>
-              </li>
-            ))}
-        </ul>
+      return (
+        <Fragment>
+          <ul className={classes.wrapper}>
+            {wordsContent.map((item, ind) =>
+              (
+                <li key={ind}>
+                  <Fragment>
+                    {keyboardMode ? null :
+                      <Badge className={classes.badge} color='secondary' badgeContent={wordsAmount[ind]}>
+                        <span></span>
+                      </Badge>
+                    }
+                    <Button key={ind} variant='contained' color='primary' className={classes.button}
+                            disabled={(!isValidIndex(ind, wordsAmount) || wordsAmount[ind] <= 0)}
+                            onClick={() => this.onWordClick(ind)}>
+                      {item}
+                    </Button>
+                  </Fragment>
+                </li>
+              ))}
+          </ul>
 
 
-
-        <Paper className={classes.paper}>
-          <Typography variant='h5' className={classes.typo}>
-            {isFinished ?
-              `Статистика. Всего фраз: ${okCount} , число ошибок: ${errorCount}` :
-              getTranslatedPhrase(data, currentIndex)
-            }
-          </Typography>
-        </Paper>
-
-        <Paper className={classes.paper}>
-          {keyboardMode ?
-            <form className={classes.form} onSubmit={this.onCheckCorrectness}>
-              <TextField
-                required
-                autoFocus={true}
-                id='result'
-                label={wasError ? 'Нужно исправить ошибку:' : 'Перевод:'}
-                value={result}
-                fullWidth
-                margin='normal'
-                onChange={this.onTranslateChange}
-              />
-            </form>
-            :
+          <Paper className={classes.paper}>
             <Typography variant='h5' className={classes.typo}>
-              {result ? result : '?'}
+              {isFinished ?
+                `Статистика. Всего фраз: ${okCount} , число ошибок: ${errorCount}` :
+                getTranslatedPhrase(data, currentIndex)
+              }
             </Typography>
-          }
-        </Paper>
+          </Paper>
 
-        <SimpleToolbar toolbar={TOOLBAR_TYPES.PHRASES} className={classes.toolbar}
-                       onRestart={this.onRestart} onSwitchMouseKeyboard={this.onSwitchMouseKeyboard}
-                       onCheckCorrectness={this.onCheckCorrectness} onCancel={this.onCancel}/>
+          <Paper className={classes.paper}>
+            {keyboardMode ?
+              <form className={classes.form} onSubmit={this.onCheckCorrectness}>
+                <TextField
+                  required
+                  autoFocus={true}
+                  id='result'
+                  label={wasError ? 'Нужно исправить ошибку:' : 'Перевод:'}
+                  value={result}
+                  fullWidth
+                  margin='normal'
+                  onChange={this.onTranslateChange}
+                />
+              </form>
+              :
+              <Typography variant='h5' className={classes.typo}>
+                {result ? result : '?'}
+              </Typography>
+            }
+          </Paper>
 
-      </Fragment>
-    )
+          <SimpleToolbar toolbar={TOOLBAR_TYPES.PHRASES} className={classes.toolbar}
+                         onRestart={this.onRestart} onSwitchMouseKeyboard={this.onSwitchMouseKeyboard}
+                         onCheckCorrectness={this.onCheckCorrectness} onCancel={this.onCancel}/>
+
+        </Fragment>
+      );
     } else {
-      return <ContentMissingMessage/>
+      return <ContentMissingMessage/>;
     }
   }
 }
 
-export default withStyles(styles)(Phrases);
+export default withStyles(styles)(bormoWrapper(Phrases));
 

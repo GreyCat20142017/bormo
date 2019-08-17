@@ -1,4 +1,4 @@
-import {DRAWER_WIDTH} from "./constants";
+import {DRAWER_WIDTH} from './constants';
 
 const styles = theme => ({
   root: {
@@ -37,6 +37,15 @@ const styles = theme => ({
       minHeight: '90vh'
     }
   },
+  status: {
+    position: 'fixed',
+    bottom: '10px',
+    left: '20px',
+    [theme.breakpoints.up('sm')]: {
+      left: '280px'
+    }
+  }
+
 });
 
 export {styles};
