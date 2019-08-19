@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2ad97c9c7b788f9ef0ba8f0f8a3a483b",
+    "revision": "7feb920917552173e4dba5f1fd9d6844",
     "url": "/bormo/index.html"
   },
   {
-    "revision": "7c37293b8af9de272427",
+    "revision": "2a2965fc06d8a60daf25",
     "url": "/bormo/static/css/main.4b5b0634.chunk.css"
   },
   {
-    "revision": "d70b94d915b699c62a5e",
-    "url": "/bormo/static/js/2.827a0cf8.chunk.js"
+    "revision": "fb88b7d07b9e99ab763a",
+    "url": "/bormo/static/js/2.fce9459f.chunk.js"
   },
   {
-    "revision": "7c37293b8af9de272427",
-    "url": "/bormo/static/js/main.747d33ce.chunk.js"
+    "revision": "2a2965fc06d8a60daf25",
+    "url": "/bormo/static/js/main.8709b169.chunk.js"
   },
   {
     "revision": "a6b476944d45d0f77531",

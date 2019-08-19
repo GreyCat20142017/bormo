@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/bormo/static/css/main.4b5b0634.chunk.css",
-    "main.js": "/bormo/static/js/main.747d33ce.chunk.js",
-    "main.js.map": "/bormo/static/js/main.747d33ce.chunk.js.map",
+    "main.js": "/bormo/static/js/main.8709b169.chunk.js",
+    "main.js.map": "/bormo/static/js/main.8709b169.chunk.js.map",
     "runtime~main.js": "/bormo/static/js/runtime~main.cdb26e6f.js",
     "runtime~main.js.map": "/bormo/static/js/runtime~main.cdb26e6f.js.map",
-    "static/js/2.827a0cf8.chunk.js": "/bormo/static/js/2.827a0cf8.chunk.js",
-    "static/js/2.827a0cf8.chunk.js.map": "/bormo/static/js/2.827a0cf8.chunk.js.map",
+    "static/js/2.fce9459f.chunk.js": "/bormo/static/js/2.fce9459f.chunk.js",
+    "static/js/2.fce9459f.chunk.js.map": "/bormo/static/js/2.fce9459f.chunk.js.map",
     "index.html": "/bormo/index.html",
-    "precache-manifest.8eb4c6e5648214ad70b72a7ccfdbfe83.js": "/bormo/precache-manifest.8eb4c6e5648214ad70b72a7ccfdbfe83.js",
+    "precache-manifest.8b0c32715c2473fcb4c331c42b1bac4f.js": "/bormo/precache-manifest.8b0c32715c2473fcb4c331c42b1bac4f.js",
     "service-worker.js": "/bormo/service-worker.js",
     "static/css/main.4b5b0634.chunk.css.map": "/bormo/static/css/main.4b5b0634.chunk.css.map"
   }

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/bormo/precache-manifest.8eb4c6e5648214ad70b72a7ccfdbfe83.js"
+  "/bormo/precache-manifest.8b0c32715c2473fcb4c331c42b1bac4f.js"
 );
 
 self.addEventListener('message', (event) => {
