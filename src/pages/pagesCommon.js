@@ -82,7 +82,8 @@ export const getModeInitialState = ({content, controlMode}) => (
     content: getShuffledContent(content, controlMode),
     errorCount: 0,
     okCount: 0,
-    wasError: false
+    wasError: false,
+    showSnack: false
   })
 );
 

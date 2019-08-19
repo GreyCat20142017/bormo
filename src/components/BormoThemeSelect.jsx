@@ -6,7 +6,6 @@ import Select from '@material-ui/core/Select';
 
 import {withStyles} from '@material-ui/core/styles';
 
-
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -36,12 +35,10 @@ const styles = theme => ({
       border: theme.palette.secondary.main
     }
   },
-  dark: {
-
-  }
+  dark: {}
 });
 
-class Bred extends React.Component {
+class BormoThemeSelect extends React.Component {
 
   constructor(props) {
     super(props);
@@ -53,6 +50,10 @@ class Bred extends React.Component {
     this.setState({[evt.target.name]: newTheme});
     this.props.onThemeSelect(newTheme);
   };
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    this.setState({choice: nextProps.currentTheme.themeKey});
+  }
 
   render() {
     const {classes, themes, fromConfig = false, light = false} = this.props;
@@ -66,8 +67,7 @@ class Bred extends React.Component {
                   inputProps={{
                     name: 'choice'
                   }}
-                  title='Выбор темы интерфейса'
-          >
+                  title='Выбор темы интерфейса'>
             {themes.length === 0 ? null : themes.map(el =>
               <MenuItem className={classes.item} value={el.themeKey} key={el.themeKey}
                         title={el.themeDescription}>{el.themeName}</MenuItem>
@@ -79,4 +79,4 @@ class Bred extends React.Component {
   }
 }
 
-export default withStyles(styles)(Bred);
+export default withStyles(styles)(BormoThemeSelect);

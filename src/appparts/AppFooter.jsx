@@ -9,9 +9,10 @@ import {ROUTES, SWITCHABLE_ROUTES} from '../routes';
 import {getStatusText} from '../functions';
 
 
-const StatusNotBormo = ({classes, statusText, currentRoute}) => (
-  // currentRoute === ROUTES.PHRASES ? <Typography variant='caption' color='secondary' classes>{statusText}</Typography> : null
-  <Typography variant='caption' color='secondary' className={classes.status}>{statusText}</Typography>
+const StatusNotBormo = ({classes, statusText}) => (
+  <Typography variant='caption' color='secondary'  className={classes.status}>
+    <span className={classes.underlined}>{statusText.mode}</span>  <span>{statusText.details}</span>
+  </Typography>
 );
 
 export const AppFooter = ({

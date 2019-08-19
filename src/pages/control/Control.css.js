@@ -56,6 +56,10 @@ const styles = theme => ({
   colorized: {
     backgroundColor: 'rgb(232, 232, 232)'
   },
+  hint: {
+    backgroundColor: theme.palette.error.main,
+    color: 'white'
+  },
   currentWord: {
     width: '80%',
     margin: '20px auto',
@@ -81,7 +85,6 @@ const styles = theme => ({
       padding: 0
     }
   },
-
   wrapper: {
     display: 'flex',
     justifyContent: 'space-around',
@@ -91,11 +94,14 @@ const styles = theme => ({
       flexWrap: 'wrap'
     }
   },
-
   badge: {
     padding: `0 ${theme.spacing.unit}px`,
     textTransform: 'uppercase'
   },
+  snack: {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText
+  }
 
 });
 

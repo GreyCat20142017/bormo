@@ -117,7 +117,7 @@ class SearchTable extends Component {
             </IconButton>
             <TextField
               id='joined'
-              title={'Заготовка для добавления в БД'}
+              title={'Заготовка для добавления в БД : ' + joinedTranslate}
               value={joinedTranslate}
               fullWidth
               margin='normal'

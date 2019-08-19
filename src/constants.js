@@ -39,6 +39,7 @@ export const VOICE_TEST_PHRASE = 'This is a voice test';
 
 export const DRAWER_WIDTH = 260;
 export const DEBOUNCE_INTERVAL = 222;
+export const DELAY_TIMEOUT  = 1500;
 
 const url = window.location.origin;
 export const SERVER_ROOT = (url.match(/github\.io/gi)) ? '/bormo/' : '/';

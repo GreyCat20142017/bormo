@@ -18,7 +18,7 @@ import BormoThemeSelect from '../BormoThemeSelect';
 import DataSourceSelector from '../DataSourceSelector';
 import {styles} from './BormoFooter.css.js';
 
-const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectDataSource, ...rest}) => (
+const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectDataSource, currentTheme, ...rest}) => (
   <AppBar position='fixed' color='primary' className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
       <NavLink className={classes.searchButton} to={ROUTES.SEARCH}
@@ -28,10 +28,12 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectData
       <DataSourceSelector onSelectDataSource={onSelectDataSource}/>
 
       <Hidden mdDown implementation='css'>
-        <BormoThemeSelect {...rest} light={true}/>
+        <BormoThemeSelect currentTheme={currentTheme} {...rest} light={true}/>
       </Hidden>
 
-      <Typography className={classes.status} variant='caption' color='secondary'>{rest.statusText}</Typography>
+      <Typography className={classes.status} variant='caption' color='secondary'>
+        {rest.statusText.mode + ' ' + rest.statusText.details}
+      </Typography>
 
       <div className={classes.fabButtons}>
         <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок (Alt+P) - Previous'

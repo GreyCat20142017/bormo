@@ -8,10 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
 
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
-import {KEY_CODES, TOOLBAR_TYPES} from '../../constants';
-import {isValidIndex, getSortedWords} from '../../functions';
 import ContentMissingMessage from '../../components/ContentMissingMessage';
 import bormoWrapper from '../../hoc/bormoWrapper';
+import {DELAY_TIMEOUT, KEY_CODES, TOOLBAR_TYPES} from '../../constants';
+import {isValidIndex, getSortedWords} from '../../functions';
 
 import {styles} from './Phrases.css.js';
 
@@ -56,7 +56,9 @@ const getPhrasesInitialState = ({content, currentSection}) => {
     errorCount: 0,
     okCount: 0,
     wasError: false,
-    keyboardMode: true
+    keyboardMode: true,
+    showSnackBar: false,
+    hintWasTaken: false
   });
 };
 
@@ -112,7 +114,7 @@ class Phrases extends Component {
         default:
       }
     } else if (evt.keyCode === KEY_CODES.ENTER && !this.state.keyboardMode) {
-      this.onCheckCorrectness(evt, true);
+      this.onCheckCorrectness(evt, this.state.hintWasTaken);
     }
   };
 
@@ -136,7 +138,8 @@ class Phrases extends Component {
     }
     this.setState({
       result: data[currentIndex].english,
-      errorCount: errorCount + 1
+      errorCount: errorCount + 1,
+      hintWasTaken: true
     });
   };
 
@@ -145,20 +148,21 @@ class Phrases extends Component {
     evt.preventDefault();
 
     if (data[currentIndex].english.toLowerCase().trim() === result.toLowerCase().trim()) {
-
       const nextIndex = isValidIndex(currentIndex + 1, data) ? currentIndex + 1 : 0;
       const newAmount = (keyboardMode || wasHint) ? getChangedAmount(wordsContent, wordsAmount, result, -1) : wordsAmount;
+      const needGoNext = (this.props.config.instantNextMode && (newAmount.filter(item => item !== 0).length === 0));
       this.bormoSpeaker.speak(data[currentIndex].english);
       this.setState({
         currentIndex: nextIndex,
         result: '',
         okCount: okCount + 1,
         wasError: false,
-        wordsAmount: newAmount
+        wordsAmount: newAmount,
+        showSnack: needGoNext,
+        hintWasTaken: false
       });
-      console.log(okCount, newAmount, this.props.config.instantNextMode);
-      if (this.props.config.instantNextMode && (newAmount.filter(item => item !== 0).length === 0)) {
-        this.props.onNextClick();
+      if (needGoNext) {
+        setTimeout(() => this.props.onNextClick(), DELAY_TIMEOUT);
       }
     } else {
       const newAmount = (keyboardMode || wasHint) ? wordsAmount : getChangedAmount(wordsContent, wordsAmount, result, +1);
@@ -166,7 +170,8 @@ class Phrases extends Component {
         errorCount: errorCount + 1,
         wasError: true,
         result: keyboardMode ? result : '',
-        wordsAmount: newAmount
+        wordsAmount: newAmount,
+        hintWasTaken: false
       });
     }
   };
@@ -201,7 +206,8 @@ class Phrases extends Component {
   render() {
     const {wordsContent, wordsAmount, currentIndex, data, result, keyboardMode, wasError, okCount, errorCount} = this.state;
     const {classes} = this.props;
-    const isFinished = (okCount === data.length);
+    const isFinished = (wordsAmount.filter(item => item !== 0).length === 0);
+    const finalMessage = `Статистика. Всего фраз: ${okCount} , число ошибок: ${errorCount}`;
 
     if (data.length > 0) {
       return (
@@ -228,9 +234,9 @@ class Phrases extends Component {
 
 
           <Paper className={classes.paper}>
-            <Typography variant='h5' className={classes.typo}>
+            <Typography variant='h5' className={classes.typo} color={isFinished ? 'error' : 'inherit'}>
               {isFinished ?
-                `Статистика. Всего фраз: ${okCount} , число ошибок: ${errorCount}` :
+                finalMessage :
                 getTranslatedPhrase(data, currentIndex)
               }
             </Typography>

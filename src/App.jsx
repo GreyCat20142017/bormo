@@ -205,6 +205,7 @@ class App extends React.Component {
       this.getCoursesData(...params, changedConfig.APIkey);
     }
     this.bormoSpeaker.mute(changedConfig.soundMuted);
+
   };
 
   onCourseChange = (course, ind) => {
@@ -247,7 +248,7 @@ class App extends React.Component {
   }
 
   onThemeSelect = (themeKey) => {
-    this.setState({currentTheme: MainTheme[themeKey]});
+    this.setState({currentTheme: Object.assign({}, MainTheme[themeKey])});
   };
 
   onDrawerToggle = () => {
@@ -276,7 +277,7 @@ class App extends React.Component {
   };
 
   moveOn = () => {
-    const ind = ROUTES_ORDER.indexOf(this.props.location.pathname);
+    const ind = ROUTES_ORDER.indexOf(window.location.pathname);
     if ((ind !== -1) && (ind < ROUTES_ORDER.length - 1)) {
       this.props.history.push(ROUTES_ORDER[ind + 1]);
     } else {
@@ -317,7 +318,7 @@ class App extends React.Component {
                        openConfig={this.openConfig} closeConfig={this.closeConfig} onThemeSelect={this.onThemeSelect}/>
 
             <AppRoutes {...this.props} {...this.state} bormoSpeaker={this.bormoSpeaker} config={config}
-                       onNextClick={this.onNextClick} onPreviousClick={this.onPreviousClick}
+                       onNextClick={this.onNextClick} onPreviousClick={this.onPreviousClick} moveOn={this.moveOn}
                        onRestartClick={this.onRestartClick} onThemeSelect={this.onThemeSelect}
                        closeConfig={this.closeConfig} onConfigChange={this.onConfigChange}/>
 

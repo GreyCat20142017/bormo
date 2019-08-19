@@ -72,5 +72,5 @@ export const getStatusText = (route, currentCourse, currentLesson) => {
   const mode  = ROUTES_TITLES[route] || '';
   const details = [ROUTES.SEARCH, ROUTES.SKYENG, ROUTES.CONFIG].indexOf(route) !== -1 ? '' :
      ((currentCourse) ? ': ' + currentCourse.toString().toUpperCase() : '') + ((currentLesson) ?  '-' + currentLesson : '');
-  return mode + details;
+  return {mode, details};
 }

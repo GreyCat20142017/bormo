@@ -26,7 +26,7 @@ import {getRound} from '../../functions';
 import {styles} from './BormoConfig.css.js';
 
 const getConfigState = (props, currentVoice) => ({
-  ...props.config, ...props.voiceConfig, soundMuted: props.soundMuted, onlyEnglish: props.onlyEnglish,
+  ...props.config, ...props.voiceConfig, soundMuted: props.soundMuted, onlyEnglish: props.onlyEnglish, currentTheme: props.currentTheme,
   APIkey: props.APIkey, currentVoice: currentVoice, testStatus: TEST_STATUSES.UNKNOWN
 });
 
@@ -113,9 +113,9 @@ class BormoConfig extends React.Component {
   saveConfig = () => {
     const {
       instantStart, instantNextMode, countErrorAtPrompt,
-      APIkey, soundMuted
+      APIkey, soundMuted, currentTheme
     } = this.state;
-    const changedConfig = {config: {instantStart, instantNextMode, countErrorAtPrompt}, APIkey, soundMuted};
+    const changedConfig = {config: {instantStart, instantNextMode, countErrorAtPrompt}, APIkey, soundMuted, currentTheme: currentTheme};
     this.props.onConfigChange(Object.assign({}, changedConfig));
   };
 

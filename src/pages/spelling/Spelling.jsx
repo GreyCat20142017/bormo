@@ -1,13 +1,13 @@
 import React, {Component, Fragment} from 'react';
+import classNames from 'classnames';
+
 import Badge from '@material-ui/core/Badge';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
-
 import {withStyles} from '@material-ui/core/styles';
-import classNames from 'classnames';
 
 import {BORMO_STATUS, LANGUAGES, TOOLBAR_TYPES} from '../../constants';
 import {getSpellInitialState} from '../pagesCommon';
@@ -16,8 +16,7 @@ import bormoWrapper from '../../hoc/bormoWrapper';
 
 import {styles} from './Spelling.css';
 
-
-class Control extends Component {
+class Spelling extends Component {
 
   constructor(props) {
     super(props);
@@ -39,7 +38,7 @@ class Control extends Component {
   }
 
   componentWillUpdate(nextProps, nextState, nextContext) {
-    if (this.props.config.instantNextMode && nextState.okCount === nextState.content.length) {
+    if (this.props.config.instantNextMode && nextState.okCount === nextState.content.length && this.state.currentIndex !== 0) {
        this.props.moveOn();
     }
   }
@@ -104,7 +103,7 @@ class Control extends Component {
 
   onHint = () => {
     const {content, currentIndex, errorCount} = this.state;
-    this.setState({translate: content[currentIndex].english, wasError: true, errorCount: errorCount + 1});
+    this.setState(() => ({translate: content[currentIndex].english, wasError: true, errorCount: errorCount + 1}));
   };
 
   onRestart = () => {
@@ -180,4 +179,4 @@ class Control extends Component {
   }
 }
 
-export default withStyles(styles)(bormoWrapper(Control));
+export default withStyles(styles)(bormoWrapper(Spelling));

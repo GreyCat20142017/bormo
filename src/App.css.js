@@ -44,6 +44,9 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       left: '280px'
     }
+  },
+  underlined: {
+    borderBottom: `2px solid ${theme.palette.primary.light}`
   }
 
 });

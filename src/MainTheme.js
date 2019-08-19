@@ -41,7 +41,7 @@ const AmberTheme = createMuiTheme({
   palette: {
     primary: {main: amber[200], light: amber[100], dark: amber[400], contrastText: grey[700]},
     secondary: {main: grey[500], dark: grey[500], contrastText: white},
-    error: {main: amber[700]},
+    error: {main: orange[900]},
   },
   typography: {
     useNextVariants: true,
