@@ -14,14 +14,11 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
     textAlign: 'center',
   },
-  button: {
+  wordButton: {
     paddingLeft: theme.spacing.unit * 4,
     paddingRight: theme.spacing.unit * 4,
     marginRight: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 2,
-    [theme.breakpoints.down('md')]: {
-      marginTop: theme.spacing.unit * 1,
-    }
+    marginTop: theme.spacing.unit * 2
   },
   buttonWrapper: {
     display: 'flex',

@@ -26,8 +26,13 @@ import {getRound} from '../../functions';
 import {styles} from './BormoConfig.css.js';
 
 const getConfigState = (props, currentVoice) => ({
-  ...props.config, ...props.voiceConfig, soundMuted: props.soundMuted, onlyEnglish: props.onlyEnglish, currentTheme: props.currentTheme,
-  APIkey: props.APIkey, currentVoice: currentVoice, testStatus: TEST_STATUSES.UNKNOWN
+  ...props.config, ...props.voiceConfig,
+  soundMuted: props.soundMuted,
+  onlyEnglish: props.onlyEnglish,
+  currentTheme: props.currentTheme,
+  APIkey: props.APIkey,
+  currentVoice: currentVoice,
+  testStatus: TEST_STATUSES.UNKNOWN
 });
 
 class BormoConfig extends React.Component {
@@ -113,9 +118,12 @@ class BormoConfig extends React.Component {
   saveConfig = () => {
     const {
       instantStart, instantNextMode, countErrorAtPrompt,
-      APIkey, soundMuted, currentTheme
+      APIkey, soundMuted, currentTheme, keyboardMode
     } = this.state;
-    const changedConfig = {config: {instantStart, instantNextMode, countErrorAtPrompt}, APIkey, soundMuted, currentTheme: currentTheme};
+    const changedConfig = {
+      config: {instantStart, instantNextMode, countErrorAtPrompt},
+      APIkey, soundMuted, currentTheme: currentTheme, keyboardMode: keyboardMode
+    };
     this.props.onConfigChange(Object.assign({}, changedConfig));
   };
 
@@ -124,7 +132,7 @@ class BormoConfig extends React.Component {
     const {isConfigOpen, classes, currentTheme, themes, onThemeSelect, closeConfig} = this.props;
     const {
       currentVoice, onlyEnglish, pitch, volume, soundMuted, APIkey, testStatus,
-      instantStart, instantNextMode, countErrorAtPrompt
+      instantStart, instantNextMode, countErrorAtPrompt, keyboardMode
     } = this.state;
 
     if (isConfigOpen) {
@@ -139,7 +147,7 @@ class BormoConfig extends React.Component {
             </AppBar>
 
             <CommonConfig classes={classes} onOptionChange={this.onOptionChange}
-                          instantStart={instantStart} instantNextMode={instantNextMode}
+                          instantStart={instantStart} instantNextMode={instantNextMode} keyboardMode={keyboardMode}
                           countErrorAtPrompt={countErrorAtPrompt}/>
 
             <DataConfig classes={classes} APIkey={APIkey} testStatus={testStatus}

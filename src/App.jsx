@@ -8,11 +8,12 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 import {withStyles} from '@material-ui/core/styles';
 import BormoModal from './components/modal/BormoModal';
-import Loader from './components/Loader';
+import Loader from './components/loader/Loader';
 import SpeakerVoice from './SpeakerVoice';
 import MainTheme from './MainTheme';
 
-import {about} from './about';
+import {about, help} from './info';
+
 import {AppRoutes} from './appparts/AppRoutes';
 import {AppHeader} from './appparts/AppHeader';
 import {AppDrawer} from './appparts/AppDrawer';
@@ -24,17 +25,34 @@ import {
   BORMO_PATH,
   COURSES_PATH,
   DATA_SOURCES,
-  DEBOUNCE_INTERVAL,
+  DEBOUNCE_INTERVAL, MODAL_TYPES,
   PHRASES_PATH,
   PHRASES_PER_LESSON,
-  STATUS_OK,
+  STATUS_OK, TEST_COUNT,
   TEST_KEY,
   WORDS_PER_LESSON
 } from './constants';
 
 import {styles} from './App.css';
 import {AppFooter} from './appparts/AppFooter';
+import TextRenderer from './components/TextRenderer';
 
+const getModalContent = (isModalOpen) => {
+  let text = '';
+  switch (isModalOpen) {
+    case MODAL_TYPES.ABOUT: {
+      text = about;
+      break;
+    }
+    case MODAL_TYPES.HELP: {
+      text = help;
+      break;
+    }
+    default:
+      text = '';
+  }
+  return text;
+}
 
 const getCourseParams = () => (window.location.pathname === ROUTES.PHRASES ?
   [API_BRANCHES.PHRASES, PHRASES_PATH, true] :
@@ -129,12 +147,7 @@ class App extends React.Component {
       }
     }
     if (!useAPIData) {
-      if (isNotBormo) {
-        result = [{name: 'test', lastlesson: 3}];
-      } else {
-        res = await axios.get(jsonPath);
-        result = res ? res.data : [];
-      }
+        result = [{name: 'test', lastlesson: TEST_COUNT}];
     }
     this.setState({
       isLoading: false,
@@ -179,12 +192,16 @@ class App extends React.Component {
     });
   };
 
-  openModal = () => {
-    this.setState({isModalOpen: true});
+  openModalAbout = () => {
+    this.setState({isModalOpen: MODAL_TYPES.ABOUT});
+  };
+
+  openModalHelp = () => {
+    this.setState({isModalOpen: MODAL_TYPES.HELP});
   };
 
   closeModal = () => {
-    this.setState({isModalOpen: false});
+    this.setState({isModalOpen: MODAL_TYPES.CLOSED});
   };
 
   openConfig = () => {
@@ -307,7 +324,7 @@ class App extends React.Component {
 
             <AppHeader classes={classes} currentTheme={currentTheme} themes={themes}
                        onDrawerToggle={this.onDrawerToggle}
-                       openModal={this.openModal} closeModal={this.closeModal}
+                       openModal={this.openModalAbout} closeModal={this.closeModal}
                        openConfig={this.openConfig} closeConfig={this.closeConfig} onThemeSelect={this.onThemeSelect}/>
 
             <AppDrawer classes={classes} currentTheme={currentTheme} themes={themes} lastLesson={lastLesson}
@@ -325,6 +342,7 @@ class App extends React.Component {
             <AppFooter classes={classes} isNotBormo={isNotBormo} currentRoute={location.pathname} themes={themes}
                        currentTheme={currentTheme} currentCourse={currentCourse} currentLesson={currentLesson}
                        onThemeSelect={this.onThemeSelect} onSelectDataSource={this.onSelectDataSource}
+                       openModal={this.openModalHelp} closeModal={this.closeModal}
                        onNextClick={this.onNextClick} onPreviousClick={this.onPreviousClick}
                        onRestartClick={this.onRestartClick}/>
 
@@ -332,8 +350,8 @@ class App extends React.Component {
 
           <BormoModal
             title={'Бормотунчик - 2019'}
-            text={about}
-            isModalOpen={isModalOpen}
+            innerComponent={<TextRenderer text={getModalContent(isModalOpen)}/>}
+            isModalOpen={(isModalOpen !== MODAL_TYPES.CLOSED)}
             closeModal={this.closeModal}/>
 
         </MuiThemeProvider>

@@ -41,7 +41,6 @@ const SpellingStopped = (props) => (
   </Paper>
 );
 
-
 const PhrasesToolbar = (props) => (
   <Paper className={props.classes.toolbar}>
     <IconButton aria-label='Проверить' onClick={props.onCheckCorrectness} title='Проверить (Alt+E) - Error checking'>
@@ -50,7 +49,7 @@ const PhrasesToolbar = (props) => (
     <IconButton aria-label='Подсказка' onClick={props.onHint} title='Подсказка (Alt+H) - Hint'>
       <InsertCommentIcon/>
     </IconButton>
-    <IconButton aria-label='Сбросить' onClick={props.onCancel} title='Сбросить (Alt+S) - reSet current)'>
+    <IconButton aria-label='Сбросить' onClick={props.onCancel} title='Сбросить (Alt+D) - Discard current)'>
       <SettingsBackIcon/>
     </IconButton>
     <IconButton aria-label='Переключение клавиатура-мышь' onClick={props.onSwitchMouseKeyboard}
@@ -78,6 +77,5 @@ const SimpleToolbar = (props) => {
       return null;
   }
 };
-
 
 export default withStyles(styles)(SimpleToolbar);

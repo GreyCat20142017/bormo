@@ -13,6 +13,7 @@ export const PHRASES_PATH = 'data/phrases.json';
 export const PAGE_LIMIT = 9;
 export const ROW_LIMIT = 5;
 
+export const TEST_COUNT = 10;
 //WORDS_PER_LESSON и PHRASES_PER_LESSON Изменять только одновременно с константами в bormob и bormophp !!!
 export const WORDS_PER_LESSON = 20;
 export const PHRASES_PER_LESSON = 7;
@@ -144,4 +145,10 @@ export const NAMES_RU = {
   translationNote: 'примечание',
   transcription: 'транскрипция',
   soundUrl: 'звук'
+};
+
+export const MODAL_TYPES = {
+  CLOSED: null,
+  ABOUT: 'about',
+  HELP: ' help'
 };

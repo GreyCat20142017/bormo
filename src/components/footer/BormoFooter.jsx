@@ -4,7 +4,6 @@ import {NavLink} from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Hidden from '@material-ui/core/Hidden';
-import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
@@ -13,12 +12,16 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SearchIcon from '@material-ui/icons/Search';
 import {withStyles} from '@material-ui/core/styles';
 
-import {ROUTES} from '../../routes';
 import BormoThemeSelect from '../BormoThemeSelect';
 import DataSourceSelector from '../DataSourceSelector';
-import {styles} from './BormoFooter.css.js';
+import StatusText from '../StatusText';
+import {ROUTES} from '../../routes';
+import {styles} from './BormoFooter.css';
 
-const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectDataSource, currentTheme, ...rest}) => (
+const BormoFooter = ({
+                       classes, theme, onNextClick, onPreviousClick, onSelectDataSource, openModal,
+                       currentTheme, ...rest
+                     }) => (
   <AppBar position='fixed' color='primary' className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
       <NavLink className={classes.searchButton} to={ROUTES.SEARCH}
@@ -31,9 +34,7 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectData
         <BormoThemeSelect currentTheme={currentTheme} {...rest} light={true}/>
       </Hidden>
 
-      <Typography className={classes.status} variant='caption' color='secondary'>
-        {rest.statusText.mode + ' ' + rest.statusText.details}
-      </Typography>
+      <StatusText classes={classes} statusText={rest.statusText}/>
 
       <div className={classes.fabButtons}>
         <Fab color='secondary' aria-label='Предыдущий урок' title='Предыдущий урок (Alt+P) - Previous'
@@ -44,7 +45,7 @@ const BormoFooter = ({classes, theme, onNextClick, onPreviousClick, onSelectData
         <Fab color='primary' aria-label='Справка'
              title='Подробная справка.  Коротко -  Следующий режим: (Alt+X) - neXt, Рестарт: (Alt+R) - Restart'
              className={classes.fabButton}
-             size='small'>
+             size='small' onClick={openModal}>
           <HelpOutlineIcon/>
         </Fab>
         <Fab color='secondary' aria-label='Следующий урок' title='Cледующий урок (ALt+N) - Next'

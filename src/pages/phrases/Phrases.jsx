@@ -44,7 +44,7 @@ const getObjectValuesByKeyArray = (sourceObject, keysArray) => (
   keysArray.map(key => sourceObject.hasOwnProperty(key) ? sourceObject[key] : 0)
 );
 
-const getPhrasesInitialState = ({content, currentSection}) => {
+const getPhrasesInitialState = ({content, keyboardMode = false}) => {
   const wordsObject = dataTransform(content);
   const shuffledWords = getSortedWords(Object.keys(wordsObject));
   return ({
@@ -56,7 +56,7 @@ const getPhrasesInitialState = ({content, currentSection}) => {
     errorCount: 0,
     okCount: 0,
     wasError: false,
-    keyboardMode: true,
+    keyboardMode: keyboardMode,
     showSnackBar: false,
     hintWasTaken: false
   });
@@ -90,11 +90,11 @@ class Phrases extends Component {
         case 'e':
         case 'у': {
           evt.preventDefault();
-          this.onCheckCorrectness();
+          this.onCheckCorrectness(evt, false);
           break;
         }
-        case 's':
-        case 'ы': {
+        case 'd':
+        case 'в': {
           evt.preventDefault();
           this.onCancel();
           break;
@@ -146,7 +146,6 @@ class Phrases extends Component {
   onCheckCorrectness = (evt, wasHint = false) => {
     const {currentIndex, data, result, okCount, errorCount, keyboardMode, wordsAmount, wordsContent} = this.state;
     evt.preventDefault();
-
     if (data[currentIndex].english.toLowerCase().trim() === result.toLowerCase().trim()) {
       const nextIndex = isValidIndex(currentIndex + 1, data) ? currentIndex + 1 : 0;
       const newAmount = (keyboardMode || wasHint) ? getChangedAmount(wordsContent, wordsAmount, result, -1) : wordsAmount;
@@ -222,7 +221,7 @@ class Phrases extends Component {
                         <span></span>
                       </Badge>
                     }
-                    <Button key={ind} variant='contained' color='primary' className={classes.button}
+                    <Button key={ind} variant='contained' color='primary' className={classes.wordButton} size={'small'}
                             disabled={(!isValidIndex(ind, wordsAmount) || wordsAmount[ind] <= 0)}
                             onClick={() => this.onWordClick(ind)}>
                       {item}

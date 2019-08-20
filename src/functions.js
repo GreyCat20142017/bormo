@@ -1,4 +1,4 @@
-import {DATA_SOURCES} from './constants';
+import {DATA_SOURCES, MODAL_TYPES} from './constants';
 import {ROUTES, ROUTES_TITLES} from './routes';
 
 const getStringCompareResult =  (left, right) => {
@@ -20,7 +20,7 @@ export const getRound = (number, precision) => {
 
 export const getInitialState = (currentTheme, isNotBormo, isConfigOpen = false) => (
   {
-    isModalOpen: false,
+    isModalOpen: MODAL_TYPES.CLOSED,
     isConfigOpen: isConfigOpen,
     isSearchOpen: false,
     currentTheme: currentTheme,
@@ -47,7 +47,8 @@ export const getInitialState = (currentTheme, isNotBormo, isConfigOpen = false) 
       pitch: 1 //0 - 2 step 0.1
     },
     mobileOpen: false,
-    isNotBormo: isNotBormo
+    isNotBormo: isNotBormo,
+    keyboardMode: true
   }
 );
 

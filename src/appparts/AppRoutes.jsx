@@ -1,8 +1,6 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 
-import Typography from '@material-ui/core/Typography';
-
 import Main from '../pages/main/Main';
 import Bormo from '../pages/bormo/Bormo';
 import Control from '../pages/control/Control';
@@ -12,6 +10,8 @@ import SkyengSearch from '../pages/sky/SkyengSearch';
 import Phrases from '../pages/phrases/Phrases';
 import BormoConfig from '../pages/config/BormoConfig';
 import NotFound from '../pages/notfound/NotFound';
+import Loader from '../components/loader/Loader';
+
 import {CONTROL_MODES} from '../constants';
 import {ROUTES} from '../routes';
 
@@ -21,7 +21,7 @@ export const AppRoutes = ({
                           }) => (
   <main className={classes.content}>
     {rest.isLoading ?
-      <Typography variant='caption'>Данные загружаются...</Typography> :
+      <Loader/> :
 
       <Switch>
         <Route exact path={ROUTES.MAIN} component={Main}/>
@@ -60,7 +60,7 @@ export const AppRoutes = ({
         <Route path={ROUTES.SKYENG} render={() => <SkyengSearch/>
         }/>
         <Route path={ROUTES.PHRASES} render={() =>
-          <Phrases content={content} bormoSpeaker={bormoSpeaker} config={config} closePhrases={rest.closePhrases}
+          <Phrases content={content} bormoSpeaker={bormoSpeaker} config={config} keyboardMode={rest.keyboardMode}
                    currentSection={currentLesson} onPreviousClick={onPreviousClick} onNextClick={onNextClick}
                    onRestartClick={onRestartClick} moveOn={moveOn}/>
         }/>

@@ -5,7 +5,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
-export const CommonConfig = ({classes, instantStart, instantNextMode, countErrorAtPrompt, onOptionChange}) => (
+export const CommonConfig = ({classes, instantStart, instantNextMode, countErrorAtPrompt, keyboardMode, onOptionChange}) => (
   <React.Fragment>
     <Typography variant='caption' className={classes.configGroup}>Общие параметры</Typography>
     <Paper className={classes.configPaper}>
@@ -37,6 +37,14 @@ export const CommonConfig = ({classes, instantStart, instantNextMode, countError
               disabled={true}/>
           }
           label='увеличивать счетчик ошибок при запросе подсказки'/>
+        <FormControlLabel
+          control={
+            <Switch checked={keyboardMode}
+                    onChange={onOptionChange('keyboardMode')}
+                    value='keyboardMode'
+                    color='primary'/>
+          }
+          label='в режиме Фразы использовать по умолчанию клавиатурный режим'/>
       </FormGroup>
     </Paper>
   </React.Fragment>
