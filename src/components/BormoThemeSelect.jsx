@@ -1,10 +1,5 @@
-import React from 'react';
-
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
-import {withStyles} from '@material-ui/core/styles';
+import React, {PureComponent} from 'react';
+import {MenuItem, FormControl, Select, withStyles} from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -38,7 +33,7 @@ const styles = theme => ({
   dark: {}
 });
 
-class BormoThemeSelect extends React.Component {
+class BormoThemeSelect extends PureComponent {
 
   constructor(props) {
     super(props);

@@ -1,12 +1,8 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import {Typography, Paper, FormGroup, FormControlLabel, Switch} from '@material-ui/core';
 
 export const CommonConfig = ({classes, instantStart, instantNextMode, countErrorAtPrompt, keyboardMode, onOptionChange}) => (
-  <React.Fragment>
+  <>
     <Typography variant='caption' className={classes.configGroup}>Общие параметры</Typography>
     <Paper className={classes.configPaper}>
       <FormGroup className={classes.configGroup}>
@@ -47,5 +43,5 @@ export const CommonConfig = ({classes, instantStart, instantNextMode, countError
           label='в режиме Фразы использовать по умолчанию клавиатурный режим'/>
       </FormGroup>
     </Paper>
-  </React.Fragment>
+  </>
 );

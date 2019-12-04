@@ -1,8 +1,6 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import {withRouter} from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles';
-
-import Fab from '@material-ui/core/Fab';
+import {Fab, withStyles} from '@material-ui/core';
 import {ROUTES, SWITCHABLE_ROUTES} from '../../routes';
 
 const styles = theme => ({
@@ -14,7 +12,7 @@ const styles = theme => ({
   }
 });
 
-class BormoLesson extends React.Component {
+class BormoLesson extends PureComponent {
 
   onLessonClick = () => {
     if ((this.props.location.pathname !== ROUTES.PHRASES) && (SWITCHABLE_ROUTES.indexOf(this.props.location.pathname) !== -1)) {
@@ -34,7 +32,7 @@ class BormoLesson extends React.Component {
         size='small'>
         {item}
       </Fab>
-    )
+    );
   }
 }
 

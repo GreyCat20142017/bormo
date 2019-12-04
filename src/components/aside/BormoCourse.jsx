@@ -1,32 +1,24 @@
-import React from 'react';
-
-import {withStyles} from '@material-ui/core/styles';
-
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/Inbox';
-import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import ReceiptIcon from '@material-ui/icons/Receipt';
+import React, {PureComponent} from 'react';
+import {ListItem, ListItemIcon, ListItemText, withStyles} from '@material-ui/core';
+import {Inbox, FormatColorText, LibraryBooks, Receipt} from '@material-ui/icons';
 import {styles} from './BormoCourse.css';
 
 const CourseIcon = ({name, color, fontSize}) => {
   switch (name) {
     case 'basic':
-      return (<ReceiptIcon color={color} fontSize={fontSize}/>)
+      return (<Receipt color={color} fontSize={fontSize}/>)
     case 'ABC':
-      return (<FormatColorTextIcon color={color} fontSize={fontSize}/>)
+      return (<FormatColorText color={color} fontSize={fontSize}/>)
     case 'book':
-      return (<LibraryBooksIcon color={color} fontSize={fontSize}/>)
+      return (<LibraryBooks color={color} fontSize={fontSize}/>)
     case 'other':
-      return (<InboxIcon color={color} fontSize={fontSize}/>)
+      return (<Inbox color={color} fontSize={fontSize}/>)
     default:
-      return (<InboxIcon color={color} fontSize={fontSize}/>)
+      return (<Inbox color={color} fontSize={fontSize}/>)
   }
 }
 
-class BormoCourse extends React.Component {
+class BormoCourse extends PureComponent {
   static CourseIcon = CourseIcon;
 
   onCourseClick = () => this.props.onCourseChange(this.props.item.name, this.props.ind);

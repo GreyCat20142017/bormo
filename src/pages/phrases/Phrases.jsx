@@ -1,18 +1,11 @@
 import React, {Component, Fragment} from 'react';
-
-import Button from '@material-ui/core/Button';
-import Badge from '@material-ui/core/Badge';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import {withStyles} from '@material-ui/core/styles';
+import {Button, Badge, Paper, TextField, Typography, withStyles} from '@material-ui/core';
 
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
 import ContentMissingMessage from '../../components/ContentMissingMessage';
 import bormoWrapper from '../../hoc/bormoWrapper';
 import {DELAY_TIMEOUT, KEY_CODES, TOOLBAR_TYPES} from '../../constants';
 import {isValidIndex, getSortedWords} from '../../functions';
-
 import {styles} from './Phrases.css.js';
 
 const getChangedAmount = (wordsContent, wordsAmount, result, operand) => {

@@ -1,13 +1,6 @@
 import React from 'react';
-
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import HeadsetIcon from '@material-ui/icons/Headset';
-
-import {withStyles} from '@material-ui/core/styles';
+import {Avatar, Typography, Card, CardHeader, CardContent, withStyles} from '@material-ui/core';
+import {Headset} from '@material-ui/icons';
 
 import {styles} from './Main.css.js';
 
@@ -17,7 +10,7 @@ const Main = ({classes}) => (
     <Card className={classes.card}>
       <CardHeader title='Браузерная версия программы - зубрилки' avatar={
         <Avatar aria-label='Recipe' className={classes.avatar} color='primary'>
-          <HeadsetIcon fontSize='default' color='inherit'/>
+          <Headset fontSize='default' color='inherit'/>
         </Avatar>}
       />
 
@@ -33,6 +26,5 @@ const Main = ({classes}) => (
     </Card>
   </div>
 );
-
 
 export default withStyles(styles)(Main);

@@ -1,9 +1,5 @@
 import React from 'react';
-
-import Hidden from '@material-ui/core/Hidden';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import Divider from '@material-ui/core/Divider';
+import {Hidden, Drawer, IconButton, Divider} from '@material-ui/core';
 import OffIcon from '@material-ui/icons/HighlightOff';
 
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -29,15 +25,15 @@ export const AppDrawer = ({
 
   return (
     <nav className={classes.drawer}>
-      <Hidden smUp implementation='css'>
 
+      <Hidden smUp>
         <Drawer
           variant='temporary'
           anchor={'left'}
           open={mobileOpen}
           onClose={onDrawerToggle}
           classes={{paper: classes.drawerPaper}}>
-          <React.Fragment>
+          <>
             <IconButton
               color='secondary'
               aria-label='Закрыть панель'
@@ -48,11 +44,11 @@ export const AppDrawer = ({
             </IconButton>
             <Divider/>
             {drawer}
-          </React.Fragment>
+          </>
         </Drawer>
-
       </Hidden>
-      <Hidden xsDown implementation='css'>
+
+      <Hidden xsDown>
         <Drawer
           classes={{paper: classes.drawerPaper}}
           variant='permanent'
@@ -60,6 +56,7 @@ export const AppDrawer = ({
           {drawer}
         </Drawer>
       </Hidden>
+
     </nav>
   );
 };

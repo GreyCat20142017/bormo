@@ -1,6 +1,5 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
+import {Typography, Hidden} from '@material-ui/core';
 
 const StatusText = ({classes, statusText}) => (
   <Typography variant='caption' color='secondary' className={classes.status}>

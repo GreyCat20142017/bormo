@@ -1,8 +1,6 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import {Paper, Tabs, Tab, withStyles} from '@material-ui/core';
+
 import SimpleTable from '../table/SimpleTable';
 import {EXCLUDED_COLUMNS} from '../../../constants';
 
@@ -16,7 +14,7 @@ const getTableStructure = (cell, excludedColumns) => (
   Object.keys(cell).filter(item => !(excludedColumns.indexOf(item) !== -1))
 );
 
-class SkyResultTabs extends React.Component {
+class SkyResultTabs extends React.PureComponent {
   state = {
     value: 0,
   };
@@ -51,6 +49,5 @@ class SkyResultTabs extends React.Component {
     );
   }
 }
-
 
 export default withStyles(styles)(SkyResultTabs);

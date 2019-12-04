@@ -1,14 +1,6 @@
 import React from 'react';
-
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import {Typography, Paper, FormGroup, FormControlLabel, Switch, Button, Select, MenuItem} from '@material-ui/core';
+import {VolumeUp} from '@material-ui/icons';
 
 import SimpleSlider from '../../../components/SimpleSlider';
 
@@ -46,7 +38,7 @@ export const SoundConfig = ({
       <Button size='small' variant='contained' color='secondary' onClick={checkVoice}
               className={classes.configButton}>
         Тест звука
-        <VolumeUpIcon className={classes.rightIcon} fontSize='small'/>
+        <VolumeUp className={classes.rightIcon} fontSize='small'/>
       </Button>
 
       <Select

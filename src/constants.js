@@ -73,37 +73,6 @@ export const DATA_SOURCES = {
     disabled: false,
     COMMENT:'PHP (loсalhost)'
   },
-  NODE_LOCAL: {
-    COURSES: 'http://localhost:3377/courses',
-    SEARCH: 'http://localhost:3377/search',
-    PHRASES: 'http://localhost:3377/phrases',
-    TEST: 'http://localhost:3377/test',
-    disabled: true,
-    COMMENT:'Node (loсalhost)'
-  },
-  PHP_HOSTING_HTTP: {
-    COURSES: 'http://bormo.pugalk8s.beget.tech/courses.php',
-    SEARCH: 'http://bormo.pugalk8s.beget.tech/search.php',
-    PHRASES: 'http://bormo.pugalk8s.beget.tech/phrases.php',
-    TEST: 'http://bormo.pugalk8s.beget.tech/test.php',
-    disabled: false,
-    COMMENT:'PHP (Beget, http)'
-  },
-  PHP_HOSTING_HTTPS: {
-    COURSES: 'https://bormo.pugalk8s.beget.tech/courses.php',
-    SEARCH: 'https://bormo.pugalk8s.beget.tech/search.php',
-    PHRASES: 'https://bormo.pugalk8s.beget.tech/phrases.php',
-    TEST: 'https://bormo.pugalk8s.beget.tech/test.php',
-    disabled: true,
-    COMMENT:'PHP (Beget, https)'
-  },
-  NODE_HOSTING: {
-    COURSES: 'Источник данных недоступен',
-    SEARCH: 'Источник данных недоступен',
-    PHRASES: 'Источник данных недоступен',
-    disabled: true,
-    COMMENT:'Node (Beget)'
-  },
   TEST: {
     COURSES: COURSES_PATH,
     SEARCH: BORMO_PATH,

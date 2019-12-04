@@ -1,20 +1,13 @@
-import React, {Component} from 'react';
-
-import {withStyles} from '@material-ui/core/styles';
-
-import Menu from '@material-ui/core/Menu';
-import Divider from '@material-ui/core/Divider';
-import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import React, {PureComponent} from 'react';
+import {Menu, MenuItem, Divider, Typography, IconButton, withStyles} from '@material-ui/core';
+import {MoreVert} from '@material-ui/icons';
 
 import BormoToolbar from './BormoToolbar';
 import {styles} from './BormoHeader.css.js';
 import {Link} from 'react-router-dom';
 import {ROUTES} from '../../routes';
 
-class BormoHeader extends Component {
+class BormoHeader extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,7 +54,7 @@ class BormoHeader extends Component {
         </Typography>
         <BormoToolbar burgerEl={burgerEl} onBurgerClick={this.onBurgerClick} onBurgerClose={this.onBurgerClose}/>
         <IconButton color='inherit' onClick={this.onAnchorClick}>
-          <MoreIcon/>
+          <MoreVert/>
         </IconButton>
         <Menu
           className={classes.menu}

@@ -1,19 +1,8 @@
 import React, {Component} from 'react';
 import {debounce} from 'lodash';
-
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import Hidden from '@material-ui/core/Hidden';
-
-import IconButton from '@material-ui/core/IconButton';
-import PauseIcon from '@material-ui/icons/Pause';
-import StopIcon from '@material-ui/icons/Stop';
-import DoneIcon from '@material-ui/icons/Done';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-
-import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
+import {Paper, Typography, Tooltip, Hidden, IconButton, withStyles} from '@material-ui/core';
+import {Pause, Stop, Done, PlayArrow} from '@material-ui/icons';
 
 import bormoWrapper from '../../hoc/bormoWrapper';
 import {isInactive, getActiveAmount, getInitialMemorized} from '../pagesCommon';
@@ -73,19 +62,19 @@ const BasePart = ({
 
         <div className={classes.controls}>
           <IconButton aria-label='Старт' className={classes.margin} onClick={timerStart} title="Старт">
-            <PlayArrowIcon/>
+            <PlayArrow/>
           </IconButton>
           <IconButton aria-label='Пауза' className={classes.margin} onClick={timerPause} title="Пауза"
           >
-            <PauseIcon/>
+            <Pause/>
           </IconButton>
           <IconButton aria-label='Стоп' className={classes.margin} onClick={timerStop} title="Стоп">
-            <StopIcon/>
+            <Stop/>
           </IconButton>
           {timerStatus === BORMO_STATUS.STARTED ?
             <IconButton aria-label='Отметить' className={classes.margin} onClick={onDebouncedSwitchCurrent}
                         data-done="true" title="Отметить слово как изученное" autoFocus={true}>
-              <DoneIcon/>
+              <Done/>
             </IconButton>
             : null
           }

@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import {debounce} from 'lodash';
-
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core';
 
 import {ListPart} from './ListPart';
 import {TopPart} from './TopPart';
 import bormoWrapper from '../../hoc/bormoWrapper';
 import {getCurrentInfo, getModeInitialState, getTranslateLanguage} from '../pagesCommon';
 import {BORMO_STATUS, DEBOUNCE_INTERVAL, DELAY_TIMEOUT, FIELDS, LANGUAGES, WORDS_PER_LESSON} from '../../constants';
-
 import {styles} from './Control.css.js';
 
 class Control extends Component {
@@ -70,7 +68,10 @@ class Control extends Component {
 
   onHint = () => {
     this.setState(() => {
-      this.setState({showHint: true, errorCount: this.state.errorCount + 1});
+      this.setState({
+        showHint: true,
+        errorCount: this.state.errorCount + 1
+      });
     }, this.hideHint());
   };
 
@@ -90,7 +91,12 @@ class Control extends Component {
         inactive: !memorized[index].inactive
       }, ...memorized.slice(index + 1)];
       if (currentIndex < maxIndex) {
-        this.setState({memorized: newMemorized, currentIndex: currentIndex + 1, okCount: okCount + 1, wasError: false});
+        this.setState({
+          memorized: newMemorized,
+          currentIndex: currentIndex + 1,
+          okCount: okCount + 1,
+          wasError: false
+        });
       } else {
         this.setState({
           memorized: newMemorized,
@@ -103,7 +109,10 @@ class Control extends Component {
         }
       }
     } else {
-      this.setState({errorCount: errorCount + 1, wasError: true});
+      this.setState({
+        errorCount: errorCount + 1,
+        wasError: true
+      });
       this.speakError();
     }
   };
@@ -128,8 +137,7 @@ class Control extends Component {
       getCurrentInfo(currentIndex, maxIndex, randomOrder, controlMode, content, FIELDS.TRANSLATE);
 
     return (content.length > 0) ?
-      <React.Fragment>
-
+      <div>
         <TopPart classes={classes} content={content} currentCourse={currentCourse} currentLesson={currentLesson}
                  okCount={okCount} errorCount={errorCount} currentTranslate={currentTranslate} isHint={showHint}/>
 
@@ -142,7 +150,7 @@ class Control extends Component {
                     switchDisableOne={this.onDebouncedSwitch} controlMode={controlMode}/>
         </div>
 
-      </React.Fragment> :
+      </div> :
       null;
   }
 }

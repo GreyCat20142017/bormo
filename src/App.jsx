@@ -2,22 +2,18 @@ import React from 'react';
 import {withRouter} from 'react-router-dom';
 import axios from 'axios';
 import {debounce} from 'lodash';
+import {CssBaseline, MuiThemeProvider, withStyles} from '@material-ui/core';
 
-import CssBaseline from '@material-ui/core/CssBaseline';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-
-import {withStyles} from '@material-ui/core/styles';
+import MainTheme from './MainTheme';
 import BormoModal from './components/modal/BormoModal';
 import Loader from './components/loader/Loader';
 import SpeakerVoice from './SpeakerVoice';
-import MainTheme from './MainTheme';
-
-import {about, help} from './info';
-
 import {AppRoutes} from './appparts/AppRoutes';
 import {AppHeader} from './appparts/AppHeader';
 import {AppDrawer} from './appparts/AppDrawer';
-
+import {AppFooter} from './appparts/AppFooter';
+import TextRenderer from './components/TextRenderer';
+import {about, help} from './info';
 import {HOTKEY_REDIRECTS, ROUTES, ROUTES_ORDER} from './routes';
 import {getInitialState, getValueArrayFromObject} from './functions';
 import {
@@ -34,8 +30,7 @@ import {
 } from './constants';
 
 import {styles} from './App.css';
-import {AppFooter} from './appparts/AppFooter';
-import TextRenderer from './components/TextRenderer';
+
 
 const getModalContent = (isModalOpen) => {
   let text = '';
@@ -316,7 +311,7 @@ class App extends React.Component {
     } = this.state;
 
     return (
-      <React.Fragment>
+      <>
         <CssBaseline/>
         <MuiThemeProvider theme={currentTheme.themeObject}>
           <div className={classes.root}>
@@ -355,7 +350,7 @@ class App extends React.Component {
             closeModal={this.closeModal}/>
 
         </MuiThemeProvider>
-      </React.Fragment>
+      </>
     );
   }
 }

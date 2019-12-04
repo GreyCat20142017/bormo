@@ -1,9 +1,6 @@
 import React from 'react';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import AppIcon from '@material-ui/icons/Apps';
+import {AppBar, Toolbar, IconButton} from '@material-ui/core';
+import {Apps} from '@material-ui/icons';
 
 import BormoHeader from '../components/header/BormoHeader';
 
@@ -19,7 +16,7 @@ export const AppHeader = ({
         onClick={onDrawerToggle}
         className={classes.menuButton}
         title='Открыть панель выбора курса и уроков'>
-        <AppIcon/>
+        <Apps/>
       </IconButton>
 
       <BormoHeader

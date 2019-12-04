@@ -1,35 +1,58 @@
 import {createMuiTheme} from '@material-ui/core/styles';
-import {indigo, blueGrey, deepPurple, white, black, amber, orange, grey} from '@material-ui/core/colors';
+import {indigo, blueGrey, white, black, amber, orange, deepOrange, grey} from '@material-ui/core/colors';
+
+export const MDB_COLOR = '#59698d';
 
 const NeutralTheme = createMuiTheme({
   palette: {
-    primary: {main: indigo[500], light: indigo[300], dark: indigo[900], contrastText: white},
-    secondary: {main: blueGrey[200], dark: blueGrey[600], contrastText: black},
-    error: {main: orange[900]},
+    primary: {
+      main: MDB_COLOR
+    },
+    secondary: {
+      main: blueGrey[200],
+    },
+    error: deepOrange,
+    contrastThreshold: 3,
+    tonalOffset: 0.2,
   },
   typography: {
     useNextVariants: true,
   },
 });
 
-const BrightTheme = createMuiTheme({
+const ClassicTheme = createMuiTheme({
   palette: {
-    primary: {main: deepPurple[400], light: deepPurple[300], dark: deepPurple[900], contrastText: white},
-    secondary: {main: grey[500], dark: grey[600], contrastText: black},
+    primary: {
+      main: indigo[500],
+      light: indigo[300],
+      dark: indigo[900],
+      contrastText: white
+    },
+    secondary: {
+      main: blueGrey[200],
+      dark: blueGrey[600],
+      contrastText: black
+    },
     error: {main: orange[900]},
   },
   typography: {
     useNextVariants: true,
   },
-  props: {
-    key: 'neutral'
-  }
 });
 
 const GreyTheme = createMuiTheme({
   palette: {
-    primary: {main: blueGrey[500], light: blueGrey[300], dark: blueGrey[900], contrastText: black},
-    secondary: {main: grey[200], dark: grey[600], contrastText: black},
+    primary: {
+      main: blueGrey[500],
+      light: blueGrey[300],
+      dark: blueGrey[900],
+      contrastText: black
+    },
+    secondary: {
+      main: grey[200],
+      dark: grey[600],
+      contrastText: black
+    },
     error: {main: orange[900]},
   },
   typography: {
@@ -39,9 +62,15 @@ const GreyTheme = createMuiTheme({
 
 const AmberTheme = createMuiTheme({
   palette: {
-    primary: {main: amber[200], light: amber[100], dark: amber[400], contrastText: grey[700]},
-    secondary: {main: grey[500], dark: grey[500], contrastText: white},
-    error: {main: orange[900]},
+    primary: {
+      main: amber[400]
+    },
+    secondary: {
+      main: blueGrey[400],
+    },
+    error: deepOrange,
+    contrastThreshold: 3,
+    tonalOffset: 0.2,
   },
   typography: {
     useNextVariants: true,
@@ -49,10 +78,30 @@ const AmberTheme = createMuiTheme({
 });
 
 const MainTheme = {
-  neutral: {themeObject: NeutralTheme, themeDescription: 'Нейтральная тема', themeName: 'Обычная', themeKey: 'neutral'},
-  bright: {themeObject: BrightTheme, themeDescription: 'Фиолетовый кошмар', themeName: 'Странная', themeKey: 'bright'},
-  grey: {themeObject: GreyTheme, themeDescription: 'Серый апельсин', themeName: 'Серая', themeKey: 'grey'},
-  amber: {themeObject: AmberTheme, themeDescription: 'Солнечный удар', themeName: 'Желтая', themeKey: 'amber'}
+  neutral: {
+    themeObject: NeutralTheme,
+    themeDescription: 'Нейтральная тема',
+    themeName: 'Нейтральная',
+    themeKey: 'neutral'
+  },
+  classic: {
+    themeObject: ClassicTheme,
+    themeDescription: 'Обычная тема',
+    themeName: 'Обычная',
+    themeKey: 'classic'
+  },
+  grey: {
+    themeObject: GreyTheme,
+    themeDescription: 'Серый апельсин',
+    themeName: 'Серая',
+    themeKey: 'grey'
+  },
+  amber: {
+    themeObject: AmberTheme,
+    themeDescription: 'Солнечный удар',
+    themeName: 'Желтая',
+    themeKey: 'amber'
+  }
 };
 
 export default MainTheme;

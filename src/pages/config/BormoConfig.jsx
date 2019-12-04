@@ -1,11 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-
-import Dialog from '@material-ui/core/Dialog';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-
-import {withStyles} from '@material-ui/core/styles';
+import {Dialog, Typography, AppBar, withStyles} from '@material-ui/core';
 
 import {DataConfig} from './configparts/DataConfig';
 import {CommonConfig} from './configparts/CommonConfig';
@@ -13,15 +8,7 @@ import {SoundConfig} from './configparts/SoundConfig';
 import {ColorConfig} from './configparts/ColorConfig';
 import {ConfigButtons} from './configparts/ConfigButtons';
 
-import {
-  API_BRANCHES,
-  DATA_SOURCES,
-  STATUS_OK,
-  TEST_KEY,
-  TEST_STATUSES,
-  VOICE_TEST_PHRASE,
-  voiceParams
-} from '../../constants';
+import {API_BRANCHES, DATA_SOURCES, STATUS_OK, TEST_KEY, TEST_STATUSES, VOICE_TEST_PHRASE, voiceParams} from '../../constants';
 import {getRound} from '../../functions';
 import {styles} from './BormoConfig.css.js';
 

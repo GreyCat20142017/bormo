@@ -1,22 +1,17 @@
-import React, {Component, Fragment} from 'react';
+import React from 'react';
 import classNames from 'classnames';
 
-import Badge from '@material-ui/core/Badge';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import {withStyles} from '@material-ui/core/styles';
+import {Badge, Paper, Typography, TextField, withStyles} from '@material-ui/core';
+
+import {CheckCircle, Error as ErrorIcon} from '@material-ui/icons';
 
 import {BORMO_STATUS, LANGUAGES, TOOLBAR_TYPES} from '../../constants';
 import {getSpellInitialState} from '../pagesCommon';
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
 import bormoWrapper from '../../hoc/bormoWrapper';
-
 import {styles} from './Spelling.css';
 
-class Spelling extends Component {
+class Spelling extends React.PureComponent {
 
   constructor(props) {
     super(props);
@@ -39,7 +34,7 @@ class Spelling extends Component {
 
   componentWillUpdate(nextProps, nextState, nextContext) {
     if (this.props.config.instantNextMode && nextState.okCount === nextState.content.length && this.state.currentIndex !== 0) {
-       this.props.moveOn();
+      this.props.moveOn();
     }
   }
 
@@ -70,7 +65,10 @@ class Spelling extends Component {
         });
       }
     } else {
-      this.setState({wasError: true, errorCount: errorCount + 1});
+      this.setState({
+        wasError: true,
+        errorCount: errorCount + 1
+      });
     }
   };
 
@@ -103,7 +101,11 @@ class Spelling extends Component {
 
   onHint = () => {
     const {content, currentIndex, errorCount} = this.state;
-    this.setState(() => ({translate: content[currentIndex].english, wasError: true, errorCount: errorCount + 1}));
+    this.setState(() => ({
+      translate: content[currentIndex].english,
+      wasError: true,
+      errorCount: errorCount + 1
+    }));
   };
 
   onRestart = () => {
@@ -118,60 +120,63 @@ class Spelling extends Component {
 
     if (content.length > 0) {
 
-      return (<React.Fragment>
-
-        <div className={classes.wrapper}>
-
-          <Badge className={classes.badge} color='primary' badgeContent={currentLesson}
-                 title={'Курс: ' + currentCourse + ', урок: ' + currentLesson}>
-            {currentCourse}
-          </Badge>
-
-          <Badge className={classes.badge} color='primary' badgeContent={errorCount}
-                 title={'Количество ошибок: ' + errorCount}>
-            <ErrorIcon fontSize='large' color='error'/>
-          </Badge>
-
-          <Badge className={classes.badge} color='primary' badgeContent={okCount}
-                 title={'Количество правильно отмеченных: ' + okCount}>
-            <CheckCircleIcon fontSize='large' color='disabled'/>
-          </Badge>
-
-        </div>
-
-        <Paper className={classNames(classes.paper, classes.currentPaper, classes.currentWord)}>
-          <Typography component='p' variant='h6' color='inherit' align='center'>
-            {okCount === content.length ?
-              'Урок "' + currentCourse + ' № ' + currentLesson + '" пройден ' + (errorCount > 0 ? '. Число ошибок: ' + errorCount : '...') :
-              currentTranslate}
-          </Typography>
-        </Paper>
-
-        <form className={classes.form} onSubmit={this.onTranslateValidate}>
-          {(timerStatus === BORMO_STATUS.STARTED) ?
-            <Fragment>
-              <TextField
-                required
-                autoFocus={true}
-                id='translate'
-                label={translate !== currentTranslate && translate !== '' ? 'Ошибка' : 'Перевод:'}
-                value={translate}
-                fullWidth
-                margin='normal'
-                onChange={this.onTranslateChange}
-              />
-              <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STARTED} className={classes.toolbar} onSkip={this.onSkip}
-                             onHint={this.onHint}/>
-            </Fragment>
-            :
-            <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STOPPED} className={classes.toolbar}
-                           onRestart={this.onRestart}/>
-          }
-
-        </form>
+      return (
+        <>
 
 
-      </React.Fragment>);
+          <div className={classes.spellingWrapper}>
+            <div>
+
+              <Badge className={classes.badge} color='primary' badgeContent={currentLesson}
+                     title={'Курс: ' + currentCourse + ', урок: ' + currentLesson}>
+                {currentCourse}
+              </Badge>
+
+              <Badge className={classes.badge} color='primary' badgeContent={errorCount}
+                     title={'Количество ошибок: ' + errorCount}>
+                <ErrorIcon fontSize='large' color='error'/>
+              </Badge>
+
+              <Badge className={classes.badge} color='primary' badgeContent={okCount}
+                     title={'Количество правильно отмеченных: ' + okCount}>
+                <CheckCircle fontSize='large' color='disabled'/>
+              </Badge>
+
+            </div>
+
+            <Paper className={classNames(classes.paper, classes.currentPaper, classes.currentWord)}>
+              <Typography component='p' variant='h6' color='inherit' align='center'>
+                {okCount === content.length ?
+                  'Урок "' + currentCourse + ' № ' + currentLesson + '" пройден ' + (errorCount > 0 ? '. Число ошибок: ' + errorCount : '...') :
+                  currentTranslate}
+              </Typography>
+            </Paper>
+
+            <form className={classes.form} onSubmit={this.onTranslateValidate}>
+              {(timerStatus === BORMO_STATUS.STARTED) ?
+                <>
+                  <TextField
+                    required
+                    autoFocus={true}
+                    id='translate'
+                    label={translate !== currentTranslate && translate !== '' ? 'Ошибка' : 'Перевод:'}
+                    value={translate}
+                    fullWidth
+                    margin='normal'
+                    onChange={this.onTranslateChange}
+                  />
+                  <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STARTED} className={classes.toolbar}
+                                 onSkip={this.onSkip}
+                                 onHint={this.onHint}/>
+                </>
+                :
+                <SimpleToolbar toolbar={TOOLBAR_TYPES.SPELLING_STOPPED} className={classes.toolbar}
+                               onRestart={this.onRestart}/>
+              }
+
+            </form>
+          </div>
+        </>);
 
     } else {
       return (<div className='message'> {contentMissingMessage} </div>);

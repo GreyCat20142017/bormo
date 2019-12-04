@@ -1,6 +1,6 @@
 import React from 'react';
-import ContentMissingMessage from '../components/ContentMissingMessage';
 import {debounce} from 'lodash';
+import ContentMissingMessage from '../components/ContentMissingMessage';
 import {DEBOUNCE_INTERVAL} from '../constants';
 
 function bormoWrapper(Component) {

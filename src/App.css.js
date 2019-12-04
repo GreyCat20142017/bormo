@@ -3,7 +3,9 @@ import {DRAWER_WIDTH} from './constants';
 const styles = theme => ({
   root: {
     display: 'flex',
-    alignItems: 'stretch'
+    flexDirection: 'column',
+    flexGrow: 1,
+    minHeight: '100vh'
   },
   drawer: {
     padding: '0',
@@ -31,10 +33,14 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
+    display: 'flex',
+    justifyContent: 'space-between',
+    align: 'stretch',
     padding: theme.spacing.unit * 2,
-    minHeight: '80vh',
+    marginLeft: 0,
+    paddingTop: '40px',
     [theme.breakpoints.up('sm')]: {
-      minHeight: '90vh'
+      marginLeft: DRAWER_WIDTH,
     }
   },
   status: {

@@ -1,6 +1,5 @@
 import React from 'react';
-
-import Paper from '@material-ui/core/Paper';
+import {Paper} from '@material-ui/core';
 
 import DataSourceSelector from '../components/DataSourceSelector';
 import BormoFooter from '../components/footer/BormoFooter';
@@ -15,13 +14,13 @@ export const AppFooter = ({
                           }) => {
   const hideFooter = SWITCHABLE_ROUTES.filter(item => item !== ROUTES.MAIN).indexOf(currentRoute) !== -1;
   return (
-    <React.Fragment>
+    <>
       {hideFooter || isNotBormo ?
-        <React.Fragment>
+        <>
           <StatusText classes={classes}
                       statusText={getStatusText(currentRoute, currentCourse, currentLesson)}/>
           <DataSourceSelector onSelectDataSource={onSelectDataSource} fixed={true}/>
-        </React.Fragment> :
+        </> :
         <Paper className={classes.paperFooter}>
           <BormoFooter onThemeSelect={onThemeSelect} currentTheme={currentTheme} themes={themes}
                        statusText={getStatusText(currentRoute, currentCourse, currentLesson)}
@@ -32,6 +31,6 @@ export const AppFooter = ({
 
         </Paper>
       }
-    </React.Fragment>
+    </>
   );
 };
