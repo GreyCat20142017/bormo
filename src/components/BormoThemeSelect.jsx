@@ -24,10 +24,9 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
   },
   light: {
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.contrastText,
     '& *': {
-      color: theme.palette.secondary.main,
-      border: theme.palette.secondary.main
+      color: theme.palette.primary.contrastText,
     }
   },
   dark: {}
@@ -46,7 +45,7 @@ class BormoThemeSelect extends PureComponent {
     this.props.onThemeSelect(newTheme);
   };
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
     this.setState({choice: nextProps.currentTheme.themeKey});
   }
 
@@ -55,8 +54,8 @@ class BormoThemeSelect extends PureComponent {
 
     return (
       <form className={fromConfig ? classes.rootFromConfig : classes.root} autoComplete='off'>
-        <FormControl className={classes.formControl}>
-          <Select className={light ? classes.light : classes.dark}
+        <FormControl className={light ? classes.light : classes.dark}>
+          <Select  variant={'standard'}
                   value={this.state.choice}
                   onChange={this.onThemeChange}
                   inputProps={{

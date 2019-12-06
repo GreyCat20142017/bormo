@@ -53,7 +53,7 @@ class BormoHeader extends PureComponent {
           Бормо<span className={classes.switchablePart}>тунчик</span>
         </Typography>
         <BormoToolbar burgerEl={burgerEl} onBurgerClick={this.onBurgerClick} onBurgerClose={this.onBurgerClose}/>
-        <IconButton color='inherit' onClick={this.onAnchorClick}>
+        <IconButton color='inherit' onClick={this.onAnchorClick} title={'Прочие пункты меню'}>
           <MoreVert/>
         </IconButton>
         <Menu

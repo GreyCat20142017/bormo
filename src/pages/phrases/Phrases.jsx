@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React from 'react';
 import {Button, Badge, Paper, TextField, Typography, withStyles} from '@material-ui/core';
 
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
@@ -55,7 +55,7 @@ const getPhrasesInitialState = ({content, keyboardMode = false}) => {
   });
 };
 
-class Phrases extends Component {
+class Phrases extends React.PureComponent {
 
   constructor(props) {
     super(props);
@@ -63,7 +63,7 @@ class Phrases extends Component {
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState(getPhrasesInitialState(nextProps));
   }
 
@@ -203,12 +203,12 @@ class Phrases extends Component {
 
     if (data.length > 0) {
       return (
-        <Fragment>
-          <ul className={classes.wrapper}>
+        <div  className={classes.wrapper}>
+          <ul className={classes.wordsWrapper}>
             {wordsContent.map((item, ind) =>
               (
                 <li key={ind}>
-                  <Fragment>
+                  <>
                     {keyboardMode ? null :
                       <Badge className={classes.badge} color='secondary' badgeContent={wordsAmount[ind]}>
                         <span></span>
@@ -219,7 +219,7 @@ class Phrases extends Component {
                             onClick={() => this.onWordClick(ind)}>
                       {item}
                     </Button>
-                  </Fragment>
+                  </>
                 </li>
               ))}
           </ul>
@@ -259,7 +259,7 @@ class Phrases extends Component {
                          onRestart={this.onRestart} onSwitchMouseKeyboard={this.onSwitchMouseKeyboard}
                          onCheckCorrectness={this.onCheckCorrectness} onCancel={this.onCancel}/>
 
-        </Fragment>
+        </div>
       );
     } else {
       return <ContentMissingMessage/>;

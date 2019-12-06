@@ -44,7 +44,7 @@ const BasePart = ({
                     onDebouncedSwitchCurrent, timerStart, timerPause, timerStop
                   }) => (
 
-  <div className={classes.part}>
+  <div className={classNames(classes.part, classes.partCentral)}>
     {content.length > 0 ?
 
       <div className={classes.currentWord}>
@@ -105,7 +105,7 @@ class Bormo extends Component {
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.interval) {
       clearInterval(this.interval);
     }
@@ -215,7 +215,7 @@ class Bormo extends Component {
     const activeAmount = getActiveAmount(memorized);
 
     return (
-      <div className='bormo__wrapper'>
+      <div className={classes.bormoWrapper}>
         <div className={classes.parts}>
 
           <ListPart content={content} classes={classes} currentIndex={currentIndex} startIndex={0}

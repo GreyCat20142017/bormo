@@ -1,5 +1,5 @@
 import {createMuiTheme} from '@material-ui/core/styles';
-import {indigo, blueGrey, white, black, amber, orange, deepOrange, grey} from '@material-ui/core/colors';
+import {indigo, blueGrey, white, black, pink, amber, orange, deepOrange, grey} from '@material-ui/core/colors';
 
 export const MDB_COLOR = '#59698d';
 
@@ -11,7 +11,7 @@ const NeutralTheme = createMuiTheme({
     secondary: {
       main: blueGrey[200],
     },
-    error: deepOrange,
+    error: {main: pink[500]},
     contrastThreshold: 3,
     tonalOffset: 0.2,
   },

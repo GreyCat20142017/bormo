@@ -32,7 +32,7 @@ class BormoConfig extends React.Component {
     this.state = getConfigState(props, currentVoice);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.bormoSpeaker = nextProps.bormoSpeaker;
     this.voices = window.speechSynthesis.getVoices().filter((item) => item.lang.slice(0, 2) === 'en');
     const currentVoice = this.bormoSpeaker.speaker ? this.bormoSpeaker.speaker.voice.name : '';

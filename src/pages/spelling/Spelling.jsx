@@ -19,7 +19,7 @@ class Spelling extends React.PureComponent {
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState((getSpellInitialState(nextProps)));
   }
 

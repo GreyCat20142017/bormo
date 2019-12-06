@@ -36,6 +36,9 @@ const styles = theme => ({
       margin: 'auto'
     }
   },
+  bormoWrapper: {
+    width: '100%'
+  },
   partDesktopOnly: {
     [theme.breakpoints.down('md')]: {
       display: 'none'
@@ -71,6 +74,9 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       fontSize: 14
     }
+  },
+  underlined: {
+    borderBottom: `2px solid ${theme.palette.primary.contrastText}`,
   }
 });
 

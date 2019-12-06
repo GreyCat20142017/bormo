@@ -38,7 +38,7 @@ const styles = theme => ({
     align: 'stretch',
     padding: theme.spacing.unit * 2,
     marginLeft: 0,
-    paddingTop: '40px',
+    paddingTop: '50px',
     [theme.breakpoints.up('sm')]: {
       marginLeft: DRAWER_WIDTH,
     }
@@ -49,10 +49,13 @@ const styles = theme => ({
     left: '20px',
     [theme.breakpoints.up('sm')]: {
       left: '280px'
-    }
+    },
+  },
+  contrast: {
+    color: theme.palette.primary.contrastText
   },
   underlined: {
-    borderBottom: `2px solid ${theme.palette.primary.light}`
+    borderBottom: `2px solid ${theme.palette.primary.light}`,
   }
 
 });

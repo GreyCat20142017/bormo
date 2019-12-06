@@ -30,7 +30,7 @@ class SimpleTable extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({page: 0, selected: [], joinedTranslate: '', editMode: false});
   }
 

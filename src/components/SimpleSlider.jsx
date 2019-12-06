@@ -33,7 +33,7 @@ class SimpleSlider extends React.Component {
     this.state = {value: getRefinedValue(this.props.value, this.props.params)};
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({value: getRefinedValue(nextProps.value, nextProps.params)});
   }
 

@@ -9,7 +9,7 @@ export const AppHeader = ({
                             onDrawerToggle, openModal, closeModal, openConfig, closeConfig, onThemeSelect
                           }) => (
   <AppBar position='fixed' className={classes.appBar}>
-    <Toolbar>
+    <Toolbar position={'static'}>
       <IconButton
         color='secondary'
         aria-label='Открыть панель'

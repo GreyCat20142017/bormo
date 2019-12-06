@@ -65,6 +65,13 @@ export const TEST_STATUSES = {
 };
 
 export const DATA_SOURCES = {
+  TEST: {
+    COURSES: COURSES_PATH,
+    SEARCH: BORMO_PATH,
+    PHRASES: PHRASES_PATH,
+    disabled: false,
+    COMMENT: 'Тестовые данные'
+  },
   PHP_LOCAL: {
     COURSES: 'http://bormophp.local:8080/courses.php',
     SEARCH: 'http://bormophp.local:8080/search.php',
@@ -72,13 +79,6 @@ export const DATA_SOURCES = {
     TEST: 'http://bormophp.local:8080/test.php',
     disabled: false,
     COMMENT:'PHP (loсalhost)'
-  },
-  TEST: {
-    COURSES: COURSES_PATH,
-    SEARCH: BORMO_PATH,
-    PHRASES: PHRASES_PATH,
-    disabled: false,
-    COMMENT: 'Тестовые данные'
   }
 };
 

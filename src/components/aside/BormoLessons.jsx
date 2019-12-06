@@ -67,7 +67,7 @@ class BormoLessons extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const start = PAGE_LIMIT <= nextProps.lastLesson ? nextProps.currentLesson || this.props.defaultStart : this.props.defaultStart;
     this.setState({
       paginationTo: nextProps.lastLesson,

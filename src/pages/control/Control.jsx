@@ -22,7 +22,7 @@ class Control extends Component {
     this.switchDisableOne(index);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState(getModeInitialState(nextProps));
   }
 
