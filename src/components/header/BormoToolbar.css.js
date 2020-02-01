@@ -63,6 +63,14 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
   },
+  navItem: {
+    color: 'rgba(0, 0, 0, 0.87)',
+    textDecoration: 'none',
+    outline: 'none',
+    '&.active *': {
+      color: 'red'
+    }
+  }
 });
 
 export {styles};

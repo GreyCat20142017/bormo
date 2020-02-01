@@ -1,8 +1,19 @@
 import React, {Component} from 'react';
 import {debounce} from 'lodash';
+
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import Hidden from '@material-ui/core/Hidden';
+
+import IconButton from '@material-ui/core/IconButton';
+import PauseIcon from '@material-ui/icons/Pause';
+import StopIcon from '@material-ui/icons/Stop';
+import DoneIcon from '@material-ui/icons/Done';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+
+import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
-import {Paper, Typography, Tooltip, Hidden, IconButton, withStyles} from '@material-ui/core';
-import {Pause, Stop, Done, PlayArrow} from '@material-ui/icons';
 
 import bormoWrapper from '../../hoc/bormoWrapper';
 import {isInactive, getActiveAmount, getInitialMemorized} from '../pagesCommon';
@@ -44,7 +55,7 @@ const BasePart = ({
                     onDebouncedSwitchCurrent, timerStart, timerPause, timerStop
                   }) => (
 
-  <div className={classNames(classes.part, classes.partCentral)}>
+  <div className={classes.part}>
     {content.length > 0 ?
 
       <div className={classes.currentWord}>
@@ -62,19 +73,19 @@ const BasePart = ({
 
         <div className={classes.controls}>
           <IconButton aria-label='Старт' className={classes.margin} onClick={timerStart} title="Старт">
-            <PlayArrow/>
+            <PlayArrowIcon/>
           </IconButton>
           <IconButton aria-label='Пауза' className={classes.margin} onClick={timerPause} title="Пауза"
           >
-            <Pause/>
+            <PauseIcon/>
           </IconButton>
           <IconButton aria-label='Стоп' className={classes.margin} onClick={timerStop} title="Стоп">
-            <Stop/>
+            <StopIcon/>
           </IconButton>
           {timerStatus === BORMO_STATUS.STARTED ?
             <IconButton aria-label='Отметить' className={classes.margin} onClick={onDebouncedSwitchCurrent}
                         data-done="true" title="Отметить слово как изученное" autoFocus={true}>
-              <Done/>
+              <DoneIcon/>
             </IconButton>
             : null
           }
@@ -105,7 +116,7 @@ class Bormo extends Component {
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.interval) {
       clearInterval(this.interval);
     }
@@ -215,7 +226,7 @@ class Bormo extends Component {
     const activeAmount = getActiveAmount(memorized);
 
     return (
-      <div className={classes.bormoWrapper}>
+      <div className='bormo__wrapper'>
         <div className={classes.parts}>
 
           <ListPart content={content} classes={classes} currentIndex={currentIndex} startIndex={0}

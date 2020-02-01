@@ -12,7 +12,9 @@
 порекомендованного кому-то в одном из чатиков.
 
 #
-
+#####Это все нужно выбросить и переделать!
+Уже в процессе, ибо такой код оставлять нельзя :-)
+#
 Интерфейс с использованием [Material-UI](https://v3.material-ui.com/) (версия 3.7).
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

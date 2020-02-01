@@ -1,5 +1,5 @@
 import React from 'react';
-import {Typography} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 const ArrayTextRenderer = ({text}) => (
   text.map((paragraph, ind) => (paragraph === '' ? <Typography key={ind}>&nbsp; </Typography> :

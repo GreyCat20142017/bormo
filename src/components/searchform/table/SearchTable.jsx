@@ -33,7 +33,7 @@ class SearchTable extends Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.setState({page: 0, selected: [], joinedTranslate: '', editMode: false});
   }
 

@@ -38,3 +38,4 @@ public/bormo/
 *.sql
 
 sky.js
+/buildlocal/

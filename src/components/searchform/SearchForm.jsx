@@ -1,10 +1,17 @@
-import React, {PureComponent} from 'react';
+import React, {Component, Fragment} from 'react';
 import axios from 'axios';
-import {Button, Typography, FormGroup, FormControlLabel, TextField, Switch, withStyles} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import FormGroup from '@material-ui/core/FormGroup';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import Button from '@material-ui/core/Button';
+import {withStyles} from '@material-ui/core';
 
 import SearchTable from './table/SearchTable';
 import SkyResults from './results/SkyResults';
 import {DATA_SOURCES, KEY_CODES, SKYENG_URL, TEST_KEY, TRANSLATE_SOURCES} from '../../constants';
+
 import {styles} from './SearchForm.css';
 
 const mapSkyEngData = (data, onlySkyEng) => {
@@ -30,7 +37,7 @@ const CurrentTable = ({onlySkyEng, ...rest}) => (onlySkyEng ?
     <SearchTable {...rest}/>
 );
 
-class SearchForm extends PureComponent {
+class SearchForm extends Component {
 
   constructor(props) {
     super(props);
@@ -92,7 +99,7 @@ class SearchForm extends PureComponent {
     const {searchText, skyEng, searchResult, currentTranslateSource, exact} = this.state;
     const isTestData = !skyEng && !onlySkyEng && (APIkey === TEST_KEY);
     return (
-      <div className={classes.search}>
+      <Fragment>
 
         <form className={classes.form} onSubmit={this.onSearch}>
           <Typography className={classes.formTitle}
@@ -136,7 +143,7 @@ class SearchForm extends PureComponent {
           <CurrentTable data={searchResult} currentTranslateSource={currentTranslateSource} onlySkyEng={onlySkyEng}
                         classes={classes}/> : null}
 
-      </div>
+      </Fragment>
 
     );
   }

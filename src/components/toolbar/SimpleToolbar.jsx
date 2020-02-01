@@ -1,8 +1,16 @@
 import React from 'react';
-import {Paper, IconButton, withStyles} from '@material-ui/core';
-import {WrapText, Replay, Done, InsertComment, Settings, SettingsBackupRestore as Discard} from '@material-ui/icons';
+import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import WrapTextIcon from '@material-ui/icons/WrapText';
+import ReplayIcon from '@material-ui/icons/Replay';
+import DoneIcon from '@material-ui/icons/Done';
+import SettingsIcon from '@material-ui/icons/Settings';
+import SettingsBackIcon from '@material-ui/icons/SettingsBackupRestore';
+import InsertCommentIcon from '@material-ui/icons/InsertComment';
 
 import {TOOLBAR_TYPES} from '../../constants.js';
+
+import {withStyles} from '@material-ui/core/styles/index';
 
 const styles = theme => ({
   toolbar: {
@@ -17,10 +25,10 @@ const styles = theme => ({
 const SpellingStarted = (props) => (
   <Paper className={props.classes.toolbar}>
     <IconButton aria-label='Пропустить' onClick={props.onSkip} title='Пропустить (Alt+S) - Skip'>
-      <WrapText/>
+      <WrapTextIcon/>
     </IconButton>
     <IconButton aria-label='Подсказка' onClick={props.onHint} title='Подсказка (Alt+H) - Hint'>
-      <InsertComment/>
+      <InsertCommentIcon/>
     </IconButton>
   </Paper>
 );
@@ -28,7 +36,7 @@ const SpellingStarted = (props) => (
 const SpellingStopped = (props) => (
   <Paper className={props.classes.toolbar}>
     <IconButton aria-label='Повторить' onClick={props.onRestart} title='Повторить сначала (Alt+R) - Repeat'>
-      <Replay/>
+      <ReplayIcon/>
     </IconButton>
   </Paper>
 );
@@ -36,21 +44,21 @@ const SpellingStopped = (props) => (
 const PhrasesToolbar = (props) => (
   <Paper className={props.classes.toolbar}>
     <IconButton aria-label='Проверить' onClick={props.onCheckCorrectness} title='Проверить (Alt+E) - Error checking'>
-      <Done/>
+      <DoneIcon/>
     </IconButton>
     <IconButton aria-label='Подсказка' onClick={props.onHint} title='Подсказка (Alt+H) - Hint'>
-      <InsertComment/>
+      <InsertCommentIcon/>
     </IconButton>
     <IconButton aria-label='Сбросить' onClick={props.onCancel} title='Сбросить (Alt+D) - Discard current)'>
-      <Discard/>
+      <SettingsBackIcon/>
     </IconButton>
     <IconButton aria-label='Переключение клавиатура-мышь' onClick={props.onSwitchMouseKeyboard}
                 title='Переключение между мышиным и клавиатурным режимами (Alt+K) - Keyboard'>
-      <Settings/>
+      <SettingsIcon/>
     </IconButton>
     <IconButton aria-label='Повторить' onClick={props.onRestart}
                 title='Повторить сначала (Alt+R) - Repeat'>
-      <Replay/>
+      <ReplayIcon/>
     </IconButton>
   </Paper>
 );

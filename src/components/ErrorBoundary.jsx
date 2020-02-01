@@ -1,5 +1,8 @@
 import React from 'react';
-import {Paper, Typography} from '@material-ui/core';
+
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -17,11 +20,12 @@ class ErrorBoundary extends React.Component {
         <Paper>
           <Typography variant='caption' color='primary'>Произошла неизвестная ошибка...</Typography>
         </Paper>
-      );
+      )
     } else {
-      return (this.props.children);
+      return (this.props.children)
     }
   }
+
 }
 
-export default ErrorBoundary;
+export default ErrorBoundary

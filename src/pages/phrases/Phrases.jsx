@@ -1,11 +1,18 @@
-import React from 'react';
-import {Button, Badge, Paper, TextField, Typography, withStyles} from '@material-ui/core';
+import React, {Component, Fragment} from 'react';
+
+import Button from '@material-ui/core/Button';
+import Badge from '@material-ui/core/Badge';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import {withStyles} from '@material-ui/core/styles';
 
 import SimpleToolbar from '../../components/toolbar/SimpleToolbar';
 import ContentMissingMessage from '../../components/ContentMissingMessage';
 import bormoWrapper from '../../hoc/bormoWrapper';
 import {DELAY_TIMEOUT, KEY_CODES, TOOLBAR_TYPES} from '../../constants';
 import {isValidIndex, getSortedWords} from '../../functions';
+
 import {styles} from './Phrases.css.js';
 
 const getChangedAmount = (wordsContent, wordsAmount, result, operand) => {
@@ -55,7 +62,7 @@ const getPhrasesInitialState = ({content, keyboardMode = false}) => {
   });
 };
 
-class Phrases extends React.PureComponent {
+class Phrases extends Component {
 
   constructor(props) {
     super(props);
@@ -63,7 +70,7 @@ class Phrases extends React.PureComponent {
     this.bormoSpeaker = this.props.bormoSpeaker;
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.setState(getPhrasesInitialState(nextProps));
   }
 
@@ -203,12 +210,12 @@ class Phrases extends React.PureComponent {
 
     if (data.length > 0) {
       return (
-        <div  className={classes.wrapper}>
-          <ul className={classes.wordsWrapper}>
+        <Fragment>
+          <ul className={classes.wrapper}>
             {wordsContent.map((item, ind) =>
               (
                 <li key={ind}>
-                  <>
+                  <Fragment>
                     {keyboardMode ? null :
                       <Badge className={classes.badge} color='secondary' badgeContent={wordsAmount[ind]}>
                         <span></span>
@@ -219,7 +226,7 @@ class Phrases extends React.PureComponent {
                             onClick={() => this.onWordClick(ind)}>
                       {item}
                     </Button>
-                  </>
+                  </Fragment>
                 </li>
               ))}
           </ul>
@@ -259,7 +266,7 @@ class Phrases extends React.PureComponent {
                          onRestart={this.onRestart} onSwitchMouseKeyboard={this.onSwitchMouseKeyboard}
                          onCheckCorrectness={this.onCheckCorrectness} onCancel={this.onCancel}/>
 
-        </div>
+        </Fragment>
       );
     } else {
       return <ContentMissingMessage/>;

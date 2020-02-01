@@ -79,6 +79,14 @@ export const DATA_SOURCES = {
     TEST: 'http://bormophp.local:8080/test.php',
     disabled: false,
     COMMENT:'PHP (loсalhost)'
+  },
+  PHP_HOSTING_HTTP: {
+    COURSES: 'http://bormo.pugalk8s.beget.tech/courses.php',
+    SEARCH: 'http://bormo.pugalk8s.beget.tech/search.php',
+    PHRASES: 'http://bormo.pugalk8s.beget.tech/phrases.php',
+    TEST: 'http://bormo.pugalk8s.beget.tech/test.php',
+    disabled: false,
+    COMMENT:'PHP (Beget, http)'
   }
 };
 

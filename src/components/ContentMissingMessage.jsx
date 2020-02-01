@@ -1,6 +1,9 @@
 import React from 'react';
-import {Typography, Hidden, withStyles} from '@material-ui/core';
-import {Apps} from '@material-ui/icons';
+import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
+import AppIcon from '@material-ui/icons/Apps';
+
+import {withStyles} from '@material-ui/core/styles'
 
 const styles = theme => ({
   wrapper: {
@@ -15,7 +18,7 @@ const ContentMissingMessage = ({classes}) => (
     <Hidden smUp implementation='css'>
       <Typography variant='caption' component='p'>Для открытия панели выбора используется этот пункт
         меню:</Typography>
-      <Apps/>
+      <AppIcon/>
     </Hidden>
   </div>
 );

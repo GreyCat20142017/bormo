@@ -53,6 +53,7 @@ const ROUTES_TITLES = {
   [ROUTES.CHECK]: 'Проверка'
 };
 
+
 export {
   ROUTES,
   SWITCHABLE_ROUTES,

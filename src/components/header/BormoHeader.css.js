@@ -14,11 +14,6 @@ const styles = (theme) => ({
       display: 'none'
     }
   },
-  navItem: {
-    color: 'rgba(0, 0, 0, 0.87)',
-    textDecoration: 'none',
-    outline: 'none'
-  },
   menuItem : {
     padding: '16px',
     marginRight: 0,
@@ -39,7 +34,15 @@ const styles = (theme) => ({
     '&:focus': {
       backgroundColor: 'rgba(0, 0, 0, 0.5)'
     }
-  }
+  },
+  navItem: {
+    color: 'rgba(0, 0, 0, 0.87)',
+    textDecoration: 'none',
+    outline: 'none',
+    '&.active *': {
+      color: 'red'
+    }
+  },
 });
 
 export {styles};

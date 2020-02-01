@@ -1,22 +1,11 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
-import {withStyles} from '@material-ui/core';
-
-const styles = theme => ({
-  tabActive: {
-    borderBottom: '2px solid',
-    borderColor: theme.palette.primary.contrastText
-  }
-});
 
 const ToolbarLink = ({classes, children, ...rest}) => (
-  <NavLink
-    activeClassName={classes.tabActive}
-    {...rest}
-  >
+  <NavLink activeStyle={{color: 'red'}}  classes={classes} {...rest} >
     {children}
   </NavLink>
 );
 
 
-export default withStyles(styles)(ToolbarLink);
+export default (ToolbarLink);

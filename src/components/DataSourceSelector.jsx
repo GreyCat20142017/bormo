@@ -1,15 +1,20 @@
 import React from 'react';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import SettingsIcon from '@material-ui/icons/Settings';
 import classNames from 'classnames';
-import {Menu, MenuItem, Button, Typography, withStyles} from '@material-ui/core';
-import {Settings} from '@material-ui/icons';
+
+import {withStyles} from '@material-ui/core/styles';
 
 import {DATA_SOURCES} from '../constants';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   fixed: {
     position: 'fixed',
     bottom: '10px',
-    right: 0,
+    right:  0,
   },
   flex: {
     display: 'flex',
@@ -39,7 +44,7 @@ class DataSourceSelector extends React.Component {
     const {anchorEl} = this.state;
     const {fixed, classes, current} = this.props;
     return (
-      <div className={classNames(fixed ? classes.fixed : '', classes.flex)}>
+      <div  className={classNames(fixed ? classes.fixed : '', classes.flex)}>
         <Typography variant='body2'>{current}</Typography>
         <Button
           aria-owns={anchorEl ? 'simple-menu' : undefined}
@@ -47,7 +52,7 @@ class DataSourceSelector extends React.Component {
           onClick={this.handleClick}
           title={'Выбор источника данных'}
         >
-          <Settings/>
+          <SettingsIcon/>
         </Button>
         <Menu
           id="data-source-selector"

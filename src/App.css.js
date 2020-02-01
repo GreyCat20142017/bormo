@@ -3,9 +3,7 @@ import {DRAWER_WIDTH} from './constants';
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    minHeight: '100vh'
+    alignItems: 'stretch'
   },
   drawer: {
     padding: '0',
@@ -33,14 +31,10 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    display: 'flex',
-    justifyContent: 'space-between',
-    align: 'stretch',
     padding: theme.spacing.unit * 2,
-    marginLeft: 0,
-    paddingTop: '50px',
+    minHeight: '80vh',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: DRAWER_WIDTH,
+      minHeight: '90vh'
     }
   },
   status: {
@@ -49,13 +43,10 @@ const styles = theme => ({
     left: '20px',
     [theme.breakpoints.up('sm')]: {
       left: '280px'
-    },
-  },
-  contrast: {
-    color: theme.palette.primary.contrastText
+    }
   },
   underlined: {
-    borderBottom: `2px solid ${theme.palette.primary.light}`,
+    borderBottom: `2px solid ${theme.palette.primary.light}`
   }
 
 });

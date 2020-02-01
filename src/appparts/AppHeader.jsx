@@ -1,25 +1,28 @@
 import React from 'react';
-import {AppBar, Toolbar, IconButton} from '@material-ui/core';
-import {Apps} from '@material-ui/icons';
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import AppIcon from '@material-ui/icons/Apps';
 
 import BormoHeader from '../components/header/BormoHeader';
 
 export const AppHeader = ({
-                            classes, currentTheme, themes,
+                            classes, currentTheme, themes, currentRoute,
                             onDrawerToggle, openModal, closeModal, openConfig, closeConfig, onThemeSelect
                           }) => (
   <AppBar position='fixed' className={classes.appBar}>
-    <Toolbar position={'static'}>
+    <Toolbar>
       <IconButton
         color='secondary'
         aria-label='Открыть панель'
         onClick={onDrawerToggle}
         className={classes.menuButton}
         title='Открыть панель выбора курса и уроков'>
-        <Apps/>
+        <AppIcon/>
       </IconButton>
-
       <BormoHeader
+        currentRoute={currentRoute}
         theme={currentTheme}
         openModal={openModal}
         closeModal={closeModal}

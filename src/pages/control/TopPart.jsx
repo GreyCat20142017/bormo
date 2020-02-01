@@ -1,8 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import {Badge, Paper, Typography} from '@material-ui/core';
-import {Error as ErrorIcon, CheckCircle} from '@material-ui/icons';
+import Badge from '@material-ui/core/Badge';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 export const TopPart = ({classes, content, currentCourse, currentLesson, okCount, errorCount, currentTranslate, isHint = false}) => (
   <div className={classes.wrapper}>
@@ -29,7 +32,7 @@ export const TopPart = ({classes, content, currentCourse, currentLesson, okCount
 
     <Badge className={classes.badge} color='primary' badgeContent={okCount}
            title={'Количество правильно отмеченных: ' + okCount}>
-      <CheckCircle fontSize='large' color='disabled'/>
+      <CheckCircleIcon fontSize='large' color='disabled'/>
     </Badge>
 
   </div>

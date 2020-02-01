@@ -1,7 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import {Paper, ButtonBase, Typography} from '@material-ui/core';
-import {VolumeUp} from '@material-ui/icons';
+import Paper from '@material-ui/core/Paper';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Typography from '@material-ui/core/Typography';
+import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 
 import SkyResultTabs from './SkyResultTabs';
 import SkyengData from '../../../classes/SkyengData';
@@ -28,7 +30,7 @@ const SkyResults = ({data, classes}) => {
         <Paper className={classNames(classes.paperFlex, classes.paper)}>
           <Typography variant='h6'> Слово: {sky.basicInfo.text} [ {sky.basicInfo.transcription} ]</Typography>
           <ButtonBase className={classes.simpleButton}
-                      onClick={() => playSound(sky.basicInfo.soundUrl)}><VolumeUp/></ButtonBase>
+                      onClick={() => playSound(sky.basicInfo.soundUrl)}><VolumeUpIcon/></ButtonBase>
         </Paper>
         <Paper className={classes.paper}>
           <SkyResultTabs skyData={sky}/>

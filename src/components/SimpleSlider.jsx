@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Typography, withStyles} from '@material-ui/core';
-import {Slider} from '@material-ui/lab';
+import {withStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/lab/Slider';
 
 const styles = theme => ({
   sliderWrapper: {
@@ -33,7 +34,7 @@ class SimpleSlider extends React.Component {
     this.state = {value: getRefinedValue(this.props.value, this.props.params)};
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps) {
     this.setState({value: getRefinedValue(nextProps.value, nextProps.params)});
   }
 

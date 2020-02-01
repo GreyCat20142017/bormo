@@ -11,6 +11,7 @@ import Phrases from '../pages/phrases/Phrases';
 import BormoConfig from '../pages/config/BormoConfig';
 import NotFound from '../pages/notfound/NotFound';
 import Loader from '../components/loader/Loader';
+
 import {CONTROL_MODES} from '../constants';
 import {ROUTES} from '../routes';
 

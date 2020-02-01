@@ -4,7 +4,7 @@ import {MoreVert} from '@material-ui/icons';
 
 import BormoToolbar from './BormoToolbar';
 import {styles} from './BormoHeader.css.js';
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {ROUTES} from '../../routes';
 
 class BormoHeader extends PureComponent {
@@ -44,7 +44,7 @@ class BormoHeader extends PureComponent {
 
   render() {
 
-    const classes = this.props.classes;
+    const {classes, currentRoute} = this.props;
     const {burgerEl, anchorEl} = this.state;
     return (
       <div className={classes.bar}>
@@ -52,7 +52,7 @@ class BormoHeader extends PureComponent {
         <Typography variant='h5' color='inherit' className={classes.switchable}>
           Бормо<span className={classes.switchablePart}>тунчик</span>
         </Typography>
-        <BormoToolbar burgerEl={burgerEl} onBurgerClick={this.onBurgerClick} onBurgerClose={this.onBurgerClose}/>
+        <BormoToolbar currentRoute={currentRoute} burgerEl={burgerEl} onBurgerClick={this.onBurgerClick} onBurgerClose={this.onBurgerClose}/>
         <IconButton color='inherit' onClick={this.onAnchorClick} title={'Прочие пункты меню'}>
           <MoreVert/>
         </IconButton>
@@ -62,21 +62,21 @@ class BormoHeader extends PureComponent {
           anchorEl={anchorEl}
           onClose={this.onMenuClose}
           open={Boolean(anchorEl)}>
-          <Link className={classes.navItem} to={ROUTES.CONFIG} onClick={this.onConfigClick}>
+          <NavLink className={classes.navItem} to={ROUTES.CONFIG} onClick={this.onConfigClick}>
             <MenuItem title='Основные параметры программы'>Настройка</MenuItem>
-          </Link>
+          </NavLink>
           <MenuItem onClick={this.onModalClick} title='Коротко об основных режимах'>О программе</MenuItem>
           <Divider/>
-          <Link className={classes.navItem} to={ROUTES.SEARCH} onClick={this.onMenuClose}>
+          <NavLink className={classes.navItem} to={ROUTES.SEARCH} onClick={this.onMenuClose}>
             <MenuItem title='Поиск c возможностью добавления данных'>Поиск (БД || Skyeng)</MenuItem>
-          </Link>
-          <Link className={classes.navItem} to={ROUTES.SKYENG} onClick={this.onMenuClose}>
+          </NavLink>
+          <NavLink className={classes.navItem} to={ROUTES.SKYENG} onClick={this.onMenuClose}>
             <MenuItem title='Поиск в Skyeng с полными результатами'>Поиск Skyeng</MenuItem>
-          </Link>
+          </NavLink>
           <Divider/>
-          <Link className={classes.navItem} to={ROUTES.PHRASES} onClick={this.onMenuClose}>
+          <NavLink className={classes.navItem} to={ROUTES.PHRASES} onClick={this.onMenuClose}>
             <MenuItem title='Дополнительный режим Фразы'>Фразы</MenuItem>
-          </Link>
+          </NavLink>
         </Menu>
       </div>
     );

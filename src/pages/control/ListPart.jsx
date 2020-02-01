@@ -1,6 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
-import {Typography, Paper} from '@material-ui/core';
+
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 import {isInactive} from '../pagesCommon';
 import {FIELDS, WORDS_PER_LESSON} from '../../constants';

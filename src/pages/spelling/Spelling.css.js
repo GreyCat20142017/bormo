@@ -3,13 +3,13 @@ const styles = theme => ({
     width: '80%',
     margin: '40px auto'
   },
-  spellingWrapper: {
+  wrapper: {
     display: 'flex',
-    flexDirection: 'column',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    padding: '40px',
+    padding: '20px 2%',
+    maxWidth: '50%',
     margin: '0 auto',
-    width: '100%',
     [theme.breakpoints.down('sm')]: {
       maxWidth: '100%',
     }

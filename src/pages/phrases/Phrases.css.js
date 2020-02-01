@@ -1,10 +1,6 @@
 const styles = theme => ({
   wrapper: {
     display: 'flex',
-    flexDirection: 'column'
-  },
-  wordsWrapper: {
-    display: 'flex',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
     listStyle: 'none',

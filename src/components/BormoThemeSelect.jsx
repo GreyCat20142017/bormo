@@ -1,5 +1,10 @@
-import React, {PureComponent} from 'react';
-import {MenuItem, FormControl, Select, withStyles} from '@material-ui/core';
+import React from 'react';
+
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+import {withStyles} from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
@@ -24,15 +29,16 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
   },
   light: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.secondary.main,
     '& *': {
-      color: theme.palette.primary.contrastText,
+      color: theme.palette.secondary.main,
+      border: theme.palette.secondary.main
     }
   },
   dark: {}
 });
 
-class BormoThemeSelect extends PureComponent {
+class BormoThemeSelect extends React.Component {
 
   constructor(props) {
     super(props);
@@ -45,7 +51,7 @@ class BormoThemeSelect extends PureComponent {
     this.props.onThemeSelect(newTheme);
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
+  componentWillReceiveProps(nextProps, nextContext) {
     this.setState({choice: nextProps.currentTheme.themeKey});
   }
 
@@ -54,8 +60,8 @@ class BormoThemeSelect extends PureComponent {
 
     return (
       <form className={fromConfig ? classes.rootFromConfig : classes.root} autoComplete='off'>
-        <FormControl className={light ? classes.light : classes.dark}>
-          <Select  variant={'standard'}
+        <FormControl className={classes.formControl}>
+          <Select className={light ? classes.light : classes.dark}
                   value={this.state.choice}
                   onChange={this.onThemeChange}
                   inputProps={{

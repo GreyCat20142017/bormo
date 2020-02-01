@@ -1,7 +1,9 @@
 import {createMuiTheme} from '@material-ui/core/styles';
-import {indigo, blueGrey, white, black, pink, amber, orange, deepOrange, grey} from '@material-ui/core/colors';
+import {indigo, blueGrey, white, black, pink, orange, grey} from '@material-ui/core/colors';
 
 export const MDB_COLOR = '#59698d';
+export const PINK_COLOR = pink[100];
+export const DARKPINK_COLOR = pink[800]
 
 const NeutralTheme = createMuiTheme({
   palette: {
@@ -49,28 +51,11 @@ const GreyTheme = createMuiTheme({
       contrastText: black
     },
     secondary: {
-      main: grey[200],
-      dark: grey[600],
+      main: grey[500],
+      dark: grey[700],
       contrastText: black
     },
     error: {main: orange[900]},
-  },
-  typography: {
-    useNextVariants: true,
-  },
-});
-
-const AmberTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: amber[400]
-    },
-    secondary: {
-      main: blueGrey[400],
-    },
-    error: deepOrange,
-    contrastThreshold: 3,
-    tonalOffset: 0.2,
   },
   typography: {
     useNextVariants: true,
@@ -95,12 +80,6 @@ const MainTheme = {
     themeDescription: 'Серый апельсин',
     themeName: 'Серая',
     themeKey: 'grey'
-  },
-  amber: {
-    themeObject: AmberTheme,
-    themeDescription: 'Солнечный удар',
-    themeName: 'Желтая',
-    themeKey: 'amber'
   }
 };
 

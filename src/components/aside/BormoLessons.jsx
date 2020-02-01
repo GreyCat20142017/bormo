@@ -1,11 +1,22 @@
 import React from 'react';
+
+import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
-import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, ExpansionPanelActions} from '@material-ui/core';
-import {Divider, Fab, Typography, IconButton, withStyles} from '@material-ui/core';
-import {ArrowBack, ArrowForward, ExpandMore} from '@material-ui/icons';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import Divider from '@material-ui/core/Divider';
+import Fab from '@material-ui/core/Fab';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import BormoLesson from './BormoLesson';
 import SimpleSlider from '../SimpleSlider';
+
 import {PAGE_LIMIT} from '../../constants';
 import {styles} from './BormoLessons.css';
 
@@ -28,7 +39,7 @@ const Lessons = ({lessons, currentLesson, onLessonChange, classes, expanded, sta
     <ul className={classNames(classes.lessonList, expanded ? classes.expanded : classes.collapsed)}>
       {list}
     </ul>
-  );
+  )
 };
 
 const BackwardForward = ({currentClass, onPrevClick, onNextClick, classes}) => (
@@ -36,13 +47,13 @@ const BackwardForward = ({currentClass, onPrevClick, onNextClick, classes}) => (
     <div className={currentClass}>
       <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу назад'
                   onClick={onPrevClick}>
-        <ArrowBack/>
+        <ArrowBackIcon/>
       </IconButton>
     </div>
     <div className={currentClass}>
       <IconButton color='secondary' size='small' title='Пролистать список уроков на страницу вперед'
                   onClick={onNextClick}>
-        <ArrowForward/>
+        <ArrowForwardIcon/>
       </IconButton>
     </div>
   </ExpansionPanelActions>
@@ -67,7 +78,7 @@ class BormoLessons extends React.Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     const start = PAGE_LIMIT <= nextProps.lastLesson ? nextProps.currentLesson || this.props.defaultStart : this.props.defaultStart;
     this.setState({
       paginationTo: nextProps.lastLesson,
@@ -82,7 +93,7 @@ class BormoLessons extends React.Component {
       expanded: !this.state.expanded,
       paginationStartTmp: this.props.currentLesson || this.props.defaultStart
     });
-  };
+  }
 
   onSliderChange = (name, value) => {
     this.setState({[name]: value});
@@ -95,7 +106,7 @@ class BormoLessons extends React.Component {
       paginationFinish: getPositionTo(this.state.paginationStartTmp, this.state.paginationTo, PAGE_LIMIT),
       expanded: false
     });
-  };
+  }
 
   onPrevClick = (evt) => {
     evt.stopPropagation();
@@ -106,7 +117,7 @@ class BormoLessons extends React.Component {
       paginationStartTmp: prev,
       paginationFinish: getPositionTo(prev, this.state.paginationTo, PAGE_LIMIT)
     });
-  };
+  }
 
   onNextClick = (evt) => {
     evt.stopPropagation();
@@ -117,32 +128,23 @@ class BormoLessons extends React.Component {
       paginationStartTmp: next,
       paginationFinish: getPositionTo(next, this.state.paginationTo, PAGE_LIMIT)
     });
-  };
+  }
 
   render() {
     const {classes, lessons, currentLesson, onLessonChange, lastLesson} = this.props;
     const {expanded, paginationStart, paginationFinish, paginationStartTmp} = this.state;
-    const sliderParams = {
-      default: currentLesson || paginationStartTmp,
-      min: 1,
-      max: lastLesson,
-      step: 1,
-      title: ''
-    };
+    const sliderParams = {default: currentLesson || paginationStartTmp, min: 1, max: lastLesson, step: 1, title: ''};
     return (lastLesson ?
         <div className={classes.root}>
           <ExpansionPanel expanded={expanded} onChange={this.onPanelSwitch}>
-            <ExpansionPanelSummary expanded={expanded} expandIcon={<ExpandMore/>}>
+            <ExpansionPanelSummary expanded={expanded} expandIcon={<ExpandMoreIcon/>}>
 
               <BackwardForward currentClass={classes.column} onPrevClick={this.onPrevClick}
                                onNextClick={this.onNextClick} classes={classes}/>
 
             </ExpansionPanelSummary>
             <Divider/>
-            <ExpansionPanelDetails className={classes.details} style={{
-              touchAction: 'none',
-              msTouchAction: 'none'
-            }}
+            <ExpansionPanelDetails className={classes.details} style={{touchAction: 'none', msTouchAction: 'none'}}
             >
               <SimpleSlider noTitle={true} name='paginationStartTmp' params={sliderParams}
                             onSliderChange={this.onSliderChange}/>

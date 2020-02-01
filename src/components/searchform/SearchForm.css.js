@@ -1,7 +1,4 @@
 const styles = theme => ({
-  search: {
-    width: '100%'
-  },
   form: {
     width: '88%',
     margin: '20px auto',

@@ -1,6 +1,6 @@
 const styles = theme => ({
   mainWrapper: {
-    flexGrow: 1,
+    height: '100%',
     backgroundColor: theme.palette.primary.main,
     backgroundSize: '100px 100px, 100px 100px, 20px 20px, 20px 20px',
     backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
